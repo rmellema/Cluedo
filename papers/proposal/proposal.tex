@@ -1,6 +1,15 @@
 \documentclass[a4paper, 10pt]{article}
-%\usepackage{fullpage}
 \usepackage{natbib}
+
+\setcounter{secnumdepth}{0} 
+
+\usepackage{geometry}
+%\usepackage{layout}
+
+% \setlength{\voffset}{-0.1in}
+\setlength{\headsep}{10pt}
+
+
 
 \title{Modelling Cluedo}
 \author{Laura van de Braak \and Luuk Boulogne \and Ren\'e Mellema}
@@ -11,44 +20,38 @@
 \newcommand{\abov}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
 
 \begin{document}
+
 \maketitle
 
-For this project, we want to implement a dynamic epistemic modelling tool
+\noindent For this project, we want to implement a dynamic epistemic modelling tool
 for a simplified version of Cluedo. This tool will be able to check
-formula's at a specific Kripke model, it will be able to generate these
-models from a card deal, and it will be able to update with given
-information. This tool can then be used to analyse specific situations in
+formulas in a specific Kripke model: it will be able to generate these
+models from a dealt hand, and it will be able to update as extra information is given. This tool can then be used to analyse specific situations in
 Cluedo.
 
-\section{Simplification}
-Because the full scope of cluedo would be to complex to check formulas in a
-reasonable amount of time, we decided to simplify our version of Cluedo to
-a game with only 6 weapons, 4 persons, and no rooms. This also means that
-there are only 4 agents (players) who have 2 cards each. There are also
-only 2 cards in the envelope. Since we have no rooms in the game, the
-players also do not have to move around. The other rules for the game stay
-the same \citep{cluedo}.
+\subsection{Simplification}
+Because implementing the full scope of cluedo would be too complex to check formulas in a reasonable amount of time, we decided to simplify our version of Cluedo to a game with only six weapons, four persons, and no rooms. This means that there are only four agents (players) who have two cards each. Because we use two categories, there are only two cards in the envelope, instead of the usual three. Since we are only interested in the reasoning within this game and movement has little influence on this, we will leave it out of our implementation. The other rules for the game stay the same \citep{cluedo}.
 
-This drastically reduces the number of states that the game can have, for a
-given envelope content, player one gets 2 of the 8 remaining cards, player
-2 gets 2 of the 6 then remaining cards etc.~ and therefore the total number
-of possible deals for a given envelope content is:
+This drastically reduces the number of states the game can have. For a
+given envelope content, player 1 gets two of the eight remaining cards, player
+2 gets two of the six then remaining cards etc. Therefore the total number
+of possible hands dealt for a given envelope content is:
 \begin{equation}
     \abov{8}{2} \times \abov{6}{2} \times \abov{4}{2} \times \abov{2}{2} =
     2520
 \end{equation}
-Before we deal the cards for the players, one weapon and one person is draw
+Before we deal the cards for the players, one weapon and one person is drawn
 for the envelope. This means that there are $6 \times 4 = 24$ possible
 envelope contents, this results in a total number of $60.480$ possible
 states.
 
-\section{Possibilities in a turn}
-In a turn one player gives a suspicion. In turn the other players say
-whether they have one of the cards in the suspicion. If a player does not
-have a card in the suspicion, this is a public announcement that they have
-neither of these cards. If a player does have one of the cards in the suspicion
-they have to reply by saying that they have on of the cards and showing
-that card to the player that made the suspicion. This is a message from one
+\subsection{Possibilities in a turn}
+In a turn a player makes a suggestion. In clockwise order the other players say
+whether they have one of the cards in the suggestion. If a player does not
+have a card in the suggestion, this is a public announcement that they have
+neither of these cards. If a player does have one of the cards in the suggestion
+they have to reply by saying that they have one of the cards and showing
+that card to the player that made the suggestion. This is a message from one
 player to the other.
 
 % We gaan cluedo doen
