@@ -162,4 +162,8 @@ public class StateDealingMap {
 	public final Dealing point() {
 		return map.get(0);
 	}
+
+    public final Dealing getValuation(int state) {
+        return map.get(state);
+    }
 }

@@ -17,7 +17,9 @@ public class KripkeModel {
 	public final Dealing point() {
 		return sdMap.point();
 	}
-	
-	
+
+	public Dealing getDealing(int state) {
+        return sdMap.getValuation(state);
+    }
 
 }
