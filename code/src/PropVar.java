@@ -3,7 +3,7 @@
  * @author lhboulogne
  *
  */
-public class PropVar {
+public class PropVar extends Formula {
 
 	private Card card;
 	private int playerID;
@@ -20,5 +20,9 @@ public class PropVar {
 	public int getPlayer() {
 		return playerID;
 	}
-	
+
+	@Override
+    public boolean evaluate(KripkeModel model, int state) {
+		return model.getDealing(state).isTrue(this);
+	}
 }
