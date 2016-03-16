@@ -7,19 +7,14 @@ public abstract class Formula {
      * Evaluate a Formula in a state using the given model
      * @param model The model used for evaluation
      * @param state The state to evaluate the Formula in
-     * @return `true` if the Formula holds in state `state`, `false` otherwise
+     * @return `true` if the Formula evaluate in state `state`, `false` otherwise
      */
     public abstract boolean evaluate(KripkeModel model, int state);
-
-    public boolean holds(Dealing dealing) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
     /**
      * Evaluate a Formula in state 0 in the given model
      * @param model The model used for evaluation
-     * @return `true` if the Formula holds in state 0, `false` otherwise
+     * @return `true` if the Formula evaluate in state 0, `false` otherwise
      */
     public boolean evaluate(KripkeModel model) {
         return this.evaluate(model, 0);

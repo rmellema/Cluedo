@@ -7,7 +7,7 @@ public class KripkeModel {
 	private RelationMatrix relations = new RelationMatrix();
 	
 	/**
-	 * @param dealing Point of the model
+	 * @param point Point of the model
 	 * @param players Number of players
 	 */
 	public KripkeModel(Dealing point, int players) {
@@ -36,7 +36,7 @@ public class KripkeModel {
 	 */
 	public void publicAnnouncement(Formula phi) {
 		for (Integer state : states) {
-			if (!phi.holds(sdMap.get(state)))
+			if (!phi.evaluate(this, state))
 				removeState(state);
 		}
 	}
@@ -51,7 +51,7 @@ public class KripkeModel {
 		Set<Integer> notHolds = new HashSet<Integer>();
 		
 		for (Integer state : states) {
-			if (phi.holds(sdMap.get(state)))
+			if (phi.evaluate(this, state))
 				holds.add(state);
 			else
 				notHolds.add(state);
