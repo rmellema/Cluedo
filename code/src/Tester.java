@@ -10,6 +10,6 @@ public class Tester {
     	km.point().print();
     	
     	//TODO Test the deep copy of the RelationMatrix
-    	
+    	//TODO Test the relation query functions
     }
 }

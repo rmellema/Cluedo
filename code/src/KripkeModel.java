@@ -12,7 +12,6 @@ public class KripkeModel {
 	 */
 	public KripkeModel(Dealing point, int players) {
 		sdMap = new StateDealingMap(point, players);
-		
 		//TODO: DEBUG
 		System.out.println("Total nr of states: " + sdMap.size());
 		
@@ -78,5 +77,17 @@ public class KripkeModel {
 	public Dealing getDealing(int state) {
         return sdMap.getValuation(state);
     }
+
+	/** @return Set of states that are related for any agent from 'agents' to 'state' 
+	 */
+	public Set<Integer> related(Integer state, Set<Integer> agents) {
+		return relations.related(state, agents);
+	}
+
+	/** @return Set of states that are related for all 'agents' to 'state' 
+	 */
+	public Set<Integer> allRelated(Integer state, Set<Integer> agents) {
+		return relations.allRelated(state, agents);
+	}
 
 }
