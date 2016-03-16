@@ -83,6 +83,10 @@ public class KripkeModel {
 	public Set<Integer> related(Integer state, Set<Integer> agents) {
 		return relations.related(state, agents);
 	}
+	
+	public Set<Integer> related(Integer state, Integer agent) {
+		return relations.related(state, new HashSet<Integer>(agent));
+	}
 
 	/** @return Set of states that are related for all 'agents' to 'state' 
 	 */
