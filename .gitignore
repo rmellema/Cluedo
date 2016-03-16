@@ -174,3 +174,4 @@ hs_err_pid*
 
 ## Custom
 papers/proposal/proposal.pdf
+*.iml
