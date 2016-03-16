@@ -8,7 +8,6 @@ import java.util.HashMap;
  */
 public class StateDealingMap {
 	private HashMap<Integer, Dealing> map = new HashMap<Integer, Dealing>();
-	private Integer counter = 1;
 	
 	public StateDealingMap(Dealing point, int players) {
 		// Determine category sizes
@@ -23,21 +22,25 @@ public class StateDealingMap {
 		buildMap(categorySizes, players, point, totalCards);
 	}
 
+	public Dealing get(Integer state) {
+		return map.get(state);
+	}
+
+	public int size() {
+		return map.size();
+	}
+
 	/**
 	 * Builds the Hashmap
 	 * @param categorySizes List of sizes of card categories
 	 * @param players Number of players in the game
 	 * @param point Point of pointed model
 	 */
-	public int size() {
-		return map.size();
-	}
-	
 	private void buildMap(int[] categorySizes, int players, Dealing point, int totalCards) {
 		Dealing empty = new Dealing(categorySizes);
 		ArrayList<Dealing> envelopeDealings = possibleEnvelopeDealings(0, empty, categorySizes);
 		
-		//TODO DEBUGCOMMENT
+		//TODO DEBUG
 		System.out.println("nr of envelope dealings: " + envelopeDealings.size());
 		
 		int cardsLeft = totalCards - categorySizes.length;
@@ -76,7 +79,6 @@ public class StateDealingMap {
 	 * @param envelopeDealing Dealing in which the envelope already contains its cards
 	 * @param players Number of players in the game
 	 */
-	
 	private void mapDealings(int playerID, Dealing soFar, int players, Dealing point, int maxHandSize) {
 		if (playerID > players) {
 			addToMap(soFar, point);
@@ -95,7 +97,6 @@ public class StateDealingMap {
 	 * @param playerID
 	 * @param soFar
 	 * @param n number of cards to be dealt
-	 * @return 
 	 */
 	private ArrayList<Dealing> dealNCardsTo(int playerID, Dealing soFar, int n) {
 		ArrayList<DealingState> states = dealNCardsTo(playerID, new DealingState(soFar, new Card(0, -1)), n);
@@ -122,7 +123,7 @@ public class StateDealingMap {
 		ArrayList<DealingState> newDealingStates = dealCardTo(playerID, state);
 		for (DealingState dealingState : newDealingStates) {
 			returnDealingStates.addAll(dealNCardsTo(playerID, dealingState, n-1));
-		}///////////////////
+		}
 		return returnDealingStates;
 	}
 
@@ -134,9 +135,9 @@ public class StateDealingMap {
 			map.put(0, dealing);
 			return;
 		}
-		map.put(counter, dealing);
-		++counter;
+		map.put(map.size()+1, dealing);
 	}
+	
 	/**
 	 * @return List of all possible dealings that result from soFar when player playerID gets any new card
 	 */

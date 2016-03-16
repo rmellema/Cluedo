@@ -33,7 +33,6 @@ public class Dealing {
 	public Dealing(Dealing other) {
 		this(other.dealing);
 	}
-
 	
 	/**
 	 * @return number of categories (e.g. weapon) in the valuation
@@ -69,6 +68,7 @@ public class Dealing {
 			System.out.println();
 		}
 	}
+	
 	/**
 	 * @return null if the card has already been dealt to a player. A new dealing with the card dealt to the specified player otherwise.
 	 */
