@@ -19,6 +19,7 @@ public class StateDealingMap {
 			totalCards += point.numberOfCards(it);
 		}
 
+        map.put(0, point);
 		buildMap(categorySizes, players, point, totalCards);
 	}
 
@@ -132,10 +133,9 @@ public class StateDealingMap {
 	 */
 	private void addToMap(Dealing dealing, Dealing point) {
 		if (point.equals(dealing)) {
-			map.put(0, dealing);
 			return;
 		}
-		map.put(map.size()+1, dealing);
+		map.put(map.size(), dealing);
 	}
 	
 	/**

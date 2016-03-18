@@ -14,10 +14,23 @@ public class KripkeModel {
 		sdMap = new StateDealingMap(point, players);
 		//TODO: DEBUG
 		System.out.println("Total nr of states: " + sdMap.size());
-		
+
 		states = new HashSet<Integer>();
 		for (int stateNumber = 0; stateNumber != sdMap.size(); ++stateNumber) 
 			states.add(stateNumber);
+        System.out.println("Added all states: " + states.size());
+        for (int category = 0; category < point.categories(); category++) {
+            int cards = point.numberOfCards(category);
+            for (int number = 0; number < cards; number++) {
+                Card card = new Card(category, number);
+                int agent = point.player(category, number);
+                if (agent > 0) {
+                    System.out.println("Removing relations for agent " + agent);
+                    this.privateAnnouncement(new PropVar(card, agent), agent);
+                }
+            }
+        }
+        System.out.println("Done making model");
 	}
 	
 	/**
