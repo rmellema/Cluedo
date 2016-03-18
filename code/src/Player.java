@@ -10,13 +10,11 @@ public class Player {
 	private Strategy accusation = new AccusationStrategy();
 
         //TODO: make this variable
-        private Card one;
-        private Card two;
+        private CardSet hand;
 
 
 	public Player(Card one, Card two){
-            this.one = one;
-            this.two = two;
+            this.hand = new CardSet(one, two);
 	}
         
         
@@ -25,7 +23,7 @@ public class Player {
         }
         
         public Card response(KripkeModel model, CardSet query){
-            return response.rStrategy(model);
+            return response.rStrategy(model, query, hand);
         }
         
         public CardSet suspect(KripkeModel model){

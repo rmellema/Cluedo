@@ -5,7 +5,7 @@
 
 
 public abstract class Strategy {
-
+    
     CardSet aStrategy(KripkeModel model) {
         
         return new CardSet(new Card(1,1), new Card(2,1));
@@ -16,7 +16,7 @@ public abstract class Strategy {
         return new CardSet(new Card(1,1), new Card(2,1));
     }
     
-    Card rStrategy(KripkeModel model) {
+    Card rStrategy(KripkeModel model, CardSet query, CardSet hand) {
         
         return new Card(1,1);
     }
