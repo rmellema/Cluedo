@@ -49,6 +49,10 @@ public class Dealing {
 	public int numberOfCards(int category) {
 		return dealing[category].length;
 	}
+
+    public int player(int category, int card) {
+        return dealing[category][card];
+    }
 	
 	/**
 	 * @return Whether the propositional variable is true in this valuation
