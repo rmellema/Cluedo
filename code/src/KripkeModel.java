@@ -78,20 +78,48 @@ public class KripkeModel {
         return sdMap.getValuation(state);
     }
 
-	/** @return Set of states that are related for any agent from 'agents' to 'state' 
+	/**
+     * Builds the set of states that are reachable in one step from `state` for
+     * any of the agents in `agents`.
+     * @param state The state to get the reachable states from
+     * @param agents The agents to take into account
+     * @return The set of states
 	 */
-	public Set<Integer> related(Integer state, Set<Integer> agents) {
-		return relations.related(state, agents);
-	}
-	
-	public Set<Integer> related(Integer state, Integer agent) {
-		return relations.related(state, new HashSet<Integer>(agent));
+	public Set<Integer> getReachableStates(Integer state, Set<Integer> agents) {
+		Set<Integer> ret = new HashSet<>();
+        for (Integer s : states) {
+            if (relations.containsAny(state, s, agents)) {
+                ret.add(s);
+            }
+        }
+        return ret;
 	}
 
-	/** @return Set of states that are related for all 'agents' to 'state' 
-	 */
-	public Set<Integer> allRelated(Integer state, Set<Integer> agents) {
-		return relations.allRelated(state, agents);
+    /**
+     * Builds the set of states that `agent` can distinguish from `state`
+     * @param state The state to see if they are different
+     * @param agent The agent to look for differences
+     * @return The set of states
+     */
+	public Set<Integer> getReachableStates(Integer state, Integer agent) {
+		return this.getReachableStates(state, new HashSet<Integer>(agent));
+	}
+
+    /**
+     * Get the set of states that are reachable in one step from `state` for
+     * all agents in `agents`.
+     * @param state The state to get the reachable states from
+     * @param agents The agents that must all be able to reach that world
+     * @return The set of states that all agents can reach from the state
+     */
+	public Set<Integer> getReachableStatesForall(Integer state, Set<Integer> agents) {
+        Set<Integer> ret = new HashSet<>();
+        for (Integer s : states) {
+            if (relations.containsAll(state, s, agents)) {
+                ret.add(s);
+            }
+        }
+        return ret;
 	}
 
 }

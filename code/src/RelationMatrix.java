@@ -104,39 +104,4 @@ public class RelationMatrix {
 		    		return false;
 		return true;
 	}
-	
-	/** @return Set of states that are related for any agent from 'agents' to 'state' 
-	 */
-	public Set<Integer> related(Integer state, Set<Integer> agents) {
-		Set<Integer> returnSet = new HashSet<Integer>();
-		if (jaggedMatrix.containsKey(state)) {
-			Set<Entry<Integer, Set<Integer>>> rels = jaggedMatrix.get(state).entrySet();
-			for (Entry<Integer, Set<Integer>> rel : rels)
-				if (!rel.getValue().containsAll(agents))
-					returnSet.add(rel.getKey());
-		}
-		
-		return returnSet;
-	}
-	
-	/** @return Set of states that are related for all 'agents' to 'state' 
-	 */
-	public Set<Integer> allRelated(Integer state, Set<Integer> agents) {
-		Set<Integer> returnSet = new HashSet<Integer>();
-		if (jaggedMatrix.containsKey(state)) {
-			Set<Entry<Integer, Set<Integer>>> rels = jaggedMatrix.get(state).entrySet();
-			for (Entry<Integer, Set<Integer>> rel : rels) {
-				boolean add = true;
-				for (Integer agent : agents)
-					if (rel.getValue().contains(agent)) {
-						add = false;
-						break;
-					}
-				if (add)
-					returnSet.add(rel.getKey());
-			}
-		}
-		return returnSet;
-	}
-	
 }
