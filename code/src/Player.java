@@ -5,16 +5,31 @@
 
 
 public class Player {
-	private Strategy suspision;
-	private Strategy response;
-	private Strategy accusastion;
+	private Strategy suspision = new SuspisionStrategy();
+	private Strategy response = new ResponseStrategy();
+	private Strategy accusation = new AccusationStrategy();
 
-	private KripkeModel model;
+        //TODO: make this variable
+        private Card one;
+        private Card two;
 
 
-	public Player(){
-		suspision = new SuspisionStrategy();
-		response = new ResponseStrategy();
-		accusastion = new AccusationStrategy();
+	public Player(Card one, Card two){
+            this.one = one;
+            this.two = two;
 	}
+        
+        
+        public CardSet accuse(KripkeModel model){
+            return accusation.aStrategy(model);
+        }
+        
+        public Card response(KripkeModel model, CardSet query){
+            return response.rStrategy(model);
+        }
+        
+        public CardSet suspect(KripkeModel model){
+            return suspision.sStrategy(model);
+        }
+        
 }
