@@ -10,28 +10,36 @@ public class RelationMatrix {
 	
 	//Like a matrix that contains sets of agent numbers
 	//All relations that are in the map are NOT in the Kripke Model
-	private Map<Integer, Map<Integer, Set<Integer>>> jaggedMatrix 
-		= new HashMap<Integer, Map<Integer, Set<Integer>>>();
+	private Map<Integer, Map<Integer, Byte>> jaggedMatrix
+		= new HashMap<Integer, Map<Integer, Byte>>();
 			
 	
 	public RelationMatrix() {	}
 
-	/**
-	 * Deep copy (at least for now)
-	 */
-	public RelationMatrix(RelationMatrix other) {
-		for (Map.Entry<Integer, Map<Integer, Set<Integer>>> entry : other.jaggedMatrix.entrySet())
-			addDeepCopyOf(entry);
-	}
+    /**
+     * Deep copy (at least for now)
+     */
+    public RelationMatrix(RelationMatrix other) {
+        for (Map.Entry<Integer, Map<Integer, Byte>> entry : other.jaggedMatrix.entrySet())
+            addDeepCopyOf(entry);
+    }
 
-	private void addDeepCopyOf(Entry<Integer, Map<Integer, Set<Integer>>> entry) {
+    public static byte setToByte(Set<Integer> agents) {
+        byte ret = 0;
+        for (Integer agent : agents) {
+            ret = (byte)(ret | (1 << (agent -1)));
+        }
+        return ret;
+    }
+
+	private void addDeepCopyOf(Entry<Integer, Map<Integer, Byte>> entry) {
 		jaggedMatrix.put(entry.getKey(), deepCopyMap(entry.getValue()));
 	}
 
-	private Map<Integer, Set<Integer>> deepCopyMap(Map<Integer, Set<Integer>> map) {
-		Map<Integer, Set<Integer>> m = new HashMap<Integer, Set<Integer>>();
-		for (Map.Entry<Integer, Set<Integer>> entry : map.entrySet()) {
-			m.put(entry.getKey() , new HashSet<Integer>(entry.getValue()));
+	private Map<Integer, Byte> deepCopyMap(Map<Integer, Byte> map) {
+		Map<Integer, Byte> m = new HashMap<Integer, Byte>();
+		for (Map.Entry<Integer, Byte> entry : map.entrySet()) {
+			m.put(entry.getKey() , entry.getValue());
 		}
 		return m;
 	}
@@ -47,12 +55,13 @@ public class RelationMatrix {
 			removeRelation(to, from, agent);
 
 		if (!jaggedMatrix.containsKey(from))
-			jaggedMatrix.put(from, new HashMap<Integer, Set<Integer>>());
+			jaggedMatrix.put(from, new HashMap<Integer, Byte>());
 
 		if (!jaggedMatrix.get(from).containsKey(to))
-			jaggedMatrix.get(from).put(to, new HashSet<Integer>());
-		
-		jaggedMatrix.get(from).get(to).add(agent);
+			jaggedMatrix.get(from).put(to, new Byte((byte)0));
+
+        byte curVal = jaggedMatrix.get(from).get(to);
+		jaggedMatrix.get(from).put(to, (byte)(curVal | (2 ^ agent)));
 	}
 
 	/**
@@ -60,9 +69,10 @@ public class RelationMatrix {
 	 */
 	public void removeState(Integer state) {
 		jaggedMatrix.remove(state);
-		for (Map<Integer, Set<Integer>> to : jaggedMatrix.values()) {
+		for (Map<Integer, Byte> to : jaggedMatrix.values()) {
 			to.remove(state);
 		}
+        jaggedMatrix.remove(state);
 	}
 	
 	/**
@@ -78,30 +88,32 @@ public class RelationMatrix {
 	public boolean containsAny(Integer from, Integer to, Set<Integer> agents) {
 		if (from > to) 
 			containsAny(to, from, agents);
+        byte mask = RelationMatrix.setToByte(agents);
 
-		if (jaggedMatrix.containsKey(from) && 
+		if (jaggedMatrix.containsKey(from) &&
 		    jaggedMatrix.get(from).containsKey(to) &&
-			jaggedMatrix.get(from).get(to).containsAll(agents))
-			return false;
-		
+                ((jaggedMatrix.get(from).get(to) & mask) == mask)) {
+            // If the bitvecotr & mask is equal to mask, all the agents'
+            // relations from this state are removed
+            return false;
+        }
 		return true;
-
 	}
 	
-
 	/**
 	 * returns whether the matrix contains specified relation for all of the specified agents.
 	 */
 	public boolean containsAll(Integer from, Integer to, Set<Integer> agents) {
-		if (from > to) 
-			containsAny(to, from, agents);
-		
+		if (from > to)
+			containsAll(to, from, agents);
+        byte mask = RelationMatrix.setToByte(agents);
+
 		//If there is no overlap between agents and the specified entry, return true
 		if (jaggedMatrix.containsKey(from) && 
-		    jaggedMatrix.get(from).containsKey(to))
-		    for (Integer agent : jaggedMatrix.get(from).get(to))
-		    	if (agents.contains(agent))
-		    		return false;
+		    jaggedMatrix.get(from).containsKey(to) &&
+                ((jaggedMatrix.get(from).get(to) & mask) != 0)) {
+            return false;
+        }
 		return true;
 	}
 }
