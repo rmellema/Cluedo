@@ -3,7 +3,7 @@
  * @author lauravandebraak
  */
 class AccusationStrategy extends Strategy {
-
+    //TODO: implement
     public AccusationStrategy() {
     }
     

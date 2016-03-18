@@ -9,6 +9,11 @@ class CardSet {
     
     //TODO: make this variable!
     
+    /**
+     * the cardset constructor
+     * @param one the first card
+     * @param two the second card
+     */
     public CardSet(Card one, Card two){
         this.one = one;
         this.two = two;
