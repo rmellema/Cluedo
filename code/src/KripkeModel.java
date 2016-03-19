@@ -6,12 +6,14 @@ public class KripkeModel {
 	private StateDealingMap sdMap;
 	//private Relations relations = new RelationHashMap();
 	private Relations relations = new RelationVoid(this);
+	private int agents;
 	
 	/**
 	 * @param point Point of the model
 	 * @param players Number of players
 	 */
 	public KripkeModel(Dealing point, int players) {
+        this.agents = players;
 		sdMap = new StateDealingMap(point, players);
 		//TODO: DEBUG
 		System.out.println("Total nr of states: " + sdMap.size());
@@ -69,6 +71,7 @@ public class KripkeModel {
 	 * Deep copy (except for sdMap) of the KripkeModel. To save memory some sharing magic might be useful. But maybe we can do without. At least for the first version.
 	 */
 	public KripkeModel(KripkeModel other) {
+        this.agents = other.getAgents();
 		this.states = new HashSet<Integer>(other.states); // deep copy for now
 		this.sdMap = other.sdMap; // no need for a deep copy
 		
@@ -167,4 +170,11 @@ public class KripkeModel {
         return ret;
 	}
 
+    /**
+     * Get the number of agents in this model
+     * @return The number of agents
+     */
+    public int getAgents() {
+        return agents;
+    }
 }
