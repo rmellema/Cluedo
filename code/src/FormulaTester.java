@@ -24,6 +24,9 @@ public class FormulaTester {
         print("1 knows p11", new Know(1, p11));
         print("1 knows p00", new Know(1, p00));
         print("1 knows p01", new Know(1, p01));
+        print("1 maybes p11", new Maybe(1, p11));
+        print("1 maybes p00", new Maybe(1, p00));
+        print("1 maybes p01", new Maybe(1, p01));
 
     	//TODO Test the relation query functions
     }

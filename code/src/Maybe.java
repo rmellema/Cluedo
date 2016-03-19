@@ -1,3 +1,5 @@
+import java.util.Set;
+
 /**
  * Implements the M_i operator for S5
  */
@@ -19,6 +21,12 @@ public class Maybe extends Formula {
      */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
+        Set<Integer> states = model.getReachableStates(state, this.agent);
+        for (Integer s : states) {
+            if (this.formula.evaluate(model, s)) {
+                return true;
+            }
+        }
         return false;
     }
 
