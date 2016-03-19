@@ -57,8 +57,9 @@ public class FormulaTester {
         print("Some has card 0, 0", cards);
         print("It is known", new EveryKnows(set(1, 2, 3, 4), cards));
         print("You know nothing", new EveryKnows(set(1, 2, 3, 4), p00));
-        print("Only a wise man", new ImplicitKnow(set(1, 2, 3, 4), p00));
-        print("Doesn\'t know everything", new EveryKnows(set(1, 2, 3, 4), p11));
+        print("Even a wise man", new ImplicitKnow(set(1, 2, 3, 4), p00));
+        print("Doesn\'t know all", new ImplicitKnow(set(1, 2, 3, 4), p11));
+        //print("Some has card 0, 0", new CommonKnow(set(1,2,3,4), cards));
 
     	//TODO Test the relation query functions
     }

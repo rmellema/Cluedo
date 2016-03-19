@@ -1,5 +1,4 @@
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Implements the C_g operator from S5
@@ -27,7 +26,28 @@ public class CommonKnow extends Formula {
      */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
-        return false;
+        Set<Integer> added = new HashSet<Integer>();
+        LinkedList<Integer> todo = new LinkedList<>();
+        if (!this.formula.evaluate(model, state)) {
+            return false;
+        }
+        added.add(state);
+        todo.push(state);
+        while (!todo.isEmpty()) {
+            int s = todo.pop();
+            System.out.println(s + ":\t" + todo.size());
+            Set<Integer> reachable = model.getReachableStates(s, this.agents);
+            for (Integer reach : reachable) {
+                if (!added.contains(reach)) {
+                    if (!this.formula.evaluate(model, reach)) {
+                        return false;
+                    }
+                    todo.add(reach);
+                    added.add(reach);
+                }
+            }
+        }
+        return true;
     }
 
     /**
