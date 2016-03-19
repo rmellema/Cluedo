@@ -35,7 +35,6 @@ public class CommonKnow extends Formula {
         todo.push(state);
         while (!todo.isEmpty()) {
             int s = todo.pop();
-            System.out.println(s + ":\t" + todo.size());
             Set<Integer> reachable = model.getReachableStates(s, this.agents);
             for (Integer reach : reachable) {
                 if (!added.contains(reach)) {
