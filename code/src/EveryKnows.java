@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Implements the E_g operator from S5
@@ -27,7 +28,13 @@ public class EveryKnows extends Formula {
      */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
-        return false;
+        Set<Integer> states = model.getReachableStates(state, this.agents);
+        for (Integer s : states) {
+            if (!this.formula.evaluate(model, s)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

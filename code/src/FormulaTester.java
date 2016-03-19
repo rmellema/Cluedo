@@ -1,7 +1,32 @@
+import java.util.HashSet;
+
 public class FormulaTester {
     static KripkeModel km;
+
+    public static HashSet<Integer> set(int... agents) {
+        HashSet<Integer> ret = new HashSet<>();
+        for (int agent : agents) {
+            ret.add(agent);
+        }
+        return ret;
+    }
+
     public static void print(String name, Formula test) {
-        System.out.format("%-20s%-54s|%-5s\n", name, test.toString(), test.evaluate(km));
+        String value = test.toString();
+        String holds = Boolean.toString(test.evaluate(km));
+        while (value.length() > 50) {
+            for (int i = 49; i >= 0; i--) {
+                if (value.charAt(i) == ' ') {
+                    System.out.format("%-20s | %-50s| %5s\n", name,
+                            value.substring(0, i), holds);
+                    value = value.substring(i);
+                    name = "";
+                    holds = "";
+                    break;
+                }
+            }
+        }
+        System.out.format("%-20s | %-50s| %5s\n", name, value, holds);
 
     }
 
@@ -27,6 +52,13 @@ public class FormulaTester {
         print("1 maybes p11", new Maybe(1, p11));
         print("1 maybes p00", new Maybe(1, p00));
         print("1 maybes p01", new Maybe(1, p01));
+        Card c00 = new Card(0, 0);
+        Or cards = new Or(p00, new PropVar(c00, 1), new PropVar(c00, 2), new PropVar(c00, 3), new PropVar(c00, 4));
+        print("Some has card 0, 0", cards);
+        print("It is known", new EveryKnows(set(1, 2, 3, 4), cards));
+        print("You know nothing", new EveryKnows(set(1, 2, 3, 4), p00));
+        print("Only a wise man", new ImplicitKnow(set(1, 2, 3, 4), p00));
+        print("Doesn\'t know everything", new EveryKnows(set(1, 2, 3, 4), p11));
 
     	//TODO Test the relation query functions
     }
