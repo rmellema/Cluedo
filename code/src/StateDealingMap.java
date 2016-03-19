@@ -18,8 +18,9 @@ public class StateDealingMap {
 			categorySizes[it] =	point.numberOfCards(it);
 			totalCards += point.numberOfCards(it);
 		}
-
+		// Add point to the map
         map.put(0, point);
+        // Add all other dealings to the map
 		buildMap(categorySizes, players, point, totalCards);
 	}
 
@@ -39,18 +40,21 @@ public class StateDealingMap {
 	 */
 	private void buildMap(int[] categorySizes, int players, Dealing point, int totalCards) {
 		Dealing empty = new Dealing(categorySizes);
+		//Determine possible envelope contents
 		ArrayList<Dealing> envelopeDealings = possibleEnvelopeDealings(0, empty, categorySizes);
 		
 		//TODO DEBUG
 		System.out.println("nr of envelope dealings: " + envelopeDealings.size());
 		
+		//Determine how many cards a player can maximally get
 		int cardsLeft = totalCards - categorySizes.length;
 		int maxHandSize = cardsLeft/players;
 		if (cardsLeft % players != 0) 
 			maxHandSize += 1;
 		
+		//Deal cards to each player for all possible envelope contents
 		for (Dealing envelopeDealing:envelopeDealings) {
-			mapDealings(1, envelopeDealing, players, point, maxHandSize);
+			mapDealings(1, envelopeDealing, players, point, maxHandSize, cardsLeft);
 		}
 	}
 	
@@ -62,16 +66,23 @@ public class StateDealingMap {
 	 * @return A list of all possible dealings to the envelope in which cards are only dealt to the envelope
 	 */
 	private ArrayList<Dealing> possibleEnvelopeDealings(int catNr, Dealing soFar, int[] categorySizes) {
+		
 		ArrayList<Dealing> returnDealing = new ArrayList<Dealing>();
+		// If all a card of every category has been added
 		if (catNr == categorySizes.length) {
+			//Return the full envelope 
 			returnDealing.add(soFar);
 			return returnDealing;
 		}
 		
+		//Otherwise, for every card of the current category
 		for (int it = 0; it != categorySizes[catNr]; ++it) {
+			//Put the card in the envelope
 			Dealing newDealing = soFar.dealTo(0, catNr, it);
+			//Make all combinations of cards from the next categories with this given card in the envelope
 			returnDealing.addAll(possibleEnvelopeDealings(catNr+1, newDealing, categorySizes));
 		}
+		//Return all these combinations for each card of the current category
 		return returnDealing;
 	}
 		
@@ -80,16 +91,25 @@ public class StateDealingMap {
 	 * @param envelopeDealing Dealing in which the envelope already contains its cards
 	 * @param players Number of players in the game
 	 */
-	private void mapDealings(int playerID, Dealing soFar, int players, Dealing point, int maxHandSize) {
-		if (playerID > players) {
+	private void mapDealings(int playerID, Dealing soFar, int players, Dealing point, int maxHandSize, int cardsLeft) {
+		//If all cards have been dealt
+		if (cardsLeft == 0) {
+			//Safe the dealing to the map
 			addToMap(soFar, point);
+			// and return
 			return;
 		}
 		
-		ArrayList<Dealing> newDealings = dealNCardsTo(playerID, soFar, maxHandSize);
-		
+		//Determine the number of cards that should be dealt to the current player
+		int cardsDealt = Math.min(maxHandSize,cardsLeft);
+		//Otherwise, deal as many cards as should to the next player. 
+		// Save all possible ways in which this can be done in a list
+		ArrayList<Dealing> newDealings = dealNCardsTo(playerID, soFar, cardsDealt);
+
+		// And for each possible way it can be done,
 		for (Dealing newDealing : newDealings) {
-			mapDealings(playerID+1, newDealing, players, point, maxHandSize);
+			//continue dealing cards to the next player
+			mapDealings(playerID+1, newDealing, players, point, maxHandSize, cardsLeft-cardsDealt);
 		}
 	}
 	
@@ -100,11 +120,18 @@ public class StateDealingMap {
 	 * @param n number of cards to be dealt
 	 */
 	private ArrayList<Dealing> dealNCardsTo(int playerID, Dealing soFar, int n) {
+		// This is actually a wrapper function. The real function keeps track of dealing states instead of dealings.
+		// During the dealing the dealer goes through the sorted deck. 
+		// A dealing state is specified by a dealing, and the card in the deck that the dealer is at. 
+		// The dealer starts at the -1th card (since counting starts at 0) of the 0th category.
 		ArrayList<DealingState> states = dealNCardsTo(playerID, new DealingState(soFar, new Card(0, -1)), n);
+		
+		// The dealings are retrieved from the returned dealing states 
 		ArrayList<Dealing> returnDealings = new ArrayList<Dealing>();
 		for (DealingState state : states) {
 			returnDealings.add(state.getDealing());
 		}
+		// and returned
 		return returnDealings;
 	}
 	
@@ -118,20 +145,25 @@ public class StateDealingMap {
 	 */
 	private ArrayList<DealingState> dealNCardsTo(int playerID, DealingState state, int n) {
 		if (n == 1){
+			//If only one card has to be dealt, deal the last card to the specified player
 			return dealCardTo(playerID, state);
 		}
+		//Otherwise, deal a card to the specified player
 		ArrayList<DealingState> returnDealingStates = new ArrayList<DealingState>();
 		ArrayList<DealingState> newDealingStates = dealCardTo(playerID, state);
+		//And for each way that this can be done.
 		for (DealingState dealingState : newDealingStates) {
+			// Deal the rest of the cards that need to be dealt in every possible way.
 			returnDealingStates.addAll(dealNCardsTo(playerID, dealingState, n-1));
 		}
 		return returnDealingStates;
 	}
 
 	/**
-	 * Saves a dealing to the map. If the dealing is the point, it becomes state 0.
+	 * Saves a dealing to the map. If the dealing is the point, it is ignored, since it already has been added.
 	 */
 	private void addToMap(Dealing dealing, Dealing point) {
+		// We don't want a duplicate of the point in the map. It has already been added.
 		if (point.equals(dealing)) {
 			return;
 		}

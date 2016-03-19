@@ -4,7 +4,8 @@ import java.util.Set;
 public class KripkeModel {
 	private Set<Integer> states;
 	private StateDealingMap sdMap;
-	private RelationMatrix relations = new RelationMatrix();
+	//private Relations relations = new RelationHashMap();
+	private Relations relations = new RelationVoid(this);
 	
 	/**
 	 * @param point Point of the model
@@ -19,18 +20,49 @@ public class KripkeModel {
 		for (int stateNumber = 0; stateNumber != sdMap.size(); ++stateNumber) 
 			states.add(stateNumber);
         System.out.println("Added all states: " + states.size());
+        
+        //this.publicAnnouncement(new Or(new PropVar(new Card(0, 2), 1) , new PropVar(new Card(0, 3), 1)));
+        //System.out.println("After public announcement: " + states.size() + " states left.");
+        
         for (int category = 0; category < point.categories(); category++) {
             int cards = point.numberOfCards(category);
             for (int number = 0; number < cards; number++) {
                 Card card = new Card(category, number);
                 int agent = point.player(category, number);
                 if (agent > 0) {
-                    System.out.println("Removing relations for agent " + agent);
+                    System.out.println("Giving card "+ number +" from category "+ category +" to agent " + agent);
                     this.privateAnnouncement(new PropVar(card, agent), agent);
                 }
             }
         }
+        
         System.out.println("Done making model");
+        
+        Set<Integer> allAgents = new HashSet<Integer>();
+        for (int player = 1; player <= players; ++player)
+        	allAgents.add(player);
+        	
+        Set<Integer> reachable = getReachableStates(0, allAgents);
+        Set<Integer> reachableAll = getReachableStatesForAll(0, allAgents);
+        
+        System.out.println("In the point:\n" +
+        		reachable.size() + "/" +states.size()+ " state(s) still reachable by any agent from the point.\n" +
+        		reachableAll.size() + "/" +states.size()+ " state(s) still reachable by all agents from the point.\n");
+        
+        System.out.println("Die " + reachable.size() +" klopt: Alle states waarin de kaarten die in \n" +
+        		"s0 in de envelop zitten in de envelop zitten, maar \n" +
+        		"waar de kaarten tussen de spelers voor iedere speler\n" +
+        		"anders zijn verdeeld dan in s0 vallen weg. Iedere \n" +
+        		"speler weet immers zijn/haar kaarten."); 
+        
+        
+        //for (int s = 0; s < sdMap.size(); ++s)
+        //	if (!reachable.contains(s))
+        //		sdMap.get(s).print();
+        	
+        //for (Integer s : reachableAll)
+        //	sdMap.get(s).print();
+        
 	}
 	
 	/**
@@ -39,7 +71,11 @@ public class KripkeModel {
 	public KripkeModel(KripkeModel other) {
 		this.states = new HashSet<Integer>(other.states); // deep copy for now
 		this.sdMap = other.sdMap; // no need for a deep copy
-		this.relations = new RelationMatrix(other.relations); // deep copy for now
+		
+		if (other.relations instanceof RelationHashMap) 
+			this.relations = new RelationHashMap((RelationHashMap) other.relations);
+		else if (other.relations instanceof RelationVoid)
+			this.relations = new RelationVoid((RelationVoid) other.relations);
 	}
 	
 	/**
@@ -47,10 +83,13 @@ public class KripkeModel {
 	 * @param phi Formula that is announced
 	 */
 	public void publicAnnouncement(Formula phi) {
+		Set<Integer> removeStates = new HashSet<Integer>();
 		for (Integer state : states) {
 			if (!phi.evaluate(this, state))
-				removeState(state);
+				removeStates.add(state);
 		}
+		states.removeAll(removeStates);
+		relations.removeStates(removeStates);
 	}
 	
 	/**
@@ -68,16 +107,7 @@ public class KripkeModel {
 			else
 				notHolds.add(state);
 		}
-		
-		for (Integer holdState : holds)
-			for (Integer notHoldState : notHolds)
-				relations.removeRelation(holdState, notHoldState, agent);
-	}
-	
-	
-	private void removeState(Integer state) {
-		states.remove(state);
-		relations.removeState(state);
+		relations.privateAnnouncement(phi, agent, holds, notHolds);
 	}
 	
 	/**
@@ -115,7 +145,9 @@ public class KripkeModel {
      * @return The set of states
      */
 	public Set<Integer> getReachableStates(Integer state, Integer agent) {
-		return this.getReachableStates(state, new HashSet<Integer>(agent));
+		Set<Integer> agents = new HashSet<Integer>();
+		agents.add(agent);
+		return this.getReachableStates(state, agents);
 	}
 
     /**
@@ -125,7 +157,7 @@ public class KripkeModel {
      * @param agents The agents that must all be able to reach that world
      * @return The set of states that all agents can reach from the state
      */
-	public Set<Integer> getReachableStatesForall(Integer state, Set<Integer> agents) {
+	public Set<Integer> getReachableStatesForAll(Integer state, Set<Integer> agents) {
         Set<Integer> ret = new HashSet<>();
         for (Integer s : states) {
             if (relations.containsAll(state, s, agents)) {
