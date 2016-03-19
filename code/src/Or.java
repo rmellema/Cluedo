@@ -35,6 +35,23 @@ public class Or extends Formula {
     }
 
     /**
+     * Return a string representation of this Formula
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        sb.append(this.getDisjuncts()[0]);
+        for (int i = 1; i < this.getDisjuncts().length; i++) {
+            sb.append(" | ");
+            sb.append(this.getDisjuncts()[i]);
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    /**
      * Get the disjuncts in this disjunction
      * @return The disjuncts in this disjunction
      */

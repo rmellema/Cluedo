@@ -35,6 +35,23 @@ public class And extends Formula {
     }
 
     /**
+     * Return a string representation of this Formula
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("(");
+        sb.append(this.getConjuncts()[0]);
+        for (int i = 1; i < this.getConjuncts().length; i++) {
+            sb.append(" & ");
+            sb.append(this.getConjuncts()[i]);
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    /**
      * Returns an array of the conjuncts
      * @return Conjuncts in this conjunction
      */

@@ -21,4 +21,14 @@ public class Maybe extends Formula {
     public boolean evaluate(KripkeModel model, int state) {
         return false;
     }
+
+    /**
+     * Return a string representation of this Formula
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        return "M_" + this.agent + " " + this.formula.toString();
+    }
 }

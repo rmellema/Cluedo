@@ -33,4 +33,14 @@ public class Neg extends Formula{
         }
         return this;
     }
+
+    /**
+     * Return a string representation of this Formula
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        return "!" + this.formula.toString();
+    }
 }

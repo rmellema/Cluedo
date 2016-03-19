@@ -25,4 +25,15 @@ public class PropVar extends Formula {
     public boolean evaluate(KripkeModel model, int state) {
 		return model.getDealing(state).isTrue(this);
 	}
+
+	/**
+	 * Return a string representation of this Formula
+	 *
+	 * @return String representation
+	 */
+	@Override
+	public String toString() {
+		return "p(c(" + this.getCard().getCategory() + ", " +
+                this.getCard().getNumber() + "), " + this.getPlayer() + ")";
+	}
 }

@@ -35,4 +35,10 @@ public abstract class Formula {
     public Formula simplify() {
         return this;
     }
+
+    /**
+     * Return a string representation of this Formula
+     * @return String representation
+     */
+    abstract public String toString();
 }

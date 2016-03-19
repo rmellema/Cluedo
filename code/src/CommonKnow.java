@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Implements the C_g operator from S5
@@ -27,5 +28,24 @@ public class CommonKnow extends Formula {
     @Override
     public boolean evaluate(KripkeModel model, int state) {
         return false;
+    }
+
+    /**
+     * Return a string representation of this Formula
+     *
+     * @return String representation
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("C_{");
+        Iterator<Integer> it = this.agents.iterator();
+        sb.append(it.next().toString());
+        while (it.hasNext()) {
+            sb.append(", ");
+            sb.append(it.next().toString());
+        }
+        sb.append("} ");
+        sb.append(this.formula.toString());
+        return sb.toString();
     }
 }
