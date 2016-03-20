@@ -78,6 +78,8 @@ public class FormulaTester {
                 new And(p11, p11.negate())));
         print("Private", new PrivateAnnouncement(set(1), p00,
                 new CommonKnow(set(1), p00)));
+        print("Private", new PrivateAnnouncement(set(1, 3), p00,
+                new CommonKnow(set(1, 3), p00)));
         print("Private", new PrivateAnnouncement(set(1), p00,
                 new CommonKnow(set(1, 2, 3, 4), p00)));
 

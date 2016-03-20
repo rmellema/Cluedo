@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -9,6 +10,9 @@ public class PrivateAnnouncement extends Formula {
     private Formula formula;
 
     public PrivateAnnouncement(Set<Integer> agents, Formula announcement, Formula formula) {
+        if (agents.size() < 1) {
+            throw new IllegalArgumentException("No agents in Private Announcement");
+        }
         this.agents = agents;
         this.announcement = announcement;
         this.formula = formula;
@@ -36,7 +40,14 @@ public class PrivateAnnouncement extends Formula {
      */
     @Override
     public String toString() {
-        return "<" + this.agents.toString() + ", " +
-                this.announcement.toString() + "> " + this.formula.toString();
+        if (this.agents.size() > 1) {
+            return "<" + this.agents.toString() + ", " +
+                    this.announcement.toString() + "> " + this.formula.toString();
+        } else {
+            Iterator<Integer> it = this.agents.iterator();
+            return "<" + it.next() + ", " + this.announcement.toString() + "> "
+                    + this.formula.toString();
+        }
+
     }
 }
