@@ -61,7 +61,7 @@ public class FormulaTester {
         Card c00 = new Card(0, 0);
         Or cards = new Or(p00, new PropVar(c00, 1), new PropVar(c00, 2),
                 new PropVar(c00, 3), new PropVar(c00, 4));
-        print("Some has card 0, 0", cards);
+        print("Someone has card 0, 0", cards);
         print("It is known", new EveryKnows(set(1, 2, 3, 4), cards));
         print("You know nothing", new EveryKnows(set(1, 2, 3, 4), p00));
         print("Even a wise man", new ImplicitKnow(set(1, 2, 3, 4), p00));
@@ -82,7 +82,6 @@ public class FormulaTester {
                 new CommonKnow(set(1, 3), p00)));
         print("Private", new PrivateAnnouncement(set(1), p00,
                 new CommonKnow(set(1, 2, 3, 4), p00)));
-
-    	//TODO Test the relation query functions
+        print("Only one person has a card", new Or(new Neg(p00), new Neg(p01)));
     }
 }

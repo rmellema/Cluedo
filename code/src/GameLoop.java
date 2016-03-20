@@ -10,7 +10,7 @@ public class GameLoop {
     private int         current;
     private int         round = 0;
     private PrintStream out;
-    private Agent[]     players;
+    private Player[]    players;
 
     public GameLoop(KripkeModel model, PrintStream out) {
         this.model = model;
@@ -40,7 +40,39 @@ public class GameLoop {
     }
 
     public void step() {
-        Agent agent = this.players[this.current];
+        boolean counterGiven = false;
+        Player agent = this.players[this.current];
+        CardSet accusation = agent.accuse(this.model);
+        this.out.println("Agent #" + this.current +
+                " speaks accusation " + accusation);
+        for (int next = (current + 1) % this.numPlayers;
+             next != current;
+             next = (next + 1) % this.numPlayers) {
+            Player a = this.players[next];
+            Card resp = a.response(this.model, accusation);
+            if (resp != null) {
+                counterGiven = true;
+                this.out.println("\tAgent #" + next +
+                        " has some of these cards");
+                //Do stuff
+                break;
+            } else {
+                this.out.println("\tAgent #" + next +
+                        " has none of these cards");
+            }
+        }
+        if (!counterGiven) {
+            this.out.println("None of the agents disprove the accusation");
+            //Do public announcement
+        }
+        CardSet suspicion = agent.suspect(model);
+        if (suspicion != null) {
+            //Do check if true
+        }
+        if (++this.current == this.numPlayers) {
+            this.current = 0;
+            this.round++;
+        }
     }
 
     public void run() {

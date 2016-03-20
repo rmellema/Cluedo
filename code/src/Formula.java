@@ -1,3 +1,5 @@
+import java.text.Normalizer;
+
 /**
  * Superclass for all Formulas
  */
@@ -34,6 +36,17 @@ public abstract class Formula {
      */
     public Formula simplify() {
         return this;
+    }
+
+    /**
+     * Return an implication. Since there is no implies class, this convenience
+     * method was added.
+     * @param premises The premises of the implication
+     * @param conclusion The conclusion of the implication
+     * @return The new implication
+     */
+    public static Formula implies(Formula premises, Formula conclusion) {
+        return new Or(premises.negate(), conclusion);
     }
 
     /**
