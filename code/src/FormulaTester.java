@@ -72,8 +72,14 @@ public class FormulaTester {
         System.out.println(new String(new char[80]).replace('\0', '='));
         //print("Public", new PublicAnnouncement(p00,
         //        new CommonKnow(set(1, 2, 3, 4), p00)));
-        print("Untrue announcement", new PublicAnnouncement(p01, new And(p11, p11.negate())));
-        print("True announcement", new PublicAnnouncement(p00, new And(p11, p11.negate())));
+        print("Untrue announcement", new PublicAnnouncement(p01,
+                new And(p11, p11.negate())));
+        print("True announcement", new PublicAnnouncement(p00,
+                new And(p11, p11.negate())));
+        print("Private", new PrivateAnnouncement(set(1), p00,
+                new CommonKnow(set(1), p00)));
+        print("Private", new PrivateAnnouncement(set(1), p00,
+                new CommonKnow(set(1, 2, 3, 4), p00)));
 
     	//TODO Test the relation query functions
     }
