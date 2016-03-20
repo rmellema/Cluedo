@@ -44,15 +44,6 @@ public class ImplicitKnow extends Formula {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("I_{");
-        Iterator<Integer> it = this.agents.iterator();
-        sb.append(it.next().toString());
-        while (it.hasNext()) {
-            sb.append(", ");
-            sb.append(it.next().toString());
-        }
-        sb.append("} ");
-        sb.append(this.formula.toString());
-        return sb.toString();
+        return "I_" + agents.toString() + " " + this.formula.toString();
     }
 }

@@ -23,7 +23,13 @@ public class PropVar extends Formula {
 
 	@Override
     public boolean evaluate(KripkeModel model, int state) {
-		return model.getDealing(state).isTrue(this);
+		try {
+            return model.getDealing(state).isTrue(this);
+        } catch (NullPointerException ex) {
+            System.err.println("Trying to evaluate " + this.toString() +
+                    " in state " + state + " which does not exist");
+            return false;
+        }
 	}
 
 	/**

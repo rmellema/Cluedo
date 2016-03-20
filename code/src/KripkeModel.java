@@ -121,7 +121,14 @@ public class KripkeModel {
 	}
 
 	public Dealing getDealing(int state) {
-        return sdMap.getValuation(state);
+		if (this.states.contains(state))
+            return sdMap.getValuation(state);
+        else
+            return null;
+    }
+
+    public boolean hasState(int state) {
+        return this.states.contains(state);
     }
 
 	/**
