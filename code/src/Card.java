@@ -41,4 +41,18 @@ public class Card {
 	public String toString() {
         return "c(" + this.category + ", " + this.number + ")";
     }
+
+    /**
+     * Check if this objects is equal to another object
+     * @param o The object to compare to
+     * @return `true` if the objects are equal, `false` otherwise
+     */
+    public boolean equals(Object o) {
+        if (o instanceof Card) {
+            Card other = (Card)o;
+            return this.getCategory() == other.getCategory() &&
+                    this.getNumber() == other.getNumber();
+        }
+        return false;
+    }
 }

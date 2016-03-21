@@ -37,6 +37,20 @@ class CardSet {
     }
 
     /**
+     * Check if this CardSet contains a specific card
+     * @param card The card to look for
+     * @return `true` if `card` is in this set, `false` otherwise
+     */
+    public boolean contains(Card card) {
+        for (Card c : this.cards) {
+            if (c.equals(card)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get the cards in this CardSet
      * @return Cards in the CardSet
      */
