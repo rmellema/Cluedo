@@ -14,10 +14,10 @@ public class FormulaTester {
     public static void print(String name, Formula test) {
         String value = test.toString();
         String holds = Boolean.toString(test.evaluate(km));
-        while (value.length() > 50) {
-            for (int i = 49; i >= 0; i--) {
+        while (value.length() > 40) {
+            for (int i = 39; i >= 0; i--) {
                 if (value.charAt(i) == ' ') {
-                    System.out.format("%-20s [ %-50s] %5s\n", name,
+                    System.out.format("%-30s # %-40s# %5s\n", name,
                             value.substring(0, i), holds);
                     value = value.substring(i);
                     name = "";
@@ -26,7 +26,7 @@ public class FormulaTester {
                 }
             }
         }
-        System.out.format("%-20s [ %-50s] %5s\n", name, value, holds);
+        System.out.format("%-30s # %-40s# %5s\n", name, value, holds);
     }
 
     public static void init(int[][] array) {
@@ -59,15 +59,29 @@ public class FormulaTester {
         print("1 maybes p01", new Maybe(1, p01));
         System.out.println(new String(new char[80]).replace('\0', '='));
         Card c00 = new Card(0, 0);
-        Or cards = new Or(p00, new PropVar(c00, 1), new PropVar(c00, 2), new PropVar(c00, 3), new PropVar(c00, 4));
-        print("Some has card 0, 0", cards);
+        Or cards = new Or(p00, new PropVar(c00, 1), new PropVar(c00, 2),
+                new PropVar(c00, 3), new PropVar(c00, 4));
+        print("Someone has card 0, 0", cards);
         print("It is known", new EveryKnows(set(1, 2, 3, 4), cards));
         print("You know nothing", new EveryKnows(set(1, 2, 3, 4), p00));
         print("Even a wise man", new ImplicitKnow(set(1, 2, 3, 4), p00));
         print("Doesn\'t know all", new ImplicitKnow(set(1, 2, 3, 4), p11));
         // Uncomment, run, and go watch a movie. It takes about that long
         //print("Some has card 0, 0", new CommonKnow(set(1,2,3,4), cards));
-
-    	//TODO Test the relation query functions
+        print("The envelope is secret", new CommonKnow(set(1, 2, 3, 4), p00));
+        System.out.println(new String(new char[80]).replace('\0', '='));
+        //print("Public", new PublicAnnouncement(p00,
+        //        new CommonKnow(set(1, 2, 3, 4), p00)));
+        print("Untrue announcement", new PublicAnnouncement(p01,
+                new And(p11, p11.negate())));
+        print("True announcement", new PublicAnnouncement(p00,
+                new And(p11, p11.negate())));
+        print("Private", new PrivateAnnouncement(set(1), p00,
+                new CommonKnow(set(1), p00)));
+        print("Private", new PrivateAnnouncement(set(1, 3), p00,
+                new CommonKnow(set(1, 3), p00)));
+        print("Private", new PrivateAnnouncement(set(1), p00,
+                new CommonKnow(set(1, 2, 3, 4), p00)));
+        print("Only one person has a card", new Or(new Neg(p00), new Neg(p01)));
     }
 }

@@ -18,4 +18,8 @@ class CardSet {
         this.one = one;
         this.two = two;
     }
+
+    public String toString() {
+        return "[" + one.toString() + ", " + two.toString() + "]";
+    }
 }

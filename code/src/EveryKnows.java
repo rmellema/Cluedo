@@ -6,7 +6,7 @@ import java.util.Set;
  * Implements the E_g operator from S5
  */
 public class EveryKnows extends Formula {
-    private HashSet<Integer> agents;
+    private Set<Integer> agents;
     private Formula formula;
 
     /**
@@ -14,7 +14,7 @@ public class EveryKnows extends Formula {
      * @param agents The agents in the group
      * @param formula The formula which they all should know
      */
-    public EveryKnows(HashSet<Integer> agents, Formula formula) {
+    public EveryKnows(Set<Integer> agents, Formula formula) {
         this.agents = agents;
         this.formula = formula;
     }
@@ -44,15 +44,6 @@ public class EveryKnows extends Formula {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("E_{");
-        Iterator<Integer> it = this.agents.iterator();
-        sb.append(it.next().toString());
-        while (it.hasNext()) {
-            sb.append(", ");
-            sb.append(it.next().toString());
-        }
-        sb.append("} ");
-        sb.append(this.formula.toString());
-        return sb.toString();
+        return "E_" + agents.toString() + " " + this.formula.toString();
     }
 }
