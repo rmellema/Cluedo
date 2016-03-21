@@ -16,7 +16,7 @@ public class Dealing {
 	private int[][] dealing; 
 	
 	/**
-	 * @param dealing List of categories with in each category a number of cards (indices) that are in the hands of a specific player (value) e.g. [1][2] = 3 means  player 3 has the second card of category 1.
+	 * @param dealing List of getCategories with in each category a number of cards (indices) that are in the hands of a specific player (value) e.g. [1][2] = 3 means  player 3 has the second card of category 1.
 	 */
 	public Dealing(int[][] dealing) {
 		//Make a deep copy of the dealing
@@ -47,7 +47,7 @@ public class Dealing {
 	/**
 	 * @return number of categories (e.g. weapon) in the valuation
 	 */
-	public int categories() {
+	public int getCategories() {
 		return dealing.length;
 	}
 	
@@ -60,9 +60,9 @@ public class Dealing {
 		return dealing[category].length;
 	}
 
-    public int player(int category, int card) {
-        return dealing[category][card];
-    }
+        public int player(int category, int card) {
+            return dealing[category][card];
+        }
 	
 	/**
 	 * @return Whether the propositional variable is true in this valuation

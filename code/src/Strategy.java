@@ -7,22 +7,42 @@ import java.util.Random;
 */
 
 
-public abstract class Strategy {
+public class Strategy {
     /**
      * strategy for accusations
      * @param model the current KripkeModel
      * @return the accusation to be made
      */
-    CardSet aStrategy(KripkeModel model) {
+    CardSet aStrategy(KripkeModel model, int agent) {
+        //TODO: veilig maken
+        int c = 0, n = 0, found = 0, number = 0;
+        int cat = model.point().getCategories();
+        Card[] cards = new Card[cat];
+    
         
-        return new CardSet(new Card(0,1), new Card(1,1));
+        for (c=0; c < cat; c++){
+            number = model.point().numberOfCards(cat);
+            for (n=0; n < number; n++){
+                Card test = new Card(cat, n);
+                if(new Know(agent, new PropVar(test, 0)).evaluate(model)){
+                    found++;
+                    cards[c] = test;
+                }
+            }
+        }
+        if(found == cat){
+            return new CardSet(cards);
+        }
+        
+        return null;
+        
     }
     /**
      * strategy for suspicions
      * @param model the current KripkeModel
      * @return the CardSet suspicion (or null if none is made)
      */
-    CardSet sStrategy(KripkeModel model) {
+    CardSet sStrategy(KripkeModel model, int number) {
         
         return new CardSet(new Card(0,1), new Card(1,1));
     }

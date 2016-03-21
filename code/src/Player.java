@@ -11,19 +11,22 @@ public class Player {
 
         //TODO: make this variable
         private CardSet hand;
+        private int number;
 
         /**
          * Constructor for Player class
          * @param one the first card in the player's hand
          * @param two the first card in the player's hand
          */
-	public Player(Card one, Card two){
+	public Player(Card one, Card two, int number){
             this.hand = new CardSet(one, two);
+            this.number = number;
 	}
 
-    public Player(CardSet hand) {
-        this.hand = hand;
-    }
+        public Player(CardSet hand, int number) {
+            this.hand = hand;
+            this.number = number;
+        }
         
         /**
          * the accusation function, determines an accusation
@@ -31,7 +34,7 @@ public class Player {
          * @return the accusation made
          */
         public CardSet accuse(KripkeModel model){
-            return accusation.aStrategy(model);
+            return accusation.aStrategy(model, number);
         }
         
         /**
@@ -50,7 +53,7 @@ public class Player {
          * @return the suspicion to be made (if any, otherwise null)
          */
         public CardSet suspect(KripkeModel model){
-            return suspicion.sStrategy(model);
+            return suspicion.sStrategy(model, number);
         }
         
 }

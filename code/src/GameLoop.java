@@ -84,7 +84,7 @@ public class GameLoop {
         for (int i = 0; i < players; i++) {
             dealing.add(i, new ArrayList<>());
         }
-        for (int i = 0; i < deal.categories(); i ++) {
+        for (int i = 0; i < deal.getCategories(); i ++) {
             for (int j = 0; j < deal.numberOfCards(i); j++) {
                 if (deal.player(i, j) > 0)
                     dealing.get(deal.player(i, j) - 1).add(new Card(i, j));
@@ -93,7 +93,7 @@ public class GameLoop {
         for (int i = 0; i < players; i++) {
             this.players[i] = new Player(new
                     CardSet(dealing.get(i).toArray(new
-                    Card[dealing.get(i).size()])));
+                    Card[dealing.get(i).size()])),i);
         }
     }
 
@@ -187,7 +187,9 @@ public class GameLoop {
     public void step() {
         Player agent = this.players[this.current];
         CardSet accusation = agent.accuse(this.model);
-        checkAccusation(accusation);
+        if (accusation != null){
+            checkAccusation(accusation);
+        }
         checkSuspicion(agent.suspect(model));
         if (++this.current == this.numPlayers) {
             this.current = 0;

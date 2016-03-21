@@ -26,7 +26,7 @@ public class KripkeModel {
         //this.publicAnnouncement(new Or(new PropVar(new Card(0, 2), 1) , new PropVar(new Card(0, 3), 1)));
         //System.out.println("After public announcement: " + states.size() + " states left.");
         
-        for (int category = 0; category < point.categories(); category++) {
+        for (int category = 0; category < point.getCategories(); category++) {
             int cards = point.numberOfCards(category);
             for (int number = 0; number < cards; number++) {
                 Card card = new Card(category, number);

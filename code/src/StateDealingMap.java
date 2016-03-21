@@ -11,10 +11,10 @@ public class StateDealingMap {
 	
 	public StateDealingMap(Dealing point, int players) {
 		// Determine category sizes
-		int[] categorySizes = new int[point.categories()];
+		int[] categorySizes = new int[point.getCategories()];
 		int totalCards = 0;
 				
-		for (int it = 0; it != point.categories(); ++it){
+		for (int it = 0; it != point.getCategories(); ++it){
 			categorySizes[it] =	point.numberOfCards(it);
 			totalCards += point.numberOfCards(it);
 		}
@@ -34,7 +34,7 @@ public class StateDealingMap {
 
 	/**
 	 * Builds the Hashmap
-	 * @param categorySizes List of sizes of card categories
+	 * @param categorySizes List of sizes of card getCategories
 	 * @param players Number of players in the game
 	 * @param point Point of pointed model
 	 */
@@ -62,7 +62,7 @@ public class StateDealingMap {
 	 * 
 	 * @param catNr Current category number
 	 * @param soFar Dealing to the envelope so far
-	 * @param categorySizes List of sizes of card categories
+	 * @param categorySizes List of sizes of card getCategories
 	 * @return A list of all possible dealings to the envelope in which cards are only dealt to the envelope
 	 */
 	private ArrayList<Dealing> possibleEnvelopeDealings(int catNr, Dealing soFar, int[] categorySizes) {
@@ -79,7 +79,7 @@ public class StateDealingMap {
 		for (int it = 0; it != categorySizes[catNr]; ++it) {
 			//Put the card in the envelope
 			Dealing newDealing = soFar.dealTo(0, catNr, it);
-			//Make all combinations of cards from the next categories with this given card in the envelope
+			//Make all combinations of cards from the next getCategories with this given card in the envelope
 			returnDealing.addAll(possibleEnvelopeDealings(catNr+1, newDealing, categorySizes));
 		}
 		//Return all these combinations for each card of the current category
@@ -175,8 +175,8 @@ public class StateDealingMap {
 	 */
 	private ArrayList<DealingState> dealCardTo(int playerID, DealingState state) {
 		ArrayList<DealingState> returnDealingStates = new ArrayList<DealingState>();
-		//For all categories including the current one
-		for (int cat = state.getPrevious().getCategory(); cat != state.getDealing().categories(); ++cat) {
+		//For all getCategories including the current one
+		for (int cat = state.getPrevious().getCategory(); cat != state.getDealing().getCategories(); ++cat) {
 			int cardNr = 0;
 			//For all cards further in the deck
 			if (cat == state.getPrevious().getCategory())
