@@ -47,17 +47,19 @@ public class GameLoop {
     private void initPlayers(Dealing deal, int players) {
         this.players = new Player[players];
         ArrayList<ArrayList<Card>> dealing = new ArrayList<ArrayList<Card>>();
-        for (int i = 0; i< players; i++) {
+        for (int i = 0; i < players; i++) {
             dealing.add(i, new ArrayList<>());
         }
         for (int i = 0; i < deal.categories(); i ++) {
             for (int j = 0; j < deal.numberOfCards(i); j++) {
-                dealing.get(deal.player(i, j)).add(new Card(i, j));
+                if (deal.player(i, j) > 0)
+                    dealing.get(deal.player(i, j) - 1).add(new Card(i, j));
             }
         }
         for (int i = 0; i < players; i++) {
             this.players[i] = new Player(new
-                    CardSet((Card[])dealing.get(i).toArray()));
+                    CardSet(dealing.get(i).toArray(new
+                    Card[dealing.get(i).size()])));
         }
     }
 

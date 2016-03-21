@@ -12,7 +12,7 @@ public abstract class Strategy {
      */
     CardSet aStrategy(KripkeModel model) {
         
-        return new CardSet(new Card(1,1), new Card(2,1));
+        return new CardSet(new Card(0,1), new Card(1,1));
     }
     /**
      * strategy for suspicions
@@ -21,7 +21,7 @@ public abstract class Strategy {
      */
     CardSet sStrategy(KripkeModel model) {
         
-        return new CardSet(new Card(1,1), new Card(2,1));
+        return new CardSet(new Card(0,1), new Card(1,1));
     }
     
     /**

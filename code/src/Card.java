@@ -20,4 +20,8 @@ public class Card {
 	public int getNumber() {
 		return number;
 	}
+
+	public String toString() {
+        return "c(" + this.category + ", " + this.number + ")";
+    }
 }
