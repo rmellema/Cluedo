@@ -42,9 +42,26 @@ public class Strategy {
      * @param model the current KripkeModel
      * @return the CardSet suspicion (or null if none is made)
      */
-    CardSet sStrategy(KripkeModel model, int number) {
+    CardSet sStrategy(KripkeModel model, int agent) {
         
-        return new CardSet(new Card(0,1), new Card(1,1));
+        int c = 0, number = 0, r = -1, s = 0;
+        int cat = model.point().getCategories();
+        Card[] cards = new Card[cat];
+        Random rand = new Random();
+        
+        for (c=0; c < cat; c++){
+            number = model.point().numberOfCards(c);
+            
+            r = rand.nextInt(number);
+            while(s == 0){
+                Card test = new Card(c, r);
+                if(new Neg(new Know(agent, new PropVar(test, 0))).evaluate(model)){
+                    cards[c] = test;
+                    s = 1;
+                }
+            }
+        }
+        return new CardSet(cards);
     }
     
     /**
