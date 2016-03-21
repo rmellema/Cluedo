@@ -31,13 +31,37 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+        For this project, we implemented a dynamic epistemic modelling tool for
+        a simplified version of Cluedo. This tool is able to check formulas 
+        from Public Announcemnet Logic in a specific Kripke model, which is
+        built specifically for Cluedo. This tool can be used to analyse specific
+        situations and strategies in Cluedo.
+
+        <h2>Simplification</h2>
+        Because implementing the full scope of Cluedo would be too complex to
+        check formulas in a reasonable amount of time, we decided to simplify
+        our version of Cluedo to a game with only six weapons, four persons,
+        and no rooms. This means that there are only four agents (players) who
+        have two cards each. Because we use two categories, there are only two
+        cards in the envelope, instead of the usual three. Since we are only
+        interested in the reasoning within this game and movement has little
+        influence on this, we left it out of our implementation.
+
+        <h2>Private Announcements</h2>
+        Since Cluedo also uses private announcements beside public
+        announcements, we also had to implement those. We implemented private
+        announcements as the removal of relations for an agent between states
+        if those states have different truth values for the announcement and
+        the announcement is made to that agent. We have a proof that this method 
+        gives us the correct knowledge change <a href="./proof.pdf">here</a>.
+
         <h2>KripkeModel</h2>
         <p>This class describes a pointed Kripke model. In this model,  states,
         valuations of the states, the number of agents and the relations
         between states for every agent is saved. The Kripke model can be deep
         copied to make agents able to reason about private and public
         announcements.</p>
-        
+
         <h4>States and their valuations</h4> <p>The possible states are saved
         as a set of integers. These integers are mapped to Dealings. A dealing
         describes which cards are dealt to what player and which cards are in
@@ -45,7 +69,7 @@
         valuation of a state. The KripkeModel class has a method getDealing
         that can be used to obtain the Dealing (valuation) for a specific
         state. This method can be used to evaluate formulas. </p>
-        
+
         <h4>Generating the states</h4> <p>When the Kripke model is initialized,
         the possible card dealings are used to construct the possible states.
         During this process, state numbers are mapped to their dealings. The
@@ -82,7 +106,7 @@
         can be used to evaluate formulas about knowledge and implicit knowledge
         of (groups of) agents.</p>
 
-        
+
         <h2>Dealing </h2>
         <p>A Dealing contains the information about which cards are held by
         whom and which cards are in the envelope. This information is
@@ -92,7 +116,7 @@
         entries in the array specify the number of the agent that is holding
         the card. An entry of 0 means that the card is in the envelope. An
         entry of -1 means that the specified card has not yet been dealt.</p>
-    
+
         <h4>Evaluating propositional variables</h4>
         <p>A propositional variable specifies a card and the player that holds
         it. Propositional variables can be easily evaluated in a dealing by
@@ -184,7 +208,7 @@
       </footer>
     </div>
 
-    
+
 
   </body>
 </html>
