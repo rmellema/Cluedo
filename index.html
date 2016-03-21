@@ -212,8 +212,10 @@
         <p>At the end of their turn, a player is asked if they want to make a suspicion. If, for all categories, they know which card is in the envelope, they return that as a suspicion. Otherwise, they return <code>null</code>.</p>
 
         <h1>Possible Strategies</h1>
+        <p>These are some extra strategies we thought were possible strategies in Cluedo.</p>
 
         <h3>Suspicion Strateies</h3>
+        <p>The possible strategies for making a suspicion.</p>
 
         <h4>Random</h4>
         <p>A completely random strategy: choose any cards, and query them.</p>
@@ -228,14 +230,19 @@
         <h3>Response Strategies</h3>
 
         <h4>Random</h4>
+        <p>This is currently implemented. When requested to respond, a player will choose a card at random of the cards thy have of the query, and show that to the requesting player.</p>
 
         <h4>Clever Random</h4>
+        <p>Almost the same as the above strategy, with the addition that if the responding player has already shown one of the cards to that player, it will do so again. This gives less information to the other players.</p>
 
         <h4>Optimal</h4>
+        <p>Added on to what was described at 'Clever Random', the agent also looks at possible consequences to see which possible action of theirs will give the least information to the other player.</p>
 
-        <h4>Sweet Grandma</h4>
+        <h4>Sweet Grandparent</h4>
+        <p>Similar to 'Clever Random', but instead of choosing the card which gives the least information, it will chose the one that gives more information. This is not a rational strategy, but one that could by played by a grandparent who does not want to let their grandchild lose too often.</p>
 
-        <h4>Clever Grandma</h4>
+        <h4>Clever Grandparent</h4>
+        <p>Similar to 'Optimal', but with the same alteration as 'Sweet Grandparent': instead of choosing the action that gives the least amount of information, do the exact opposite. Similarly to 'Sweet Grandparent', this is not an optimal strategy.</p>
 
         <h3>Accusation Strategies</h3>
 
@@ -243,7 +250,7 @@
 
         <h4>Risky Player</h4>
 
-        <h4>Grandma</h4>
+        <h4>Grandparent</h4>
 
         <h1>Results</h1>
         <p>As we do not have any complex strategies implemented, and only one strategy of each yet, we cannot give any results. </p>
