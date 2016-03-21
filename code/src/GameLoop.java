@@ -192,7 +192,7 @@ public class GameLoop {
         if (++this.current == this.numPlayers) {
             this.current = 0;
             this.round++;
-            System.out.println("# Round " + this.round);
+            this.out.println("# Round " + this.round);
         }
     }
 
@@ -210,6 +210,7 @@ public class GameLoop {
      * Play the game until someone wins
      */
     public void game() {
+        this.out.println("# Round " + this.round);
         while (!this.done) {
             step();
         }
