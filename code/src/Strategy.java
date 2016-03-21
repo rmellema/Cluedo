@@ -21,9 +21,9 @@ public class Strategy {
     
         
         for (c=0; c < cat; c++){
-            number = model.point().numberOfCards(cat);
+            number = model.point().numberOfCards(c);
             for (n=0; n < number; n++){
-                Card test = new Card(cat, n);
+                Card test = new Card(c, n);
                 if(new Know(agent, new PropVar(test, 0)).evaluate(model)){
                     found++;
                     cards[c] = test;
@@ -78,6 +78,8 @@ public class Strategy {
                     return hand.getCard(f);
                 }
             }
+        } else if (counter == 0) {
+            return null;
         }
         
         // If a player has more than one of the cards queried, return a random card
