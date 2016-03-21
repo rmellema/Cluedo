@@ -59,6 +59,28 @@
         <h4>Evaluating propositional variables</h4>
         <p>A propositional variable specifies a card and the player that holds it. Propositional variables can be easily evaluated in a dealing by checking whether the card is held by the player that the propositional variable specifies.</p>
 
+        <h2 id="evaluation-of-formulas">Evaluation of Formulas</h2>
+        <p>For the evaluation of formulas, we decided to create a Formula class that could be subclassed to implement the specific operators for Epistemic Dynamic Logic. This class also has other convenience methods like <code>negate</code> and <code>simplify</code> that can be used to speed up evaluation. Because of the way that the model is constructed, a lot of the semantics of PAL can be translated to our system in a natural way. Now, we will go over the implementation of the operators.</p>
+        <h3 id="propositional-variable-propvar">Propositional Variable (<code>PropVar</code>)</h3>
+        <p>In order to evaluate a propositional variable in a given state, we can simply look up the valuation for that state and see if that propositional variable is true given that valuation.</p>
+        <h3 id="negation-neg">Negation (<code>Neg</code>)</h3>
+        <p>In order to evaluate the negation of a formula, we evaluate the formula and take the boolean not of that value.</p>
+        <h3 id="conjunction-and">Conjunction (<code>And</code>)</h3>
+        <p>In order to evaluate a conjunction, we evaluate all of the conjuncts. If one of them is false, the whole conjunction is false. If all of them are true, the conjunction is true.</p>
+        <h3 id="disjunction-or">Disjunction (<code>Or</code>)</h3>
+        <p>In order to evaluate a disjunction, we evaluate the disjuncts. If one of them is true, the disjunction is true. If none of them are true, the disjunction is false.</p>
+        <h3 id="knowledge-know">Knowledge (<code>Know</code>)</h3>
+        <p>To evaluate the knowledge operator in a state in a model, we first get all the relations from that state for the agent that is tied to the knowledge operator. Then we evaluate the formula that the operator works over in all those states. If it holds in all those states, the knowledge operator holds. If it fails in one state, the operator returns <code>false</code>.</p>
+        <h3 id="considers-maybe">Considers (<code>Maybe</code>)</h3>
+        <p>To evaluate the M operator in a state in a model, we first get all the relations from that state for the agent that is tied to the operator. Then we evaluate the formula that the operator works over in all those states. If it holds in one of those states, the operator returns true. If the formula holds in none of the states, it returns false.</p>
+        <h3 id="general-knowledge-everyknows">General Knowledge (<code>EveryKnows</code>)</h3>
+        <p>To evaluate general knowledge in a state in a model, we first get all the states that are reachable in one step for any of the agents in the group. Then we evaluate the formula that the operator works over in all those states and return <code>true</code> if it holds in all those states. If it does not hold in one of those states we return <code>false</code>.</p>
+        <h3 id="implicit-knowledge-implicitknow">Implicit Knowledge (<code>ImplicitKnow</code>)</h3>
+        <p>To evaluate implicit knowledge in a state in a model, we first get all the states that are reachable in one step for all the agents in the group. Then we evaluate the formula that the operator works over in all those states and return <code>true</code> if it holds in all those states. If it does not hold in one of those states we return <code>false</code>.</p>
+        <h3 id="common-knowledge-commonknow">Common Knowledge (<code>CommonKnow</code>)</h3>
+        <p>To evaluate common knowledge in a state in a model, we first get all the states that are reachable in one step for any the agents in the group. Then we evaluate the formula that the operator works over in all those states and get all of the states that any of the agents can reach from those states in one step, making sure that no state is evaluated twice. This is repeated until we have processed all states that are reachable. We return <code>true</code> if it holds in all reachable states. If it does not hold in one of those states we return <code>false</code>.</p>
+
+
       </section>
     </div>
 
