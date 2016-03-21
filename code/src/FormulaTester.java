@@ -54,6 +54,9 @@ public class FormulaTester {
         print("1 knows p11", new Know(1, p11));
         print("1 knows p00", new Know(1, p00));
         print("1 knows p01", new Know(1, p01));
+        print("1 knows not p10", new Know(1, new Neg(new PropVar(new Card(0, 1), 0))));
+        print("1 knows not p10", new Neg(new Know(1, new PropVar(new Card(0, 1), 0))));
+        print("1 knows not p10", new Maybe(1, new PropVar(new Card(0, 1), 0)));
         print("1 maybes p11", new Maybe(1, p11));
         print("1 maybes p00", new Maybe(1, p00));
         print("1 maybes p01", new Maybe(1, p01));
@@ -72,16 +75,16 @@ public class FormulaTester {
         System.out.println(new String(new char[80]).replace('\0', '='));
         //print("Public", new PublicAnnouncement(p00,
         //        new CommonKnow(set(1, 2, 3, 4), p00)));
-        print("Untrue announcement", new PublicAnnouncement(p01,
-                new And(p11, p11.negate())));
-        print("True announcement", new PublicAnnouncement(p00,
-                new And(p11, p11.negate())));
-        print("Private", new PrivateAnnouncement(set(1), p00,
-                new CommonKnow(set(1), p00)));
-        print("Private", new PrivateAnnouncement(set(1, 3), p00,
-                new CommonKnow(set(1, 3), p00)));
-        print("Private", new PrivateAnnouncement(set(1), p00,
-                new CommonKnow(set(1, 2, 3, 4), p00)));
-        print("Only one person has a card", new Or(new Neg(p00), new Neg(p01)));
+//        print("Untrue announcement", new PublicAnnouncement(p01,
+//                new And(p11, p11.negate())));
+//        print("True announcement", new PublicAnnouncement(p00,
+//                new And(p11, p11.negate())));
+//        print("Private", new PrivateAnnouncement(set(1), p00,
+//                new CommonKnow(set(1), p00)));
+//        print("Private", new PrivateAnnouncement(set(1, 3), p00,
+//                new CommonKnow(set(1, 3), p00)));
+//        print("Private", new PrivateAnnouncement(set(1), p00,
+//                new CommonKnow(set(1, 2, 3, 4), p00)));
+//        print("Only one person has a card", new Or(new Neg(p00), new Neg(p01)));
     }
 }
