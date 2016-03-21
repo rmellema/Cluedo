@@ -21,6 +21,7 @@ public class GameLoop {
         this.numPlayers = model.getAgents();
         this.current = 1;
         this.out = out;
+        this.initPlayers(model.point(), model.getAgents());
     }
 
     public GameLoop(KripkeModel model) {
@@ -41,6 +42,23 @@ public class GameLoop {
 
     public GameLoop() {
         this(System.out);
+    }
+
+    private void initPlayers(Dealing deal, int players) {
+        this.players = new Player[players];
+        ArrayList<ArrayList<Card>> dealing = new ArrayList<ArrayList<Card>>();
+        for (int i = 0; i< players; i++) {
+            dealing.add(i, new ArrayList<>());
+        }
+        for (int i = 0; i < deal.categories(); i ++) {
+            for (int j = 0; j < deal.numberOfCards(i); j++) {
+                dealing.get(deal.player(i, j)).add(new Card(i, j));
+            }
+        }
+        for (int i = 0; i < players; i++) {
+            this.players[i] = new Player(new
+                    CardSet((Card[])dealing.get(i).toArray()));
+        }
     }
 
     public Set<Integer> set(int... agents) {

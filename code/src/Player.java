@@ -20,6 +20,10 @@ public class Player {
 	public Player(Card one, Card two){
             this.hand = new CardSet(one, two);
 	}
+
+    public Player(CardSet hand) {
+        this.hand = hand;
+    }
         
         /**
          * the accusation function, determines an accusation
