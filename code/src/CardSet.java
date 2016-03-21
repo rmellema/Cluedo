@@ -3,23 +3,42 @@
  * @author lauravandebraak
  */
 class CardSet {
-    private Card one;
-    private Card two;
-    
-    
+    private Card[] cards;
+
     //TODO: make this variable!
     
     /**
      * the cardset constructor
-     * @param one the first card
-     * @param two the second card
+     * @param cards the cards in this CardSet
      */
-    public CardSet(Card one, Card two){
-        this.one = one;
-        this.two = two;
+    public CardSet(Card... cards){
+        this.cards = cards;
     }
 
     public String toString() {
-        return "[" + one.toString() + ", " + two.toString() + "]";
+        StringBuilder sb = new StringBuilder("[");
+        sb.append(this.cards[0]);
+        for (int i = 1; i < this.cards.length; i++) {
+            sb.append(", ");
+            sb.append(this.cards[i]);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
+     * Get the number of cards in this CardSet
+     * @return Number of cards in CardSet
+     */
+    public int size() {
+        return this.cards.length;
+    }
+
+    /**
+     * Get the cards in this CardSet
+     * @return Cards in the CardSet
+     */
+    public Card[] getCards() {
+        return this.cards;
     }
 }
