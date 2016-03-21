@@ -31,7 +31,34 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+        <h2>KripkeModel</h2>
+        <p>This class describes a pointed Kripke model. In this model,  states, valuations of the states, the number of agents and the relations between states for every agent is saved. The Kripke model can be deep copied to make agents able to reason about private and public announcements.</p>
         
+        <h4>States and their valuations</h4>
+        <p>The possible states are saved as a set of integers. These integers are mapped to Dealings. A dealing describes which cards are dealt to what player and which cards are in the envelope for a specific state. A dealing can thus be seen as a valuation of a state. The KripkeModel class has a method getDealing that can be used to obtain the Dealing (valuation) for a specific state. This method can be used to evaluate formulas. </p>
+        
+        <h4>Generating the states</h4>
+        <p>When the Kripke model is initialized, the possible card dealings are used to construct the possible states. During this process, state numbers are mapped to their dealings. The real dealing is saved as the point of the model.</p>
+
+        <h4>Public announcements</h4>
+        <p>The public announcements done during a game are only announcements of propositional formulas. Whenever a public announcement is done, states where the announced formula does not hold are removed from the Kripke model. Also all relations to or from these states are removed.</p>
+
+        <h4>Private announcements</h4>
+        <p>Whenever a private announcement is done to a specific agent, all relations of that agent between a state where the announced formula holds and a state where the announced formula does not hold are removed. We have proven that doing this indeed causes the effect of a private announcement in cluedo. </p>
+
+        <h4>Relations between states</h4>
+        <p>The relations in the Kripke model are not saved explicitly and when a private announcement is done, they are not removed explicitly either. Instead, all private announcements done during the game are stored per agent. Whenever it is needed to check whether a relation between two states is there for a specific agent, every formula privately announced to that agent is evaluated in both states. Only if the valuation of every formula is the same in both states, the relation is still there. We did not store relations or removed relations explicitly, because this caused our program to run out of memory quickly.</p>
+
+        <h4>Relation querying</h4>
+        <p>The Kripke model has methods available that return the states that are reachable in one step by any or all specified agents. These methods can be used to evaluate formulas about knowledge and implicit knowledge of (groups of) agents.</p>
+
+        
+        <h2>Dealing </h2>
+        <p>A Dealing contains the information about which cards are held by whom and which cards are in the envelope. This information is represented as a 2D ragged array. The first index specifies the category of the card (e.g. 0th category means weapon) and the second index specifies the card number (e.g. 4th weapon means lead pipe). The entries in the array specify the number of the agent that is holding the card. An entry of 0 means that the card is in the envelope. An entry of -1 means that the specified card has not yet been dealt.</p>
+    
+        <h4>Evaluating propositional variables</h4>
+        <p>A propositional variable specifies a card and the player that holds it. Propositional variables can be easily evaluated in a state.</p>
+
       </section>
     </div>
 
