@@ -57,4 +57,12 @@ class CardSet {
     public Card[] getCards() {
         return this.cards;
     }
+    
+    /**
+     * Get the cards in this CardSet
+     * @return Cards in the CardSet
+     */
+    public Card getCard(int i) {
+        return this.cards[i];
+    }
 }
