@@ -5,7 +5,7 @@ import java.util.Set;
  * Implements the I_g operator from S5
  */
 public class ImplicitKnow extends Formula {
-    private HashSet<Integer> agents;
+    private Set<Integer> agents;
     private Formula formula;
 
     /**
@@ -13,7 +13,7 @@ public class ImplicitKnow extends Formula {
      * @param agents The agents in the group
      * @param formula The formula which we want to test for implicit knowledge
      */
-    public ImplicitKnow(HashSet<Integer> agents, Formula formula) {
+    public ImplicitKnow(Set<Integer> agents, Formula formula) {
         this.agents = agents;
         this.formula = formula;
     }

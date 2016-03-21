@@ -4,7 +4,7 @@ import java.util.*;
  * Implements the C_g operator from S5
  */
 public class CommonKnow extends Formula {
-    private HashSet<Integer> agents;
+    private Set<Integer> agents;
     private Formula formula;
 
     /**
@@ -12,7 +12,7 @@ public class CommonKnow extends Formula {
      * @param agents The agents in the group
      * @param formula The formula which we want to test for common knowledge
      */
-    public CommonKnow(HashSet<Integer> agents, Formula formula) {
+    public CommonKnow(Set<Integer> agents, Formula formula) {
         this.agents = agents;
         this.formula = formula;
     }

@@ -134,7 +134,7 @@ public class GameLoop {
                 Formula[] eors = new Formula[accusation.size()];
                 for (int i = 0; i < cards.length; i++) {
                     ors[i]  = new PropVar(cards[i], next);
-                    eors[i] = new EveryKnows(set(current, next), ors[i]);
+                    eors[i] = new CommonKnow(set(current, next), ors[i]);
                 }
                 model.publicAnnouncement(new Or(ors));
                 model.privateAnnouncement(new PropVar(resp, next), current);
