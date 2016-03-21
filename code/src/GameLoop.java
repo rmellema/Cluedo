@@ -1,5 +1,8 @@
 import java.io.PrintStream;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by rene on 19/03/16.
@@ -11,6 +14,7 @@ public class GameLoop {
     private int         round = 0;
     private PrintStream out;
     private Player[]    players;
+    private boolean     done = false;
 
     public GameLoop(KripkeModel model, PrintStream out) {
         this.model = model;
@@ -39,12 +43,20 @@ public class GameLoop {
         this(System.out);
     }
 
-    public void step() {
-        boolean counterGiven = false;
-        Player agent = this.players[this.current];
-        CardSet accusation = agent.accuse(this.model);
+    public Set<Integer> set(int... agents) {
+        HashSet<Integer> ret = new HashSet<>(agents.length);
+        for (int agent : agents) {
+            ret.add(agent);
+        }
+        return ret;
+    }
+
+    private void checkAccusation(CardSet accusation) {
         this.out.println("Agent #" + this.current +
                 " speaks accusation " + accusation);
+        ArrayList<Formula> ands = new ArrayList<>();
+        Card[] cards = accusation.getCards();
+        boolean counterGiven = false;
         for (int next = (current + 1) % this.numPlayers;
              next != current;
              next = (next + 1) % this.numPlayers) {
@@ -54,27 +66,79 @@ public class GameLoop {
                 counterGiven = true;
                 this.out.println("\tAgent #" + next +
                         " has some of these cards");
+                Formula[] ors = new Formula[accusation.size()];
+                Formula[] eors = new Formula[accusation.size()];
+                for (int i = 0; i < cards.length; i++) {
+                    ors[i]  = new PropVar(cards[i], next);
+                    eors[i] = new EveryKnows(set(current, next), ors[i]);
+                }
+                model.publicAnnouncement(new Or(ors));
+                model.privateAnnouncement(new PropVar(resp, next), current);
+                model.publicAnnouncement(new Or(eors));
                 //Do stuff
                 break;
             } else {
                 this.out.println("\tAgent #" + next +
                         " has none of these cards");
+                for (Card card : cards) {
+                    ands.add((new PropVar(card, next).negate()));
+                }
             }
         }
         if (!counterGiven) {
             this.out.println("None of the agents disprove the accusation");
-            //Do public announcement
+            model.publicAnnouncement(new And((Formula[])ands.toArray()));
         }
-        CardSet suspicion = agent.suspect(model);
+    }
+
+    private void checkSuspicion(CardSet suspicion) {
         if (suspicion != null) {
-            //Do check if true
+            this.out.println("Agent #" + this.current + " speaks suspicion "
+                    + suspicion.toString());
+            Formula[] props = new Formula[suspicion.size()];
+            for (int i = 0; i < props.length; i++) {
+                props[i] = new PropVar(suspicion.getCards()[i], 0);
+            }
+            if ((new And(props)).evaluate(model)) {
+                this.out.println("The suspicion is correct\nThe game is over");
+                this.done = true;
+            } else {
+                this.out.println("The suspicion is incorrect\nAgent #" +
+                        this.current + " will be removed from the game");
+                for (int i = this.current + 1; i < this.numPlayers; i++) {
+                    this.players[i - 1] = this.players[i];
+                }
+                this.numPlayers--;
+            }
         }
+    }
+
+    public void step() {
+        Player agent = this.players[this.current];
+        CardSet accusation = agent.accuse(this.model);
+        checkAccusation(accusation);
+        checkSuspicion(agent.suspect(model));
         if (++this.current == this.numPlayers) {
             this.current = 0;
             this.round++;
         }
     }
 
-    public void run() {
+    public void round() {
+        int oldRound = this.round;
+        while (this.round == oldRound) {
+            step();
+        }
+    }
+
+    public void game() {
+        while (!this.done) {
+            step();
+        }
+    }
+
+    public static void main(String[] args) {
+        GameLoop loop = new GameLoop(System.out);
+        loop.game();
     }
 }
