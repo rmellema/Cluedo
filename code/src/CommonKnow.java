@@ -8,9 +8,9 @@ public class CommonKnow extends Formula {
     private Formula formula;
 
     /**
-     * Create a new formula C_agents formula
+     * Create a new C_agents formula
      * @param agents The agents in the group
-     * @param formula The formula which they all should know
+     * @param formula The formula which we want to test for common knowledge
      */
     public CommonKnow(HashSet<Integer> agents, Formula formula) {
         this.agents = agents;

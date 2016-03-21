@@ -7,6 +7,11 @@ public class Maybe extends Formula {
     private int agent;
     private Formula formula;
 
+    /**
+     * Creates a new M-formula
+     * @param agent The agent of which we want to know if he holds the formula for possible
+     * @param formula The formula of which we want to know if the agent holds it for possible
+     */
     public Maybe(int agent, Formula formula) {
         this.agent = agent;
         this.formula = formula;

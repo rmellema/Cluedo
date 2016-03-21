@@ -1,5 +1,3 @@
-import java.text.Normalizer;
-
 /**
  * Superclass for all Formulas
  */
@@ -9,12 +7,13 @@ public abstract class Formula {
      * Evaluate a Formula in a state using the given model
      * @param model The model used for evaluation
      * @param state The state to evaluate the Formula in
-     * @return `true` if the Formula evaluate in state `state`, `false` otherwise
+     * @return `true` if the Formula holds in state `state`, `false` otherwise
      */
     public abstract boolean evaluate(KripkeModel model, int state);
 
     /**
-     * Evaluate a Formula in state 0 in the given model
+     * Evaluate a Formula in state 0 in the given model. State 0 is the true
+     * state.
      * @param model The model used for evaluation
      * @return `true` if the Formula evaluate in state 0, `false` otherwise
      */
@@ -23,7 +22,7 @@ public abstract class Formula {
     }
 
     /**
-     * Negate a formula
+     * Negate a formula. Preferred way of creating negations
      * @return The negation of a formula
      */
     public Formula negate() {

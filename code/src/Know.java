@@ -7,7 +7,12 @@ public class Know extends Formula {
     private int agent;
     private Formula formula;
 
-    Know(int agent, Formula formula) {
+    /**
+     * Create a new K-formula
+     * @param agent The agent to test the knowledge of
+     * @param formula The formula of which we want to test if the agent knows it
+     */
+    public Know(int agent, Formula formula) {
         this.agent = agent;
         this.formula = formula;
     }

@@ -9,6 +9,12 @@ public class PrivateAnnouncement extends Formula {
     private Formula announcement;
     private Formula formula;
 
+    /**
+     * Create a new Private Announcement formula
+     * @param agents The agents to which the announcement is made
+     * @param announcement The announcement that is made
+     * @param formula The formula which we want to evaluate in the new model
+     */
     public PrivateAnnouncement(Set<Integer> agents, Formula announcement, Formula formula) {
         if (agents.size() < 1) {
             throw new IllegalArgumentException("No agents in Private Announcement");

@@ -8,7 +8,7 @@ public class PublicAnnouncement extends Formula {
     /**
      * Create a new public announcement
      * @param announcement The announcement that is made
-     * @param formula The formula that should hold afterwards
+     * @param formula The formula which we want to test in the new model
      */
     public PublicAnnouncement(Formula announcement, Formula formula) {
         this.announcement = announcement;

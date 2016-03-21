@@ -1,5 +1,3 @@
-import java.text.Normalizer;
-
 /**
  * Implements the disjunction of two or more Formulas
  */
@@ -18,11 +16,11 @@ public class Or extends Formula {
     }
 
     /**
-     * Evaluate a Formula in a state using the given model
+     * Evaluate a disjunction in a state using the given model
      *
      * @param model The model used for evaluation
-     * @param state The state to evaluate the Formula in
-     * @return `true` if the Formula holds in state `state`, `false` otherwise
+     * @param state The state to evaluate the disjunction in
+     * @return `true` if the disjunction holds in state `state`, `false` otherwise
      */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
@@ -35,7 +33,7 @@ public class Or extends Formula {
     }
 
     /**
-     * Return a string representation of this Formula
+     * Return a string representation of this disjunction
      *
      * @return String representation
      */

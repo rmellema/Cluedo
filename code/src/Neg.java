@@ -12,6 +12,13 @@ public class Neg extends Formula{
         this.formula = form;
     }
 
+    /**
+     * Evaluate the negation of the formula in `state` using `model`
+     * @param model The model used for evaluation
+     * @param state The state to evaluate the Formula in
+     * @return `true` if the formula in the negation does not hold in `state`,
+     * `false` otherwise.
+     */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
         return !this.formula.evaluate(model, state);

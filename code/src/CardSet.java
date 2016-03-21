@@ -5,16 +5,18 @@
 class CardSet {
     private Card[] cards;
 
-    //TODO: make this variable!
-    
     /**
-     * the cardset constructor
-     * @param cards the cards in this CardSet
+     * Create a new CardSet
+     * @param cards The cards in this CardSet
      */
     public CardSet(Card... cards){
         this.cards = cards;
     }
 
+    /**
+     * Create a string representation of this CardSet
+     * @return String representation
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         sb.append(this.cards[0]);

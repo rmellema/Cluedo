@@ -1,5 +1,3 @@
-import java.text.Normalizer;
-
 /**
  * Implements the conjunction of two or more formulas
  */
@@ -18,11 +16,11 @@ public class And extends Formula {
     }
 
     /**
-     * Evaluate a Formula in a state using the given model
+     * Evaluate a conjunction in a `state` using the given `model`
      *
      * @param model The model used for evaluation
-     * @param state The state to evaluate the Formula in
-     * @return `true` if the Formula holds in state `state`, `false` otherwise
+     * @param state The state to evaluate the conjunction in
+     * @return `true` if all the conjuncts hold in state `state`, `false` otherwise
      */
     @Override
     public boolean evaluate(KripkeModel model, int state) {
@@ -32,6 +30,20 @@ public class And extends Formula {
             }
         }
         return true;
+    }
+
+    /**
+     * Negates a conjunction. Returns a version that is faster to evaluate
+     * than using `Neg` if the conjunction is true
+     * @return Fast evaluating negation
+     */
+    @Override
+    public Formula negate() {
+        Formula[] ors = new Formula[formulas.length];
+        for (int i = 0; i < this.formulas.length; i++) {
+            ors[i] = this.formulas[i].negate();
+        }
+        return new Or(ors);
     }
 
     /**

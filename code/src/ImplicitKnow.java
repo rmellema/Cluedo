@@ -1,5 +1,4 @@
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -10,9 +9,9 @@ public class ImplicitKnow extends Formula {
     private Formula formula;
 
     /**
-     * Create a new formula I_agents formula
+     * Create a new I_agents formula
      * @param agents The agents in the group
-     * @param formula The formula which they all should know
+     * @param formula The formula which we want to test for implicit knowledge
      */
     public ImplicitKnow(HashSet<Integer> agents, Formula formula) {
         this.agents = agents;
