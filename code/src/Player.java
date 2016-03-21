@@ -55,5 +55,9 @@ public class Player {
         public CardSet suspect(KripkeModel model){
             return suspicion.sStrategy(model, number);
         }
+
+    public CardSet getHand() {
+        return this.hand;
+    }
         
 }

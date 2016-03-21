@@ -58,6 +58,9 @@ public class PropVar extends Formula {
 	 */
 	@Override
 	public String toString() {
+		if (this.getCard() == null) {
+			System.out.println("Uhhh...");
+		}
 		return "p(c(" + this.getCard().getCategory() + ", " +
                 this.getCard().getNumber() + "), " + this.getPlayer() + ")";
 	}

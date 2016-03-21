@@ -129,12 +129,12 @@ public class GameLoop {
             if (resp != null) {
                 counterGiven = true;
                 this.out.println("\tAgent #" + (next + 1) +
-                        " has some of these cards");
+                        " has some of these cards: " + resp.toString());
                 Formula[] ors = new Formula[suspicion.size()];
                 Formula[] eors = new Formula[suspicion.size()];
                 for (int i = 0; i < cards.length; i++) {
                     ors[i]  = new PropVar(cards[i], next + 1);
-                    eors[i] = new CommonKnow(set(current + 1, next + 1), ors[i]);
+                    eors[i] = new EveryKnows(set(current + 1, next + 1), ors[i]);
                 }
                 model.publicAnnouncement(new Or(ors));
                 model.privateAnnouncement(new PropVar(resp, next + 1), current + 1);
@@ -151,7 +151,7 @@ public class GameLoop {
         }
         if (!counterGiven) {
             this.out.println("None of the agents disprove the suspicion");
-            model.publicAnnouncement(new And((Formula[])ands.toArray()));
+            model.publicAnnouncement(new And(ands.toArray(new Formula[ands.size()])));
         }
     }
 
@@ -185,6 +185,7 @@ public class GameLoop {
      * Play one turn of the game for the current player
      */
     public void step() {
+        this.out.println("Stepping");
         Player agent = this.players[this.current];
         CardSet suspicion = agent.suspect(this.model);
         checkSuspicion(suspicion);
@@ -210,6 +211,10 @@ public class GameLoop {
      * Play the game until someone wins
      */
     public void game() {
+        for (int i = 0; i< numPlayers; i++) {
+            this.out.println("Agent #" + (i + 1) + " " +
+                    this.players[i].getHand());
+        }
         this.out.println("# Round " + this.round);
         while (!this.done) {
             step();
