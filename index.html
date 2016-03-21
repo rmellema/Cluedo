@@ -32,53 +32,144 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h2>KripkeModel</h2>
-        <p>This class describes a pointed Kripke model. In this model,  states, valuations of the states, the number of agents and the relations between states for every agent is saved. The Kripke model can be deep copied to make agents able to reason about private and public announcements.</p>
+        <p>This class describes a pointed Kripke model. In this model,  states,
+        valuations of the states, the number of agents and the relations
+        between states for every agent is saved. The Kripke model can be deep
+        copied to make agents able to reason about private and public
+        announcements.</p>
         
-        <h4>States and their valuations</h4>
-        <p>The possible states are saved as a set of integers. These integers are mapped to Dealings. A dealing describes which cards are dealt to what player and which cards are in the envelope for a specific state. A dealing can thus be seen as a valuation of a state. The KripkeModel class has a method getDealing that can be used to obtain the Dealing (valuation) for a specific state. This method can be used to evaluate formulas. </p>
+        <h4>States and their valuations</h4> <p>The possible states are saved
+        as a set of integers. These integers are mapped to Dealings. A dealing
+        describes which cards are dealt to what player and which cards are in
+        the envelope for a specific state. A dealing can thus be seen as a
+        valuation of a state. The KripkeModel class has a method getDealing
+        that can be used to obtain the Dealing (valuation) for a specific
+        state. This method can be used to evaluate formulas. </p>
         
-        <h4>Generating the states</h4>
-        <p>When the Kripke model is initialized, the possible card dealings are used to construct the possible states. During this process, state numbers are mapped to their dealings. The real dealing is saved as the point of the model.</p>
+        <h4>Generating the states</h4> <p>When the Kripke model is initialized,
+        the possible card dealings are used to construct the possible states.
+        During this process, state numbers are mapped to their dealings. The
+        real dealing is saved as the point of the model.</p>
 
         <h4>Public announcements</h4>
-        <p>The public announcements done during a game are only announcements of propositional formulas. Whenever a public announcement is done, states where the announced formula does not hold are removed from the Kripke model. Also all relations to or from these states are removed.</p>
+        <p>The public announcements done during a game are only announcements
+        of propositional formulas. Whenever a public announcement is done,
+        states where the announced formula does not hold are removed from the
+        Kripke model. Also all relations to or from these states are
+        removed.</p>
 
         <h4>Private announcements</h4>
-        <p>Whenever a private announcement is done to a specific agent, all relations of that agent between a state where the announced formula holds and a state where the announced formula does not hold are removed. We have proven that doing this indeed causes the effect of a private announcement in cluedo. </p>
+        <p>Whenever a private announcement is done to a specific agent, all
+        relations of that agent between a state where the announced formula
+        holds and a state where the announced formula does not hold are
+        removed. We have proven that doing this indeed causes the effect of a
+        private announcement in cluedo. </p>
 
         <h4>Relations between states</h4>
-        <p>The relations in the Kripke model are not saved explicitly and when a private announcement is done, they are not removed explicitly either. Instead, all private announcements done during the game are stored per agent. Whenever it is needed to check whether a relation between two states is there for a specific agent, every formula privately announced to that agent is evaluated in both states. Only if the valuation of every formula is the same in both states, the relation is still there. We did not store relations or removed relations explicitly, because this caused our program to run out of memory quickly.</p>
+        <p>The relations in the Kripke model are not saved explicitly and when
+        a private announcement is done, they are not removed explicitly either.
+        Instead, all private announcements done during the game are stored per
+        agent. Whenever it is needed to check whether a relation between two
+        states is there for a specific agent, every formula privately announced
+        to that agent is evaluated in both states. Only if the valuation of
+        every formula is the same in both states, the relation is still there.
+        We did not store relations or removed relations explicitly, because
+        this caused our program to run out of memory quickly.</p>
 
         <h4>Relation querying</h4>
-        <p>The Kripke model has methods available that return the states that are reachable in one step by any or all specified agents. These methods can be used to evaluate formulas about knowledge and implicit knowledge of (groups of) agents.</p>
+        <p>The Kripke model has methods available that return the states that
+        are reachable in one step by any or all specified agents. These methods
+        can be used to evaluate formulas about knowledge and implicit knowledge
+        of (groups of) agents.</p>
 
         
         <h2>Dealing </h2>
-        <p>A Dealing contains the information about which cards are held by whom and which cards are in the envelope. This information is represented as a 2D ragged array. The first index specifies the category of the card (e.g. 0th category means weapon) and the second index specifies the card number (e.g. 4th weapon means lead pipe). The entries in the array specify the number of the agent that is holding the card. An entry of 0 means that the card is in the envelope. An entry of -1 means that the specified card has not yet been dealt.</p>
+        <p>A Dealing contains the information about which cards are held by
+        whom and which cards are in the envelope. This information is
+        represented as a 2D ragged array. The first index specifies the
+        category of the card (e.g. 0th category means weapon) and the second
+        index specifies the card number (e.g. 4th weapon means lead pipe). The
+        entries in the array specify the number of the agent that is holding
+        the card. An entry of 0 means that the card is in the envelope. An
+        entry of -1 means that the specified card has not yet been dealt.</p>
     
         <h4>Evaluating propositional variables</h4>
-        <p>A propositional variable specifies a card and the player that holds it. Propositional variables can be easily evaluated in a dealing by checking whether the card is held by the player that the propositional variable specifies.</p>
+        <p>A propositional variable specifies a card and the player that holds
+        it. Propositional variables can be easily evaluated in a dealing by
+        checking whether the card is held by the player that the propositional
+        variable specifies.</p>
 
         <h2 id="evaluation-of-formulas">Evaluation of Formulas</h2>
-        <p>For the evaluation of formulas, we decided to create a Formula class that could be subclassed to implement the specific operators for Epistemic Dynamic Logic. This class also has other convenience methods like <code>negate</code> and <code>simplify</code> that can be used to speed up evaluation. Because of the way that the model is constructed, a lot of the semantics of PAL can be translated to our system in a natural way. Now, we will go over the implementation of the operators.</p>
+        <p>For the evaluation of formulas, we decided to create a Formula class
+        that could be subclassed to implement the specific operators for
+        Epistemic Dynamic Logic. This class also has other convenience methods
+        like <code>negate</code> and <code>simplify</code> that can be used to
+        speed up evaluation. Because of the way that the model is constructed,
+        a lot of the semantics of PAL can be translated to our system in a
+        natural way. Now, we will go over the implementation of the
+        operators.</p>
+
         <h3 id="propositional-variable-propvar">Propositional Variable (<code>PropVar</code>)</h3>
-        <p>In order to evaluate a propositional variable in a given state, we can simply look up the valuation for that state and see if that propositional variable is true given that valuation.</p>
+        <p>In order to evaluate a propositional variable in a given state, we
+        can simply look up the valuation for that state and see if that
+        propositional variable is true given that valuation.</p>
+
         <h3 id="negation-neg">Negation (<code>Neg</code>)</h3>
-        <p>In order to evaluate the negation of a formula, we evaluate the formula and take the boolean not of that value.</p>
+        <p>In order to evaluate the negation of a formula, we evaluate the
+        formula and take the boolean not of that value.</p>
+
         <h3 id="conjunction-and">Conjunction (<code>And</code>)</h3>
-        <p>In order to evaluate a conjunction, we evaluate all of the conjuncts. If one of them is false, the whole conjunction is false. If all of them are true, the conjunction is true.</p>
+        <p>In order to evaluate a conjunction, we evaluate all of the
+        conjuncts. If one of them is false, the whole conjunction is false. If
+        all of them are true, the conjunction is true.</p>
+
         <h3 id="disjunction-or">Disjunction (<code>Or</code>)</h3>
-        <p>In order to evaluate a disjunction, we evaluate the disjuncts. If one of them is true, the disjunction is true. If none of them are true, the disjunction is false.</p>
+        <p>In order to evaluate a disjunction, we evaluate the disjuncts. If
+        one of them is true, the disjunction is true. If none of them are true,
+        the disjunction is false.</p>
+
         <h3 id="knowledge-know">Knowledge (<code>Know</code>)</h3>
-        <p>To evaluate the knowledge operator in a state in a model, we first get all the relations from that state for the agent that is tied to the knowledge operator. Then we evaluate the formula that the operator works over in all those states. If it holds in all those states, the knowledge operator holds. If it fails in one state, the operator returns <code>false</code>.</p>
+        <p>To evaluate the knowledge operator in a state in a model, we first
+        get all the relations from that state for the agent that is tied to the
+        knowledge operator. Then we evaluate the formula that the operator
+        works over in all those states. If it holds in all those states, the
+        knowledge operator holds. If it fails in one state, the operator
+        returns <code>false</code>.</p>
+
         <h3 id="considers-maybe">Considers (<code>Maybe</code>)</h3>
-        <p>To evaluate the M operator in a state in a model, we first get all the relations from that state for the agent that is tied to the operator. Then we evaluate the formula that the operator works over in all those states. If it holds in one of those states, the operator returns true. If the formula holds in none of the states, it returns false.</p>
+        <p>To evaluate the M operator in a state in a model, we first get all
+        the relations from that state for the agent that is tied to the
+        operator. Then we evaluate the formula that the operator works over in
+        all those states. If it holds in one of those states, the operator
+        returns true. If the formula holds in none of the states, it returns
+        false.</p>
+
         <h3 id="general-knowledge-everyknows">General Knowledge (<code>EveryKnows</code>)</h3>
-        <p>To evaluate general knowledge in a state in a model, we first get all the states that are reachable in one step for any of the agents in the group. Then we evaluate the formula that the operator works over in all those states and return <code>true</code> if it holds in all those states. If it does not hold in one of those states we return <code>false</code>.</p>
+        <p>To evaluate general knowledge in a state in a model, we first get
+        all the states that are reachable in one step for any of the agents in
+        the group. Then we evaluate the formula that the operator works over in
+        all those states and return <code>true</code> if it holds in all those
+        states. If it does not hold in one of those states we return
+
+        <code>false</code>.</p>
         <h3 id="implicit-knowledge-implicitknow">Implicit Knowledge (<code>ImplicitKnow</code>)</h3>
-        <p>To evaluate implicit knowledge in a state in a model, we first get all the states that are reachable in one step for all the agents in the group. Then we evaluate the formula that the operator works over in all those states and return <code>true</code> if it holds in all those states. If it does not hold in one of those states we return <code>false</code>.</p>
+        <p>To evaluate implicit knowledge in a state in a model, we first get
+        all the states that are reachable in one step for all the agents in the
+        group. Then we evaluate the formula that the operator works over in all
+        those states and return <code>true</code> if it holds in all those
+        states. If it does not hold in one of those states we return
+        <code>false</code>.</p>
+
         <h3 id="common-knowledge-commonknow">Common Knowledge (<code>CommonKnow</code>)</h3>
-        <p>To evaluate common knowledge in a state in a model, we first get all the states that are reachable in one step for any the agents in the group. Then we evaluate the formula that the operator works over in all those states and get all of the states that any of the agents can reach from those states in one step, making sure that no state is evaluated twice. This is repeated until we have processed all states that are reachable. We return <code>true</code> if it holds in all reachable states. If it does not hold in one of those states we return <code>false</code>.</p>
+        <p>To evaluate common knowledge in a state in a model, we first get all
+        the states that are reachable in one step for any the agents in the
+        group. Then we evaluate the formula that the operator works over in all
+        those states and get all of the states that any of the agents can reach
+        from those states in one step, making sure that no state is evaluated
+        twice. This is repeated until we have processed all states that are
+        reachable. We return <code>true</code> if it holds in all reachable
+        states. If it does not hold in one of those states we return
+        <code>false</code>.</p>
 
 
       </section>
@@ -88,7 +179,8 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Cluedo maintained by <a href="https://github.com/rmellema">rmellema</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub
+          Pages</a></p>
       </footer>
     </div>
 
