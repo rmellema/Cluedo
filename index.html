@@ -57,7 +57,7 @@
         <p>A Dealing contains the information about which cards are held by whom and which cards are in the envelope. This information is represented as a 2D ragged array. The first index specifies the category of the card (e.g. 0th category means weapon) and the second index specifies the card number (e.g. 4th weapon means lead pipe). The entries in the array specify the number of the agent that is holding the card. An entry of 0 means that the card is in the envelope. An entry of -1 means that the specified card has not yet been dealt.</p>
     
         <h4>Evaluating propositional variables</h4>
-        <p>A propositional variable specifies a card and the player that holds it. Propositional variables can be easily evaluated in a state.</p>
+        <p>A propositional variable specifies a card and the player that holds it. Propositional variables can be easily evaluated in a dealing by checking whether the card is held by the player that the propositional variable specifies.</p>
 
       </section>
     </div>
