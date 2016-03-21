@@ -111,27 +111,27 @@ public class GameLoop {
     }
 
     /**
-     * Given an accusation, check the other players and see if they have one of
-     * the cards in the accusation. If they do, handle that situation
-     * @param accusation The accusation to check
+     * Given an suspicion, check the other players and see if they have one of
+     * the cards in the suspicion. If they do, handle that situation
+     * @param suspicion The suspicion to check
      */
-    private void checkAccusation(CardSet accusation) {
+    private void checkSuspicion(CardSet suspicion) {
         this.out.println("Agent #" + this.current +
-                " speaks accusation " + accusation);
+                " speaks suspicion " + suspicion);
         ArrayList<Formula> ands = new ArrayList<>();
-        Card[] cards = accusation.getCards();
+        Card[] cards = suspicion.getCards();
         boolean counterGiven = false;
         for (int next = (current + 1) % this.numPlayers;
              next != current;
              next = (next + 1) % this.numPlayers) {
             Player a = this.players[next];
-            Card resp = a.response(this.model, accusation);
+            Card resp = a.response(this.model, suspicion);
             if (resp != null) {
                 counterGiven = true;
                 this.out.println("\tAgent #" + next +
                         " has some of these cards");
-                Formula[] ors = new Formula[accusation.size()];
-                Formula[] eors = new Formula[accusation.size()];
+                Formula[] ors = new Formula[suspicion.size()];
+                Formula[] eors = new Formula[suspicion.size()];
                 for (int i = 0; i < cards.length; i++) {
                     ors[i]  = new PropVar(cards[i], next);
                     eors[i] = new CommonKnow(set(current, next), ors[i]);
@@ -150,28 +150,28 @@ public class GameLoop {
             }
         }
         if (!counterGiven) {
-            this.out.println("None of the agents disprove the accusation");
+            this.out.println("None of the agents disprove the suspicion");
             model.publicAnnouncement(new And((Formula[])ands.toArray()));
         }
     }
 
     /**
-     * Check if a suspicion is correct, and if so, end the game
-     * @param suspicion The suspicion to check
+     * Check if a accusation is correct, and if so, end the game
+     * @param accusation The accusation to check
      */
-    private void checkSuspicion(CardSet suspicion) {
-        if (suspicion != null) {
-            this.out.println("Agent #" + this.current + " speaks suspicion "
-                    + suspicion.toString());
-            Formula[] props = new Formula[suspicion.size()];
+    private void checkAccusation(CardSet accusation) {
+        if (accusation != null) {
+            this.out.println("Agent #" + this.current + " speaks accusation "
+                    + accusation.toString());
+            Formula[] props = new Formula[accusation.size()];
             for (int i = 0; i < props.length; i++) {
-                props[i] = new PropVar(suspicion.getCards()[i], 0);
+                props[i] = new PropVar(accusation.getCards()[i], 0);
             }
             if ((new And(props)).evaluate(model)) {
-                this.out.println("The suspicion is correct\nThe game is over");
+                this.out.println("The accusation is correct\nThe game is over");
                 this.done = true;
             } else {
-                this.out.println("The suspicion is incorrect\nAgent #" +
+                this.out.println("The accusation is incorrect\nAgent #" +
                         this.current + " will be removed from the game");
                 for (int i = this.current + 1; i < this.numPlayers; i++) {
                     this.players[i - 1] = this.players[i];
@@ -186,11 +186,11 @@ public class GameLoop {
      */
     public void step() {
         Player agent = this.players[this.current];
-        CardSet accusation = agent.accuse(this.model);
-        if (accusation != null){
-            checkAccusation(accusation);
+        CardSet suspicion = agent.suspect(this.model);
+        if (suspicion != null){
+            checkSuspicion(suspicion);
         }
-        checkSuspicion(agent.suspect(model));
+        checkAccusation(agent.accuse(model));
         if (++this.current == this.numPlayers) {
             this.current = 0;
             this.round++;
