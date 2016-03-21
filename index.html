@@ -194,7 +194,22 @@
         reachable. We return <code>true</code> if it holds in all reachable
         states. If it does not hold in one of those states we return
         <code>false</code>.</p>
+        
 
+        <h2>Player</h2>
+        <p>This class describes a Player. Each player has a set of cards in their hand, and has functions which call the strategies they can play. Every player also has to know their number they are denoted by in the model, otherwise they cannot do queries concering knowledge.</p>
+        
+        <h3 id="strategies">Implemented Strategies(<code>Strategy</code>)</h3>
+        <p>There are three actions where a player needs a strategy. The first is when their turn comes, and they have to make a suspicion. Next, when another player make a suspicion, they can be asked to respond to that suspicion. Finally, at the end of their turn, they can make an accusation, if they want to. Below is a description of the strategies currently implemented. For a discussion on other possible strategies, see further below.</p>
+
+        <h4>Suspicion Strategy</h4>
+        <p>Each turn a player makes a suspicion. A suspicion consists of one card of each category. So, currently, for each category, a player will randomly choose a card. If they still hold that card possible, so they hold it for possible that the card is in the envelope, but do not yet know that it is in the envelope, they will add it to the set of cards they will make a suspicion of, and continue to the next category. When they have chosen a card for each category this way, the function will return that <code>CardSet</code></p>
+
+        <h4>Response Strategy</h4>
+        <p>If another player makes a suspicion, a player can be asked to respond to that query. This means that if the player has one or more of the cards queried, they must show one of them. The current implementation is that if an agent has one of the cards, they show that card. If they have more than one, they choose a card at random.</p>
+
+        <h4>Accusation Strategy</h4>
+        <p>At the end of their turn, a player is asked if they want to make a suspicion. If, for all categories, they know which card is in the envelope, they return that as a suspicion. Otherwise, they return <code>null</code>.</p>
 
       </section>
     </div>
