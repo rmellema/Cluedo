@@ -23,7 +23,7 @@ public class GameLoop {
     public GameLoop(KripkeModel model, PrintStream out) {
         this.model = model;
         this.numPlayers = model.getAgents();
-        this.current = 1;
+        this.current = 0;
         this.out = out;
         this.initPlayers(model.point(), model.getAgents());
     }
@@ -93,7 +93,7 @@ public class GameLoop {
         for (int i = 0; i < players; i++) {
             this.players[i] = new Player(new
                     CardSet(dealing.get(i).toArray(new
-                    Card[dealing.get(i).size()])),i);
+                    Card[dealing.get(i).size()])),i + 1);
         }
     }
 
@@ -116,7 +116,7 @@ public class GameLoop {
      * @param suspicion The suspicion to check
      */
     private void checkSuspicion(CardSet suspicion) {
-        this.out.println("Agent #" + this.current +
+        this.out.println("Agent #" + (this.current + 1) +
                 " speaks suspicion " + suspicion);
         ArrayList<Formula> ands = new ArrayList<>();
         Card[] cards = suspicion.getCards();
@@ -128,24 +128,24 @@ public class GameLoop {
             Card resp = a.response(this.model, suspicion);
             if (resp != null) {
                 counterGiven = true;
-                this.out.println("\tAgent #" + next +
+                this.out.println("\tAgent #" + (next + 1) +
                         " has some of these cards");
                 Formula[] ors = new Formula[suspicion.size()];
                 Formula[] eors = new Formula[suspicion.size()];
                 for (int i = 0; i < cards.length; i++) {
-                    ors[i]  = new PropVar(cards[i], next);
-                    eors[i] = new CommonKnow(set(current, next), ors[i]);
+                    ors[i]  = new PropVar(cards[i], next + 1);
+                    eors[i] = new CommonKnow(set(current + 1, next + 1), ors[i]);
                 }
                 model.publicAnnouncement(new Or(ors));
-                model.privateAnnouncement(new PropVar(resp, next), current);
+                model.privateAnnouncement(new PropVar(resp, next + 1), current + 1);
                 model.publicAnnouncement(new Or(eors));
                 //Do stuff
                 break;
             } else {
-                this.out.println("\tAgent #" + next +
+                this.out.println("\tAgent #" + (next + 1) +
                         " has none of these cards");
                 for (Card card : cards) {
-                    ands.add((new PropVar(card, next).negate()));
+                    ands.add((new PropVar(card, next + 1).negate()));
                 }
             }
         }
@@ -161,7 +161,7 @@ public class GameLoop {
      */
     private void checkAccusation(CardSet accusation) {
         if (accusation != null) {
-            this.out.println("Agent #" + this.current + " speaks accusation "
+            this.out.println("Agent #" + (this.current + 1) + " speaks accusation "
                     + accusation.toString());
             Formula[] props = new Formula[accusation.size()];
             for (int i = 0; i < props.length; i++) {
@@ -172,7 +172,7 @@ public class GameLoop {
                 this.done = true;
             } else {
                 this.out.println("The accusation is incorrect\nAgent #" +
-                        this.current + " will be removed from the game");
+                        (this.current + 1) + " will be removed from the game");
                 for (int i = this.current + 1; i < this.numPlayers; i++) {
                     this.players[i - 1] = this.players[i];
                 }
@@ -187,13 +187,12 @@ public class GameLoop {
     public void step() {
         Player agent = this.players[this.current];
         CardSet suspicion = agent.suspect(this.model);
-        if (suspicion != null){
-            checkSuspicion(suspicion);
-        }
+        checkSuspicion(suspicion);
         checkAccusation(agent.accuse(model));
         if (++this.current == this.numPlayers) {
             this.current = 0;
             this.round++;
+            System.out.println("# Round " + this.round);
         }
     }
 
