@@ -1,0 +1,158 @@
+\documentclass[a4paper, 10pt]{article}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{natbib}
+
+\title{Modelling Cluedo: Validity of private announcements}
+\author{Laura van de Braak \and Luuk Boulogne \and Ren\'e Mellema}
+\date{}
+
+\newcommand{\impl}{\rightarrow}
+\newcommand{\A}{\mathbf{A}}
+\newcommand{\DBox}[1]{\left[#1\right]}
+\newcommand{\DDiamond}[1]{\left\langle #1 \right\rangle}
+
+\newtheorem{prop}{Proposition}
+
+\begin{document}
+
+\maketitle
+
+For our implementation of Cluedo, we needed to implement private
+announcements \citep[see][chapter 6]{ditmarsch2007dynamic}. We decided to
+implement this by removing the relations for the agent that received the
+announcement between the states where the announcement holds and the states
+where the announcement does not hold. So if agent $i$ receives announcement
+$\varphi$ and $R_i$ is the set of relations before the announcement then
+$R_i'$, the set of relations for agent $i$ after the private announcement.
+$R_i'$ is defined as $R_i = \{(s, t) | (s, t) \in R_i, (M', s) \models
+\varphi \text{ bi-implies } (M', t) \models \varphi\}$.
+
+We denote propositional variables as $p_i^j$, where $p$ stands for the
+category of the card, $i$ for the number of that card in the category and
+$j$ for the agent that has that card. So $p_3^0$ means that person card
+number 3 is dealt to agent 0. In this notation, agent 0 is the envelope.
+If the number or category of the card is not important, the number is left
+out and the letter is not $p$ or $w$.  We also have a model $M$, which
+after the first public announcement becomes $M'$, after the private
+announcement becomes $M''$ and after the second public announcement becomes
+$M'''$.
+
+Most of the rules for Cluedo are also implemented in the model implicitly,
+like the rule $c^i \impl \neg c^j$ with $i \not = j$, which says that only
+one person can has a specific card. Also the rule that everybody has two
+cards is implemented in this way.
+
+Assume we have a set of agents $\A$. Now agent $i \in \A$ speaks a
+accusation, which is a set of cards denoted as $a$. Now the agent $j \in
+\A, i \not = j$ says he has one of these cards, $c \in a$ and shows that
+card $c$ to $i$.  In our implementation, this is modelled as the public
+announcement $\bigvee_{k \in a} k^j$. After this public announcement, the
+private announcement $c^j$ is made towards agent $i$. After that, the
+public announcement $\bigvee_{k \in a} E_{i, j} k^j$ is made, to show that
+both agents know the same card. 
+
+During the private announcement, only agent $i$ should get new knowledge,
+while we would also want that during the public announcements it becomes
+common knowledge that agent $j$ has at least one of the cards in $a$ and
+that agent $i$ and agent $j$ now know the same card. This idea is captured
+in the five propositions.
+
+\begin{prop}
+    $(M''', s0) \models C(\bigvee_{k \in a} \neg k^0)$
+\end{prop}
+\begin{prop}
+    $(M''', s0) \models C_{i, j} \neg c^0$
+\end{prop}
+\begin{prop}
+    $(M''', s0) \models C(\bigvee_{k \in a} C_{i,j} \neg k^0)$
+\end{prop}
+\begin{prop}
+    For all agents $h \in \A$ with $h \not = i$ and $h \not = j$ it holds
+    that for all cards $k \in a$: \[ (M', s0) \models M_h k^0 \text{
+            implies } (M'', s0) \models M_h k^0 \]
+\end{prop}
+\begin{prop}
+    For all agents $h \in \A$ with $h \not = i$ and $h \not = j$ it holds
+    that for all cards $k \in a$: \[ (M', s0) \models \neg K_h k^j \text{
+            implies } (M'', s0) \models \neg K_h k^j \]
+\end{prop}
+
+\begin{proof}[Proof of Proposition 1]
+    First we will prove that $(M', s0) \models \DBox{\bigvee_{k \in a} k^j}
+    C(\bigvee_{k \in a} k^j)$. For this, we first have to see that this
+    announcement is part of the language $\mathcal{L}_N^{u0}$ from
+    \cite{ditmarsch2006secret}. This means that we get $\DBox{\bigvee_{k
+            \in a} k^j} \bigvee_{k \in a} k^j$. From propositional logic we
+    now have $\top \impl \DBox{\bigvee_{k \in a} k^j} \bigvee_{k \in a}
+    k^j$. Since agent $j$ can only respond to an accusation if it has one
+    of the cards in the accusation, we know that $c^j$ for some $c \in a$.
+    So $\bigvee_{k \in a} k^j$. This means we also get $(\top \land
+    \bigvee_{k \in a} k^j) \impl E\top$. Now we can apply Proposition 4.26
+    from \citet{ditmarsch2007dynamic} to get $\top \impl \DBox{\bigvee_{k
+            \in a} k^j} C\left(\bigvee_{k \in a} k^j\right)$. Now by a
+    propositional tautology we get $\DBox{\bigvee_{k \in a} k^j}
+    C\left(\bigvee_{k \in a} k^j\right)$.
+
+    Since $M'$ is the model after the first public announcement and we have
+    $(M, s0) \models \DBox{\bigvee_{k \in a} k^j} C\left(\bigvee_{k \in a}
+        k^j\right)$. This means that we also have $(M', s0) \models
+    C\left(\bigvee_{k \in a} k^j\right)$.  Since we also have $k^j \impl
+    \neg k^0$, via propositional logic we have $\left(\bigvee_{k \in a} k^j
+    \right) \impl \left(\bigvee_{k \in a} \neg k^0\right)$, and if we apply
+    (R3) we get $C\left(\left(\bigvee_{k \in a} k^j \right) \impl
+        \left(\bigvee_{k \in a} \neg k^0\right)\right)$. Now we can apply
+    modus ponens in order to get $C\left(\bigvee_{k \in a} \neg
+        k^0\right)$. Since the logic is complete, we can conclude that
+    $(M', s0) \models C\left(\bigvee_{k \in a} \neg k^0\right)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition 2]
+    After we made the private announcement $\langle i, c^j\rangle$, we are
+    in model $M''$. In this model, there are no relations between states
+    $s, t \in S$ if $(M', s) \models c^j$ and $(M', t) \not \models c^j$
+    for the agents $i$ and $j$. This means that there is also no $t$ such
+    that $s0 \twoheadrightarrow_{i,j} t$ with $(M'', t) \models \neg c^j$.
+    Therefore, for all worlds $s0 \twoheadrightarrow_{i,j} u$ we have
+    $(M'', u) \models c^j$. By the definition of $C$ we get $(M'', s0)
+    \models C_{i,j} c^j$. Since we also have $c^j \impl \neg c^0$, which
+    holds in each state, so $(M'', s0) \models C_{i,j} (c^j \impl \neg
+    c^0)$. Now by modus ponens we get $(M'', s0) \models C_{i,j} \neg c^0$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition 3]
+    Here we make the observation that the second public announcement
+    $\bigvee_{k\in a} E_{i,j} k^j$ is also a member of
+    $\mathcal{L}_N^{u0}$ and that the proof will be similar to the proof of
+    Proposition 1.
+\end{proof}
+
+\begin{proof}[Proof of Proposition 4]
+    We will prove this by contraposition.
+    Take an agent $h \in \A$ such that $h \not = i$ and $h \not = j$ and
+    $(M', s0) \models M_h k^0$ for some $k \in a$. Now assume that $(M'',
+    s0) \not \models M_h k^0$. This means that during the private
+    announcement for $i$, the relations for $h$ have changed. By
+    definition, this is not what happens, so that means that our assumption
+    did not hold. So $(M', s0) \models M_h k^0$ implies $(M'', s0) \models
+    M_h k^0$ for some $k \in a$. Since $k$ was also chosen arbitrarily,
+    this holds for all cards in $a$. 
+\end{proof}
+
+\begin{proof}[Proof of Proposition 5]
+    We will prove this by contraposition.
+    Take an agent $h \in \A$ such that $h \not = i$ and $h \not = j$ and
+    $(M', s0) \models \neg K_h k^j$ for some $k \in a$. Now assume that
+    $(M'', s0) \not \models \neg K_h k^j$. This means that during the private
+    announcement for $i$, the relations for $h$ have changed. By
+    definition, this is not what happens, so that means that our assumption
+    did not hold. So $(M', s0) \models \neg K_h k^j$ implies $(M'', s0) \models
+    \neg K_h k^j$ for some $k \in a$. Since $k$ was also chosen arbitrarily,
+    this holds for all cards in $a$. 
+\end{proof}
+
+\bibliographystyle{plainnat}
+\bibliography{../references}
+
+\end{document}
