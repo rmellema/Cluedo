@@ -97,6 +97,14 @@ public class GameLoop {
         }
     }
 
+    public Dealing getDealing() {
+        return this.model.point();
+    }
+
+    public Player[] getPlayers() {
+        return this.players;
+    }
+
     /**
      * Create a set of agents
      * @param agents The agents that should be in the set

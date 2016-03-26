@@ -59,5 +59,8 @@ public class Player {
     public CardSet getHand() {
         return this.hand;
     }
-        
+
+    public int getNumber() {
+        return this.number;
+    }
 }
