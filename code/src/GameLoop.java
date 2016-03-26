@@ -82,7 +82,7 @@ public class GameLoop {
         this.players = new Player[players];
         ArrayList<ArrayList<Card>> dealing = new ArrayList<ArrayList<Card>>();
         for (int i = 0; i < players; i++) {
-            dealing.add(i, new ArrayList<>());
+            dealing.add(i, new ArrayList<Card>());
         }
         for (int i = 0; i < deal.getCategories(); i ++) {
             for (int j = 0; j < deal.numberOfCards(i); j++) {

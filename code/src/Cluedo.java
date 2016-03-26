@@ -1,12 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class GameFrame extends JFrame {
+public class Cluedo extends JFrame {
     private GameLoop loop = null;
     private boolean busy = false;
     private JTextArea outField;
@@ -21,7 +20,7 @@ public class GameFrame extends JFrame {
     private GameAction restartAction;
     private GameAction newGameAction;
 
-    public GameFrame() {
+    public Cluedo() {
         super("Cluedo");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // Panel Creation
@@ -77,7 +76,7 @@ public class GameFrame extends JFrame {
 
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        GameFrame frame = new GameFrame();
+        Cluedo frame = new Cluedo();
     }
 
     /**
@@ -122,12 +121,11 @@ public class GameFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             SwingWorker<Void, Void> run = null;
             Constructor<?>[] ctor = runClass.getConstructors();
-            System.out.println(ctor.length);
             try {
                 for (int i = 0; i < ctor.length; i++) {
                     if (ctor[i].getGenericParameterTypes().length == 1) {
                         ctor[i].setAccessible(true);
-                        run = (SwingWorker<Void, Void>)ctor[i].newInstance(GameFrame.this);
+                        run = (SwingWorker<Void, Void>)ctor[i].newInstance(Cluedo.this);
                     }
                 }
             } catch (InstantiationException e1) {
@@ -143,7 +141,7 @@ public class GameFrame extends JFrame {
                 System.err.println(e.getActionCommand());
                 return;
             }
-            GameFrame.this.setBusy(true);
+            Cluedo.this.setBusy(true);
             run.execute();
         }
     }
@@ -154,16 +152,16 @@ public class GameFrame extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            GameFrame.this.loop.game();
+            Cluedo.this.loop.game();
             return null;
         }
         @Override
         public void done() {
-            GameFrame.this.setBusy(false);
-            if (GameFrame.this.loop.isDone()) {
-                GameFrame.this.setEnabledButtons(false);
-                GameFrame.this.restartAction.setEnabled(true);
-                GameFrame.this.newGameAction.setEnabled(true);
+            Cluedo.this.setBusy(false);
+            if (Cluedo.this.loop.isDone()) {
+                Cluedo.this.setEnabledButtons(false);
+                Cluedo.this.restartAction.setEnabled(true);
+                Cluedo.this.newGameAction.setEnabled(true);
             }
         }
     }
@@ -174,16 +172,16 @@ public class GameFrame extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            GameFrame.this.loop.round();
+            Cluedo.this.loop.round();
             return null;
         }
         @Override
         public void done() {
-            GameFrame.this.setBusy(false);
-            if (GameFrame.this.loop.isDone()) {
-                GameFrame.this.setEnabledButtons(false);
-                GameFrame.this.restartAction.setEnabled(true);
-                GameFrame.this.newGameAction.setEnabled(true);
+            Cluedo.this.setBusy(false);
+            if (Cluedo.this.loop.isDone()) {
+                Cluedo.this.setEnabledButtons(false);
+                Cluedo.this.restartAction.setEnabled(true);
+                Cluedo.this.newGameAction.setEnabled(true);
             }
         }
     }
@@ -194,16 +192,16 @@ public class GameFrame extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            GameFrame.this.loop.step();
+            Cluedo.this.loop.step();
             return null;
         }
         @Override
         public void done() {
-            GameFrame.this.setBusy(false);
-            if (GameFrame.this.loop.isDone()) {
-                GameFrame.this.setEnabledButtons(false);
-                GameFrame.this.restartAction.setEnabled(true);
-                GameFrame.this.newGameAction.setEnabled(true);
+            Cluedo.this.setBusy(false);
+            if (Cluedo.this.loop.isDone()) {
+                Cluedo.this.setEnabledButtons(false);
+                Cluedo.this.restartAction.setEnabled(true);
+                Cluedo.this.newGameAction.setEnabled(true);
             }
         }
     }
@@ -214,7 +212,7 @@ public class GameFrame extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            GameFrame.this.loop = new GameLoop(loop.getDealing(),
+            Cluedo.this.loop = new GameLoop(loop.getDealing(),
                     loop.getPlayers().length,
                     writer);
             return null;
@@ -222,11 +220,11 @@ public class GameFrame extends JFrame {
 
         @Override
         public void done() {
-            GameFrame.this.outField.setText("");
-            GameFrame.this.writer.println("Restarted game");
-            GameFrame.this.writer.println("=================");
-            GameFrame.this.writer.println("# Round 0");
-            GameFrame.this.setBusy(false);
+            Cluedo.this.outField.setText("");
+            Cluedo.this.writer.println("Restarted game");
+            Cluedo.this.writer.println("=================");
+            Cluedo.this.writer.println("# Round 0");
+            Cluedo.this.setBusy(false);
         }
     }
 
@@ -237,22 +235,22 @@ public class GameFrame extends JFrame {
 
         @Override
         public Void doInBackground() {
-            GameFrame.this.infoPanel.removeAll();
-            GameFrame.this.loop = new GameLoop(writer);
+            Cluedo.this.infoPanel.removeAll();
+            Cluedo.this.loop = new GameLoop(writer);
             return null;
         }
 
         @Override
         public void done() {
-            GameFrame.this.outField.setText("");
-            for (Player p : GameFrame.this.loop.getPlayers()) {
+            Cluedo.this.outField.setText("");
+            for (Player p : Cluedo.this.loop.getPlayers()) {
                 String label = "Agent #" + p.getNumber() + "\n\t" + p.getHand();
-                GameFrame.this.infoPanel.add(new JLabel(label));
+                Cluedo.this.infoPanel.add(new JLabel(label));
             }
-            GameFrame.this.writer.println("Prepared new game");
-            GameFrame.this.writer.println("=================");
-            GameFrame.this.writer.println("# Round 0");
-            GameFrame.this.setBusy(false);
+            Cluedo.this.writer.println("Prepared new game");
+            Cluedo.this.writer.println("=================");
+            Cluedo.this.writer.println("# Round 0");
+            Cluedo.this.setBusy(false);
         }
     }
 }
