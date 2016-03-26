@@ -38,21 +38,13 @@ public class GameFrame extends JFrame {
         this.infoPanel.setPreferredSize(new Dimension(200, 800));
         this.infoPanel.setLayout(new BoxLayout(this.infoPanel, BoxLayout.Y_AXIS));
         this.add(this.infoPanel, BorderLayout.EAST);
-        this.getContentPane().add(outField,BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(this.outField);
+        scrollPane.setPreferredSize(new Dimension(640, 800));
+        this.getContentPane().add(scrollPane, BorderLayout.CENTER);
         this.getContentPane().add(bar, BorderLayout.WEST);
         // Menu and Button creation
         this.menu = new JMenuBar();
         this.setJMenuBar(this.menu);
-        JMenu cluedoMenu = new JMenu("Cluedo");
-        this.menu.add(cluedoMenu);
-        JMenuItem quit = new JMenuItem("Quit");
-        quit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        cluedoMenu.add(quit);
         JMenu game = new JMenu("Game");
         this.menu.add(game);
         this.buttons = new JPanel();
@@ -84,6 +76,7 @@ public class GameFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
         GameFrame frame = new GameFrame();
     }
 
@@ -127,14 +120,11 @@ public class GameFrame extends JFrame {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Trying action");
             SwingWorker<Void, Void> run = null;
             Constructor<?>[] ctor = runClass.getConstructors();
             System.out.println(ctor.length);
             try {
                 for (int i = 0; i < ctor.length; i++) {
-                    System.out.println(ctor[i].getGenericParameterTypes().length);
-                    System.out.println(ctor[i].getGenericParameterTypes()[0]);
                     if (ctor[i].getGenericParameterTypes().length == 1) {
                         ctor[i].setAccessible(true);
                         run = (SwingWorker<Void, Void>)ctor[i].newInstance(GameFrame.this);
@@ -147,9 +137,14 @@ public class GameFrame extends JFrame {
             } catch (InvocationTargetException e1) {
                 e1.printStackTrace();
             }
-            run.execute();
+            if (run == null) {
+                System.err.println("No constructor for action found:");
+                System.err.print("\t");
+                System.err.println(e.getActionCommand());
+                return;
+            }
             GameFrame.this.setBusy(true);
-            System.out.println("Waiting...");
+            run.execute();
         }
     }
 
@@ -165,6 +160,11 @@ public class GameFrame extends JFrame {
         @Override
         public void done() {
             GameFrame.this.setBusy(false);
+            if (GameFrame.this.loop.isDone()) {
+                GameFrame.this.setEnabledButtons(false);
+                GameFrame.this.restartAction.setEnabled(true);
+                GameFrame.this.newGameAction.setEnabled(true);
+            }
         }
     }
 
@@ -180,6 +180,11 @@ public class GameFrame extends JFrame {
         @Override
         public void done() {
             GameFrame.this.setBusy(false);
+            if (GameFrame.this.loop.isDone()) {
+                GameFrame.this.setEnabledButtons(false);
+                GameFrame.this.restartAction.setEnabled(true);
+                GameFrame.this.newGameAction.setEnabled(true);
+            }
         }
     }
 
@@ -195,6 +200,11 @@ public class GameFrame extends JFrame {
         @Override
         public void done() {
             GameFrame.this.setBusy(false);
+            if (GameFrame.this.loop.isDone()) {
+                GameFrame.this.setEnabledButtons(false);
+                GameFrame.this.restartAction.setEnabled(true);
+                GameFrame.this.newGameAction.setEnabled(true);
+            }
         }
     }
 
@@ -213,6 +223,9 @@ public class GameFrame extends JFrame {
         @Override
         public void done() {
             GameFrame.this.outField.setText("");
+            GameFrame.this.writer.println("Restarted game");
+            GameFrame.this.writer.println("=================");
+            GameFrame.this.writer.println("# Round 0");
             GameFrame.this.setBusy(false);
         }
     }
@@ -238,6 +251,7 @@ public class GameFrame extends JFrame {
             }
             GameFrame.this.writer.println("Prepared new game");
             GameFrame.this.writer.println("=================");
+            GameFrame.this.writer.println("# Round 0");
             GameFrame.this.setBusy(false);
         }
     }

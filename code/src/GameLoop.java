@@ -124,7 +124,8 @@ public class GameLoop {
      * @param suspicion The suspicion to check
      */
     private void checkSuspicion(CardSet suspicion) {
-        this.out.println("Agent #" + (this.current + 1) +
+        Player agent = this.players[this.current];
+        this.out.println("Agent #" + agent.getNumber() +
                 " speaks suspicion " + suspicion);
         ArrayList<Formula> ands = new ArrayList<>();
         Card[] cards = suspicion.getCards();
@@ -136,24 +137,23 @@ public class GameLoop {
             Card resp = a.response(this.model, suspicion);
             if (resp != null) {
                 counterGiven = true;
-                this.out.println("\tAgent #" + (next + 1) +
+                this.out.println("\tAgent #" + a.getNumber() +
                         " has some of these cards: " + resp.toString());
                 Formula[] ors = new Formula[suspicion.size()];
                 Formula[] eors = new Formula[suspicion.size()];
                 for (int i = 0; i < cards.length; i++) {
-                    ors[i]  = new PropVar(cards[i], next + 1);
-                    eors[i] = new EveryKnows(set(current + 1, next + 1), ors[i]);
+                    ors[i]  = new PropVar(cards[i], a.getNumber());
+                    eors[i] = new EveryKnows(set(agent.getNumber(), a.getNumber()), ors[i]);
                 }
                 model.publicAnnouncement(new Or(ors));
-                model.privateAnnouncement(new PropVar(resp, next + 1), current + 1);
+                model.privateAnnouncement(new PropVar(resp, a.getNumber()), agent.getNumber());
                 model.publicAnnouncement(new Or(eors));
-                //Do stuff
                 break;
             } else {
-                this.out.println("\tAgent #" + (next + 1) +
+                this.out.println("\tAgent #" + a.getNumber() +
                         " has none of these cards");
                 for (Card card : cards) {
-                    ands.add((new PropVar(card, next + 1).negate()));
+                    ands.add((new PropVar(card, a.getNumber()).negate()));
                 }
             }
         }
@@ -168,8 +168,9 @@ public class GameLoop {
      * @param accusation The accusation to check
      */
     private void checkAccusation(CardSet accusation) {
+        Player agent = this.players[this.current];
         if (accusation != null) {
-            this.out.println("Agent #" + (this.current + 1) + " speaks accusation "
+            this.out.println("Agent #" + agent.getNumber() + " speaks accusation "
                     + accusation.toString());
             Formula[] props = new Formula[accusation.size()];
             for (int i = 0; i < props.length; i++) {
@@ -180,7 +181,7 @@ public class GameLoop {
                 this.done = true;
             } else {
                 this.out.println("The accusation is incorrect\nAgent #" +
-                        (this.current + 1) + " will be removed from the game");
+                        agent.getNumber() + " will be removed from the game");
                 for (int i = this.current + 1; i < this.numPlayers; i++) {
                     this.players[i - 1] = this.players[i];
                 }
@@ -193,7 +194,6 @@ public class GameLoop {
      * Play one turn of the game for the current player
      */
     public void step() {
-        this.out.println("Stepping");
         Player agent = this.players[this.current];
         CardSet suspicion = agent.suspect(this.model);
         checkSuspicion(suspicion);
@@ -219,14 +219,13 @@ public class GameLoop {
      * Play the game until someone wins
      */
     public void game() {
-        for (int i = 0; i< numPlayers; i++) {
-            this.out.println("Agent #" + (i + 1) + " " +
-                    this.players[i].getHand());
-        }
-        this.out.println("# Round " + this.round);
         while (!this.done) {
             step();
         }
+    }
+
+    public boolean isDone() {
+        return this.done;
     }
 
     public static void main(String[] args) {
