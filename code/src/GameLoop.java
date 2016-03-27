@@ -3,11 +3,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * Created by rene on 19/03/16.
  */
 public class GameLoop {
-    private KripkeModel model;
+
+	private KripkeModel model;
     private int         numPlayers;
     private int         current;
     private int         round = 0;
@@ -46,6 +48,17 @@ public class GameLoop {
     public GameLoop(Dealing deal, int players, PrintStream out) {
         this(new KripkeModel(deal, players), out);
     }
+    
+
+
+    /**
+     * Create a new loop using the given table (dealing of cards, number of players)
+     * @param table Contains dealing and number of players.
+     * @param out PrintStream this object uses for printing
+     */
+    private GameLoop(Table table, PrintStream out) {
+		this(table.getDealing(), table.getPlayers(), out);
+	}
 
     /**
      * Create a new loop using the given dealing of cards, number of players
@@ -61,7 +74,7 @@ public class GameLoop {
      * @param out The PrintStream used for printing
      */
     public GameLoop(PrintStream out) {
-        this(new Dealing(new int[][] {{0, 1, 1, 2}, {0, 2, 3, 3, 4, 4}}), 4, out);
+        this(new Table(), out);
     }
 
     /**
@@ -72,7 +85,7 @@ public class GameLoop {
         this(System.out);
     }
 
-    /**
+	/**
      * Given a dealing and number of players, adds `players` number of players
      * into the game and deals them their cards
      * @param deal The deal for this game

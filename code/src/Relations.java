@@ -1,32 +1,27 @@
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 
-public abstract class Relations {
+public class Relations {
 	
-    protected static byte setToByte(Set<Integer> agents) {
-        byte ret = 0;
-        // For every agent in the set
-        for (Integer agent : agents) {
-        	//Put a 1 on the agent location in the byte
-            ret = (byte)(ret | (1 << (agent -1)));
-        }
-        return ret;
-    }
-    
-	/**
-	 * Specified states are removed from the matrix
-	 */
-	public void removeStates(Set<Integer> states) {
-		for (Integer state : states)
-			removeState(state);
+	private KripkeModel parent;
+	private Map<Integer, Set<Formula>> announcements = new HashMap<Integer, Set<Formula>>();
+	
+	public Relations(KripkeModel parent) {
+		this.parent = parent;
 	}
-	
-	/**
-	 * Specified state is removed from the matrix
-	 */
-	public abstract void removeState(Integer state);
-	
+
+	public Relations(Relations other) {
+		this(other.parent);
+		//Shallow copy of formulas is ok since they are not altered
+		for (Entry<Integer, Set<Formula>> entry : other.announcements.entrySet())
+			for (Formula phi : entry.getValue())
+				privateAnnouncement(phi, entry.getKey());
+	}
+    
 	/**
 	 * returns whether the matrix contains specified relation for the specified agent.
 	 */
@@ -37,17 +32,48 @@ public abstract class Relations {
 	/**
 	 * returns whether the matrix contains specified relation for any of the specified agents.
 	 */
-	public abstract boolean containsAny(Integer from, Integer to, Set<Integer> agents);
-	
+	public boolean containsAny(Integer from, Integer to, Set<Integer> agents) {
+		// for any agent
+		for (Integer agent : agents) {
+			
+			//If there are no private announcements done to the agent, the relation is still there for that agent
+			if (!announcements.containsKey(agent))
+				return true;
+			
+			boolean relationStillThere = true;
+			// otherwise, if no private announcement crossed away the specified relation
+			for (Formula phi : announcements.get(agent))
+				if (phi.evaluate(parent, from) != phi.evaluate(parent, to))
+					relationStillThere = false;
+			if (relationStillThere)
+				// Then there is an agent for which this relation is still there
+				return true;
+		}		
+		return false;
+	}
 	/**
 	 * returns whether the matrix contains specified relation for all of the specified agents.
 	 */
-	public abstract boolean containsAll(Integer from, Integer to, Set<Integer> agents);
-	
+	public boolean containsAll(Integer from, Integer to, Set<Integer> agents) {
+		// if for any agent
+		for (Integer agent : agents)
+			// a private announcement crossed away the specified relation
+			if (announcements.containsKey(agent))
+				for (Formula phi : announcements.get(agent))
+					if (phi.evaluate(parent, from) != phi.evaluate(parent, to))
+						// Then the relation does not hold for all agents.
+						return false;
+		
+		return true;
+	}
 	/**
 	 * Handles private announcement phi to agent
 	 * @param states States left in the Kripke model
 	 */
-	public abstract void privateAnnouncement(Formula phi, Integer agent, Set<Integer> states, Set<Integer> notHolds);
+	public void privateAnnouncement(Formula phi, Integer agent) {
+			if (!announcements.containsKey(agent))
+				announcements.put(agent, new HashSet<Formula>());
+			announcements.get(agent).add(phi);
+		}
 
 }
