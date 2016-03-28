@@ -38,6 +38,15 @@ public abstract class Formula {
     }
 
     /**
+     * Make a formula remember its evaluation in a specific state. Do not
+     * use if you work with different models
+     * @return The memoized version of the formula
+     */
+    public Formula memoize() {
+        return new MemoizationFormula(this);
+    }
+
+    /**
      * Return an implication. Since there is no implies class, this convenience
      * method was added.
      * @param premises The premises of the implication

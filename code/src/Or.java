@@ -32,6 +32,15 @@ public class Or extends Formula {
         return false;
     }
 
+    @Override
+    public Formula memoize() {
+        Formula[] disju = new Formula[this.formulas.length];
+        for (int i = 0; i < this.formulas.length; i++) {
+            disju[i] = this.formulas[i].memoize();
+        }
+        return new MemoizationFormula(new Or(disju));
+    }
+
     /**
      * Return a string representation of this disjunction
      *

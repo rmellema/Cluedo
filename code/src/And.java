@@ -46,6 +46,15 @@ public class And extends Formula {
         return new Or(ors);
     }
 
+    @Override
+    public Formula memoize() {
+        Formula[] conjs = new Formula[this.formulas.length];
+        for (int i = 0; i < this.formulas.length; i++) {
+            conjs[i] = this.formulas[i].memoize();
+        }
+        return new MemoizationFormula(new And(conjs));
+    }
+
     /**
      * Return a string representation of this Formula
      *
