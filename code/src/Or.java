@@ -1,3 +1,5 @@
+import java.util.Set;
+
 /**
  * Implements the disjunction of two or more Formulas
  */
@@ -39,6 +41,48 @@ public class Or extends Formula {
             disju[i] = this.formulas[i].memoize();
         }
         return new MemoizationFormula(new Or(disju));
+    }
+
+    @Override
+    public Formula simplify() {
+        Set<Integer> agents = null;
+        boolean canSimplify = false;
+        String className = null;
+        simplyKnow:
+        for (Formula form : this.formulas) {
+            if (className == null) {
+                className = form.getClass().getName();
+                switch (className) {
+                    case "EveryKnows":
+                    case "CommonKnow":
+                    case "ImplicitKnow":
+                        canSimplify = true;
+                        agents = ((GroupKnow) form).getAgents();
+                        break;
+                    default:
+                        break simplyKnow;
+                }
+            } else {
+                if (!(form.getClass().getName().equals(className) &&
+                    agents.equals(((GroupKnow)form).getAgents()))) {
+                    canSimplify = false;
+                    break;
+                }
+            }
+        }
+        if (canSimplify) {
+            Formula[] forms = new Formula[this.formulas.length];
+            for (int i = 0; i < forms.length; i++) {
+                forms[i] = ((GroupKnow) this.formulas[i]).getFormula();
+            }
+            switch (className) {
+                case "EveryKnows":
+                    return new MultiEvery(agents, false, forms);
+                default:
+                    return this;
+            }
+        }
+        return this;
     }
 
     /**

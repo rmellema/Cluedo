@@ -47,6 +47,9 @@ public class FormulaTester {
 		PropVar p00 = new PropVar(new Card(0, 0), 0);
         PropVar p11 = new PropVar(new Card(0, 1), 1);
         PropVar p01 = new PropVar(new Card(0, 0), 1);
+        Or test = new Or(new ImplicitKnow(set(1, 3), p00), new EveryKnows(set(1, 3), p11));
+        print("Testing MultiEvery", test);
+        print("", test.simplify());
         print("p00", p00);
         print("p11", p11);
         print("p01", p01);
