@@ -147,7 +147,7 @@ public class GameLoop {
              next != current;
              next = (next + 1) % this.numPlayers) {
             Player a = this.players[next];
-            Card resp = a.response(this.model, suspicion);
+            Card resp = a.response(this.model, suspicion, agent.getNumber());
             if (resp != null) {
                 counterGiven = true;
                 this.out.println("\tAgent #" + a.getNumber() +

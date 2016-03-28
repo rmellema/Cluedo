@@ -6,7 +6,6 @@ import java.util.Random;
  * @author lauravandebraak
  */
 class AccusationStrategy extends Strategy {
-    //TODO: implement
     private String strategy;
     
     public AccusationStrategy() {

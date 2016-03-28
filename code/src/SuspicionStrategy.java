@@ -6,7 +6,6 @@ import java.util.Random;
  * @author lauravandebraak
  */
 class SuspicionStrategy extends Strategy {
-    //TODO: implement
     
     private String strategy;
     

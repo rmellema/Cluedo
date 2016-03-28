@@ -73,10 +73,11 @@ public class Player {
          * the response function, determines if a response is to be made
          * @param model the current KripkeModel
          * @param query the query made
+         * @param other the agent requesting response
          * @return the card response (if any, otherwise null)
          */
-        public Card response(KripkeModel model, CardSet query){
-            return response.strategy(model, number, query, hand);
+        public Card response(KripkeModel model, CardSet query, int other){
+            return response.strategy(model, number, query, hand, other);
         }
         
         /**
