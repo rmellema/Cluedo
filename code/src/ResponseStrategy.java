@@ -19,7 +19,7 @@ class ResponseStrategy extends Strategy {
     }
     
     public Card strategy(KripkeModel model, int agent, CardSet query, CardSet hand){
-        if(strategy == "default"){
+        if(strategy.equals("default")){
             return defaultStrat(model, agent, query, hand);
         }
         return defaultStrat(model, agent, query, hand);

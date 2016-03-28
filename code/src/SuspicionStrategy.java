@@ -25,7 +25,7 @@ class SuspicionStrategy extends Strategy {
      * @return the suspicion made
      */
     public CardSet strategy(KripkeModel model, int agent){
-        if(strategy == "default"){
+        if(strategy.equals("default")){
             return defaultStrat(model, agent);
         }
         return defaultStrat(model, agent);
