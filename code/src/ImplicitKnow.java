@@ -4,7 +4,7 @@ import java.util.Set;
 /**
  * Implements the I_g operator from S5
  */
-public class ImplicitKnow extends Formula {
+public class ImplicitKnow extends Formula implements GroupKnow {
     private Set<Integer> agents;
     private Formula formula;
 
@@ -34,6 +34,14 @@ public class ImplicitKnow extends Formula {
             }
         }
         return true;
+    }
+
+    public Formula getFormula() {
+        return this.formula;
+    }
+
+    public Set<Integer> getAgents() {
+        return this.agents;
     }
 
     /**

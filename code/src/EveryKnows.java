@@ -3,7 +3,7 @@ import java.util.Set;
 /**
  * Implements the E_g operator from S5
  */
-public class EveryKnows extends Formula {
+public class EveryKnows extends Formula implements GroupKnow {
     private Set<Integer> agents;
     private Formula formula;
 
@@ -33,6 +33,14 @@ public class EveryKnows extends Formula {
             }
         }
         return true;
+    }
+
+    public Formula getFormula() {
+        return this.formula;
+    }
+
+    public Set<Integer> getAgents() {
+        return this.agents;
     }
 
     /**

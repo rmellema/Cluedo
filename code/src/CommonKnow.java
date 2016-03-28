@@ -3,7 +3,7 @@ import java.util.*;
 /**
  * Implements the C_g operator from S5
  */
-public class CommonKnow extends Formula {
+public class CommonKnow extends Formula implements GroupKnow {
     private Set<Integer> agents;
     private Formula formula;
 
@@ -47,6 +47,14 @@ public class CommonKnow extends Formula {
             }
         }
         return true;
+    }
+
+    public Formula getFormula() {
+        return this.formula;
+    }
+
+    public Set<Integer> getAgents() {
+        return this.agents;
     }
 
     /**
