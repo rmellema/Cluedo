@@ -5,27 +5,59 @@
 
 
 public class Player {
-	private Strategy suspicion = new SuspicionStrategy();
-	private Strategy response = new ResponseStrategy();
-	private Strategy accusation = new AccusationStrategy();
+	private SuspicionStrategy suspicion;
+	private ResponseStrategy response;
+	private AccusationStrategy accusation;
 
         //TODO: make this variable
         private CardSet hand;
         private int number;
+        
 
         /**
          * Constructor for Player class
          * @param one the first card in the player's hand
          * @param two the first card in the player's hand
+         * @param number the player's index number
+         * @param suspicion the suspicion strategy
+         * @param response the response strategy
+         * @param accusation the accusation strategy
          */
-	public Player(Card one, Card two, int number){
+	public Player(Card one, Card two, int number, String suspicion, String response, String accusation){
             this.hand = new CardSet(one, two);
             this.number = number;
+            this.suspicion = new SuspicionStrategy(suspicion);
+            this.response = new ResponseStrategy(response);
+            this.accusation = new AccusationStrategy(accusation);
 	}
-
+        
+        /**
+         * Constructor for Player class
+         * @param hand a CardSet cards that the player has
+         * @param number the player's index number
+         */
         public Player(CardSet hand, int number) {
             this.hand = hand;
             this.number = number;
+            this.suspicion = new SuspicionStrategy("default");
+            this.response = new ResponseStrategy("default");
+            this.accusation = new AccusationStrategy("default");
+        }
+        
+        /**
+         * Constructor for Player class
+         * @param hand a CardSet cards that the player has
+         * @param number the player's index number
+         * @param suspicion the suspicion strategy
+         * @param response the response strategy
+         * @param accusation the accusation strategy
+         */
+        public Player(CardSet hand, int number, String suspicion, String response, String accusation) {
+            this.hand = hand;
+            this.number = number;
+            this.suspicion = new SuspicionStrategy(suspicion);
+            this.response = new ResponseStrategy(response);
+            this.accusation = new AccusationStrategy(accusation);
         }
         
         /**
@@ -34,7 +66,7 @@ public class Player {
          * @return the accusation made
          */
         public CardSet accuse(KripkeModel model){
-            return accusation.aStrategy(model, number);
+            return accusation.strategy(model, number);
         }
         
         /**
@@ -44,7 +76,7 @@ public class Player {
          * @return the card response (if any, otherwise null)
          */
         public Card response(KripkeModel model, CardSet query){
-            return response.rStrategy(model, query, hand);
+            return response.strategy(model, number, query, hand);
         }
         
         /**
@@ -53,7 +85,7 @@ public class Player {
          * @return the suspicion to be made (if any, otherwise null)
          */
         public CardSet suspect(KripkeModel model){
-            return suspicion.sStrategy(model, number);
+            return suspicion.strategy(model, number);
         }
 
     public CardSet getHand() {
