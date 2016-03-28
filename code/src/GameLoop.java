@@ -160,7 +160,10 @@ public class GameLoop {
                 }
                 model.publicAnnouncement(new Or(ors));
                 model.privateAnnouncement(new PropVar(resp, a.getNumber()), agent.getNumber());
-                model.publicAnnouncement(new Or(eors));
+                long startTime = System.nanoTime();
+                model.publicAnnouncement(new Or(eors).simplify());
+                long endTime = System.nanoTime();
+                System.out.println("Time taken: " + (endTime - startTime)/(60000000000.0));
                 break;
             } else {
                 this.out.println("\tAgent #" + a.getNumber() +
