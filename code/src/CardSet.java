@@ -19,7 +19,8 @@ class CardSet {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        sb.append(this.cards[0]);
+        if (this.cards.length != 0)
+        	sb.append(this.cards[0]);
         for (int i = 1; i < this.cards.length; i++) {
             sb.append(", ");
             sb.append(this.cards[i]);

@@ -110,4 +110,18 @@ public class Dealing {
 		}
 		return true;
 	}
+	
+	/**
+	 * @return Current dealing with only cards dealt to the envelope. Other cards have not been dealt yet.
+	 */
+	public Dealing envelopeDealing() {
+		Dealing envelopeDealing = new Dealing(this);
+		for (int category = 0; category != envelopeDealing.dealing.length; ++category) {
+			for (int cardNumber = 0; cardNumber != envelopeDealing.dealing[category].length; ++cardNumber) {
+				if (envelopeDealing.dealing[category][cardNumber] != 0)
+					envelopeDealing.dealing[category][cardNumber] = -1;
+			}
+		}
+		return envelopeDealing;
+	}
 }
