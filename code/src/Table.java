@@ -1,13 +1,16 @@
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,11 +20,311 @@ import javax.swing.JTextField;
 
 	public class Table{
 		@SuppressWarnings("serial")
-		public class Initializer extends JFrame{
+		private static class Initializer extends JFrame{
+			public class DealPanel extends JPanel {
+				private int[] cardsPerPlayer;
+				
+				private ArrayList<HashMap<Integer, JComboBox<Integer>>> cardLocations;
+				
+				public class IntsInputListener implements ActionListener {
+					private JButton apply;
+					
+					public IntsInputListener(JButton apply) {
+						this.apply = apply;
+					}
+					
+					// Compares the contents of two int[]s with equal length
+					private boolean checkEnteredCards(int[] enteredCards) {
+						for (int idx = 0; idx != cardsPerPlayer.length; ++idx)
+							if (enteredCards[idx] != cardsPerPlayer[idx]) {
+								wrongDealingPopup(enteredCards);
+								return false;
+							}
+						return true;
+					}
+					
+					private void wrongDealingPopup(int[] enteredCards) {
+						String playerString = "";
+						for (int idx = 0; idx != cardsPerPlayer.length; ++idx)
+							if (enteredCards[idx] != cardsPerPlayer[idx]) {
+								playerString += "\nAgent #" + (idx+1) + ": " +enteredCards[idx]+ " \\ "+ cardsPerPlayer[idx];
+							}
+						final JPanel panel = new JPanel();
+						JOptionPane.showMessageDialog(panel, "Some agents have been dealt a wrong number of cards:" + playerString, "Invalid input", JOptionPane.ERROR_MESSAGE);
+						
+					}
+					// Returns null if the entered dealing is invalid, the entered dealing otherwise.
+					private boolean validInputDealing() {
+						int[] enteredCardsPerPlayer = new int[agents];
+						dealing = dealing.envelopeDealing();
+						// Read what the user has entered and meanwhile save the number of cards each player has been dealt
+						for (int cat = 0; cat != categories; ++cat)
+							for (int card = 0; card != categorySizes[cat]; ++card){
+								if (cardLocations.get(cat).containsKey(card)) {
+									int player = (Integer) cardLocations.get(cat).get(card).getSelectedItem();
+									++enteredCardsPerPlayer[player-1];
+									dealing = dealing.dealTo(player, cat, card);
+								}
+							}
+						// Check whether the amounts of cards that the agents have been dealt are correct
+						if (checkEnteredCards(enteredCardsPerPlayer))
+							return true;
+						return false;
+					}
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(e.getSource().equals(apply)) {
+							if (validInputDealing()) {
+								dealingReady = true;
+							} else
+								dealingReady = false;
+					    }
+					}
 
+				}
+				
+				public DealPanel() {
+					reOrganize();
+				}
+				
+				private boolean showNotReady() {
+
+					int tabsFilledIn = 2;
+					String agentString = "";
+					String cardString = "";
+					String andString = "";
+					
+					if (getAgents() == 0) {
+						agentString = " \"Agents\"";
+						--tabsFilledIn;
+					}
+					if (dealing == null) {
+						cardString = " \"Envelope\"";
+						--tabsFilledIn;
+					}
+					if (tabsFilledIn == 2)
+						return false;
+					
+					if (tabsFilledIn == 0)
+						andString = " and";
+					
+					setLayout(new BorderLayout())	;
+					add(new JLabel("Please first fill in" + agentString + andString + cardString + "."), BorderLayout.NORTH);
+					return true;
+				}
+
+				private Integer[] constructAgentList() {
+					Integer[] returnList = new Integer[agents];
+					for (int idx = 0; idx != agents; ++idx) {
+						returnList[idx] = idx+1;
+					}
+					return returnList;
+				}
+				
+				public void reOrganize() {
+					removeAll();
+					if (showNotReady())
+						return;
+					
+					countCardsPerAgent();
+					
+					Integer[] agentList = constructAgentList();
+					cardLocations = new ArrayList<HashMap<Integer, JComboBox<Integer>>>();
+					
+					int maxCatSize = max(categorySizes);
+					
+					GridLayout gridLayout = new GridLayout(maxCatSize + 1, getCategories() + 1);
+					JPanel gridPanel = new JPanel(gridLayout);
+					
+					//Empty space in the upper left corner
+					gridPanel.add(new JLabel());
+					
+					//Add category labels and initialize the 2D array of comboboxes
+					for(int cat = 0; cat != getCategories(); ++cat) {
+						gridPanel.add(new JLabel("Category " + Integer.toString(cat+1) + ": "));
+						cardLocations.add(cat, new HashMap<Integer, JComboBox<Integer>>());
+					}
+					
+					for(int card = 0; card != maxCatSize; ++card) {
+						// Add card labels to the table
+						gridPanel.add(new JLabel("Card "+ Integer.toString(card+1) + ": "));
+						
+						// Add comboboxes as table entries
+						for(int cat = 0; cat != getCategories(); ++cat) {
+							//If the card is not in the game, place an empty panel
+							if (card >= categorySizes[cat]) {
+								gridPanel.add(new JLabel());
+								continue;
+							}
+								
+							//If the card is in the envelope, write an x
+							if (dealing.isTrue(new PropVar(new Card(cat, card), 0))) {
+								gridPanel.add(new JLabel("Envelope"));
+								continue;
+							}
+							//Otherwise place a combobox
+							cardLocations.get(cat).put(card, new JComboBox<Integer>(agentList));
+							gridPanel.add(cardLocations.get(cat).get(card));
+						}
+					}
+					setLayout(new BorderLayout());
+					JPanel bigPanel = new JPanel(new BorderLayout());
+					bigPanel.add(new JLabel("Specify which cards each agent gets:"));
+					bigPanel.add(gridPanel, BorderLayout.SOUTH);
+					
+					add(bigPanel, BorderLayout.NORTH);
+					
+					JButton apply = new JButton("Apply");
+					apply.addActionListener(new IntsInputListener(apply));
+				    add(apply, BorderLayout.SOUTH);
+				}
+
+				//Stores the number of cards each agent should get
+				private void countCardsPerAgent() {
+					cardsPerPlayer = new int[agents];
+					int total = sum(categorySizes) - categories;
+					int minimum = total/agents;
+					int rest = total%agents;
+					for (int idx = 0; idx != agents; ++idx) {
+						cardsPerPlayer[idx] = minimum;
+						if (idx < rest)
+							++cardsPerPlayer[idx];
+					}
+				}
+				
+				// Private function to check the sum of all ints in an int[] which is known not to be null
+				private int sum(int[] vals) {
+					int sum = 0;
+					for (int val : vals) {
+						sum += val;
+					}
+					return sum;
+				}
+
+				// Private function to check the size of an int[] which is known not to be null and to contain at least one int
+				private int max(int[] vals) {
+					int max = vals[0];
+					for (int val : vals) {
+						if (val > max)
+							max = val;
+					}
+					return max;
+				}
+			}
+				
+			public class EnvelopePanel extends JPanel {
+
+				private ArrayList<JComboBox<Integer>> cardInputs;
+				
+				public class IntsInputListener implements ActionListener {
+					private JButton apply;
+					
+					public IntsInputListener(JButton apply) {
+						this.apply = apply;
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(e.getSource().equals(apply)) {
+							dealing = new Dealing(categorySizes);
+							for (int cat = 0; cat != cardInputs.size(); ++cat) {
+								int card = (Integer) cardInputs.get(cat).getSelectedItem() - 1;
+								dealing = dealing.dealTo(0, cat, card);
+							}
+							change(Panels.DEALING);
+					    }
+					}
+
+				}
+				
+				public EnvelopePanel() {
+					reOrganize();
+				}
+				
+				public void reOrganize() {
+					removeAll();
+					if (categorySizes == null) {
+						setLayout(new BorderLayout())	;
+						add(new JLabel("Please first fill in \"Cards\"."), BorderLayout.NORTH);
+						return;
+					}
+					cardInputs = new ArrayList<JComboBox<Integer>>(getCategories());
+					
+					JPanel hugePanel = new JPanel();
+					hugePanel.setLayout(new BorderLayout());
+					hugePanel.add(new JLabel("Cards in the envelope:"), BorderLayout.NORTH);
+					
+					JPanel bigPanel = new JPanel();
+					bigPanel.setLayout(new BoxLayout(bigPanel, BoxLayout.PAGE_AXIS));
+					for (int idx = 0; idx != getCategories(); ++idx) {
+						JPanel inputPanel = new JPanel();
+						inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
+						inputPanel.add(new JLabel("Category "+ (idx+1) +": "));
+						
+						Integer[] options = new Integer[categorySizes[idx]];
+						for (int card = 0; card != categorySizes[idx]; ++card)
+							options[card] = card+1;
+						
+						cardInputs.add(idx, new JComboBox<Integer>(options));
+						inputPanel.add(cardInputs.get(idx));
+						bigPanel.add(inputPanel);
+					}
+					hugePanel.add(bigPanel, BorderLayout.SOUTH);
+					
+					setLayout(new BorderLayout());
+					add(hugePanel, BorderLayout.NORTH);
+					
+					JButton apply = new JButton("Apply");
+					apply.addActionListener(new IntsInputListener(apply));
+				    add(apply, BorderLayout.SOUTH);
+				}
+			}
+			
 			public class CardPanel extends JPanel {
 
 				private JTextField[] cardInputs;
+				
+				public class IntsInputListener implements ActionListener {
+					private JButton apply;
+					
+					public IntsInputListener(JButton apply) {
+						this.apply = apply;
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						boolean correctInput = true;
+						int[] tmpCatSizes = new int[cardInputs.length];
+						if(e.getSource().equals(apply)) {
+							// Make sure the input in every txtfield is correct
+							for (int idx = 0; idx != cardInputs.length; ++idx) {
+								if (cardInputs[idx].getText().matches("[0-9]+") 
+										&& cardInputs[idx].getText().length() > 0) {
+									tmpCatSizes[idx] = Integer.parseInt(cardInputs[idx].getText()); 
+									if (tmpCatSizes[idx]  <= 0) {
+										correctInput = false;
+										break;
+									}
+								} else {
+									correctInput = false;
+									break;
+								}
+							}
+							//If so, save the input
+							if (correctInput) {
+								categorySizes = tmpCatSizes;
+								change(Panels.ENVELOPE);
+								return;
+							}
+							final JPanel panel = new JPanel();
+							JOptionPane.showMessageDialog(panel, "Please input positive integers for each category.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+					    }
+
+					}
+
+				}
 				
 				public CardPanel() {
 					reOrganize();
@@ -30,38 +333,39 @@ import javax.swing.JTextField;
 				public void reOrganize() {
 					removeAll();
 					if (getCategories() == 0) {
-						add(new JLabel("Please first enter the number of categories."));
+						setLayout(new BorderLayout())	;
+						add(new JLabel("Please first fill in \"Categories\"."), BorderLayout.NORTH);
 						return;
 					}
 					cardInputs = new JTextField[getCategories()];
+					
+					JPanel hugePanel = new JPanel();
+					hugePanel.setLayout(new BorderLayout());
+					hugePanel.add(new JLabel("Number of cards per category:"), BorderLayout.NORTH);
 					
 					JPanel bigPanel = new JPanel();
 					bigPanel.setLayout(new BoxLayout(bigPanel, BoxLayout.PAGE_AXIS));
 					for (int idx = 0; idx != getCategories(); ++idx) {
 						JPanel inputPanel = new JPanel();
 						inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
-						inputPanel.add(new JLabel("Category "+ (idx+1) +":"));
+						inputPanel.add(new JLabel("Category "+ (idx+1) +": "));
 						cardInputs[idx] = new JTextField();
-						cardInputs[idx].setPreferredSize(new Dimension(50,20));
 						inputPanel.add(cardInputs[idx]);
 						bigPanel.add(inputPanel);
 					}
-					add(bigPanel);
+					hugePanel.add(bigPanel, BorderLayout.SOUTH);
+					
+					setLayout(new BorderLayout());
+					add(hugePanel, BorderLayout.NORTH);
+					
+					JButton apply = new JButton("Apply");
+					apply.addActionListener(new IntsInputListener(apply));
+				    add(apply, BorderLayout.SOUTH);
 				}
 			}
 
-			public class IntInputPanel extends JPanel {
-				public class IntInputListener implements ActionListener {
-					private int[] storage;
-					private JButton apply;
-					private JTextField input;
-					
-					public IntInputListener(JButton apply, JTextField input, int[] storage) {
-						this.storage = storage;
-						this.apply = apply;
-						this.input = input;
-					}
-
+			public class CategoryPanel extends JPanel {
+				public class CategoryListener implements ActionListener {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(e.getSource().equals(apply)) {
@@ -69,8 +373,8 @@ import javax.swing.JTextField;
 									&& input.getText().length() > 0) {
 								int tmp = Integer.parseInt(input.getText()); 
 								if (tmp > 0) {
-									storage[0] = tmp;
-									cardPanel.reOrganize();
+									categories = tmp;
+									change(Panels.CARDS);
 									return;
 								}
 							} 
@@ -83,21 +387,64 @@ import javax.swing.JTextField;
 
 				}
 
-				JLabel label;
-				JTextField input;
-				JButton apply;
-				String storeName;
 				
-				public IntInputPanel(int[] storage, String label) {
+				private JTextField input;
+				private JButton apply;
+				
+				public CategoryPanel() {
 					
 					this.setLayout(new BorderLayout());
-				    this.label = new JLabel(label);
+				    JLabel label = new JLabel("Number of categories:");
 				    this.apply = new JButton("Apply");
 				    this.input = new JTextField();
-				    this.apply.addActionListener(new IntInputListener(apply, input, storage));
+				    this.apply.addActionListener(new CategoryListener());
 				    
-				    add(this.label, BorderLayout.NORTH);
-				    add(this.input, BorderLayout.CENTER);
+				    JPanel panel = new JPanel(new BorderLayout());
+				    panel.add(label, BorderLayout.NORTH);
+				    panel.add(this.input, BorderLayout.SOUTH);
+				    add(panel, BorderLayout.NORTH);
+				    add(this.apply, BorderLayout.SOUTH);
+				}
+				
+			}
+
+			public class AgentPanel extends JPanel {
+				public class AgentListener implements ActionListener {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(e.getSource().equals(apply)) {
+							if (input.getText().matches("[0-9]+") 
+									&& input.getText().length() > 0) {
+								int tmp = Integer.parseInt(input.getText()); 
+								if (tmp > 0) {
+									agents = tmp;
+									change(Panels.DEALING);
+									return;
+								}
+							} 
+							final JPanel panel = new JPanel();
+							JOptionPane.showMessageDialog(panel, "Please enter a positive integer.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+
+					    }
+
+					}
+
+				}
+				JTextField input;
+				JButton apply;
+				
+				public AgentPanel() {
+					
+					this.setLayout(new BorderLayout());
+				    JLabel label = new JLabel("Number of agents:");
+				    this.apply = new JButton("Apply");
+				    this.input = new JTextField();
+				    this.apply.addActionListener(new AgentListener());
+				    
+				    JPanel panel = new JPanel(new BorderLayout());
+				    panel.add(label, BorderLayout.NORTH);
+				    panel.add(this.input, BorderLayout.SOUTH);
+				    add(panel, BorderLayout.NORTH);
 				    add(this.apply, BorderLayout.SOUTH);
 				}
 				
@@ -113,12 +460,12 @@ import javax.swing.JTextField;
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(e.getSource().equals(okButton)) {
-							if (dealing != null) {
+							if (dealingReady) {
 								close();
 								return;
 							} 
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please enter a valid dealing.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please first fill in \"Dealing\".", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
@@ -127,7 +474,7 @@ import javax.swing.JTextField;
 				}
 
 				public OKButton() {
-					super("Start new game");
+					super("Use this dealing");
 					this.addActionListener(new OKListener(this));
 				}
 			}
@@ -156,13 +503,22 @@ import javax.swing.JTextField;
 				}
 			}
 			
-			
-			private int[] nrCategories = new int[1]; //reference to an int
+
+			private int agents = 0;
+			private int categories = 0;
 			private int[] categorySizes = null;
-			private int[] nrAgents = new int[1]; //reference to an int
 			private Dealing dealing = null;
+			private boolean dealingReady = false;
 			
 			private CardPanel cardPanel;
+			private EnvelopePanel envelopePanel;
+			private DealPanel dealPanel;
+			
+			private enum Panels{
+				CARDS,
+				ENVELOPE,
+				DEALING;
+			}
 			
 			public Initializer() {
 		        super("New game");
@@ -172,10 +528,9 @@ import javax.swing.JTextField;
 			        public void windowClosing(WindowEvent arg0) {
 			            synchronized (lock) {
 			                setVisible(false);
-			                lock.notify();
-			                if (dealing == null)  {
+			                if (!dealingReady)
 			                	setDefaultDealing();
-			                }
+			                lock.notify();
 			            }
 			        }
 
@@ -189,9 +544,25 @@ import javax.swing.JTextField;
 		        this.setVisible(true);
 		        
 			}
+			
+			private void change(Panels panel) {
+				switch (panel) {
+				case CARDS:
+					cardPanel.reOrganize();
+					categorySizes = null;
+					//FALLING TROUGH
+				case ENVELOPE:
+					envelopePanel.reOrganize();
+					dealing = null;
+				//FALLING TROUGH
+				default: 
+					dealPanel.reOrganize();
+					dealingReady = false;
+				}
+			}
 
 			private void setDefaultDealing() {
-				nrAgents[0] = 4;
+				agents = 4;
 				dealing = new Dealing(new int[][] {{0, 1, 1, 2}, {0, 2, 3, 3, 4, 4}});
 			}
 
@@ -210,16 +581,23 @@ import javax.swing.JTextField;
 			private void initTabbedPanel() {
 		        JTabbedPane tabbedPane = new JTabbedPane();
 
-		        JPanel agentPanel = new IntInputPanel(nrAgents, "Number of agents:");
+		        tabbedPane.setPreferredSize(new Dimension(400, 400));
+		        
+		        AgentPanel agentPanel = new AgentPanel();
 		        tabbedPane.addTab("Agents", agentPanel);
 
-		        JPanel catPanel = new IntInputPanel(nrCategories, "Number of card categories:");
+		        CategoryPanel catPanel = new CategoryPanel();
 		        tabbedPane.addTab("Categories", catPanel);
-		        
+
 		        cardPanel = new CardPanel();
 		        tabbedPane.addTab("Cards", cardPanel);
-		        
 
+		        envelopePanel = new EnvelopePanel();
+		        tabbedPane.addTab("Envelope", envelopePanel);
+
+		        dealPanel = new DealPanel();
+		        tabbedPane.addTab("Dealing", dealPanel);
+		        
 		        add(tabbedPane);
 				
 			}
@@ -229,7 +607,7 @@ import javax.swing.JTextField;
 			}
 			
 			private int getCategories() {
-				return nrCategories[0];
+				return categories;
 			}
 			
 			public Dealing getDealing() {
@@ -237,7 +615,7 @@ import javax.swing.JTextField;
 			}
 			
 			public int getAgents() {
-				return nrAgents[0];
+				return agents;
 			}
 			
 		}
