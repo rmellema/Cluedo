@@ -63,7 +63,7 @@ import javax.swing.JTextField;
 								if (cardLocations.get(cat).containsKey(card)) {
 									int player = (Integer) cardLocations.get(cat).get(card).getSelectedItem();
 									++enteredCardsPerPlayer[player-1];
-									dealing = dealing.dealTo(player, cat, card);
+									dealing.deal(player, cat, card);
 								}
 							}
 						// Check whether the amounts of cards that the agents have been dealt are correct
@@ -230,7 +230,7 @@ import javax.swing.JTextField;
 							dealing = new Dealing(categorySizes);
 							for (int cat = 0; cat != cardInputs.size(); ++cat) {
 								int card = (Integer) cardInputs.get(cat).getSelectedItem() - 1;
-								dealing = dealing.dealTo(0, cat, card);
+								dealing.deal(0, cat, card);
 							}
 							change(Panels.DEALING);
 					    }
@@ -503,6 +503,37 @@ import javax.swing.JTextField;
 				}
 			}
 			
+			public class RandomButton extends JButton {
+				public class RandomListener implements ActionListener {
+					RandomButton randomButton;
+					public RandomListener(RandomButton randomButton) {
+						this.randomButton = randomButton;
+					}
+					private void setRandomDealing() {
+						categorySizes = new int[]{4, 6};
+						dealing = new Dealing(categorySizes);
+						agents = 4;
+						dealing.randomize(agents);
+						dealingReady = true;
+					}
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(e.getSource().equals(randomButton)) {
+							setRandomDealing();
+							close();
+							return;
+					    }
+					}
+
+				}
+
+				public RandomButton() {
+					super("Random dealing");
+					this.addActionListener(new RandomListener(this));
+				}
+			}
+			
 
 			private int agents = 0;
 			private int categories = 0;
@@ -574,6 +605,9 @@ import javax.swing.JTextField;
 				
 				JButton def = new DefaultButton();
 				buttonPanel.add(def);
+				
+				JButton rand = new RandomButton();
+				buttonPanel.add(rand);
 
 		        this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 			}
