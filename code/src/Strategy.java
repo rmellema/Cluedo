@@ -3,12 +3,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
-* Class that implements strategies
+* Superclass that implements strategies
 * @author lauravdbraak
 */
 
 
-public class Strategy {
+public abstract class Strategy {
     protected int[] arrayTo(int num) {
         int[] ret = new int[num];
         for (int i = 0; i< num; i++) {

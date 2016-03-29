@@ -116,7 +116,7 @@ class ResponseStrategy extends Strategy {
         */
         for(Card c : found){
             PropVar test = new PropVar(c,0);
-            if(new Know(agent, new Know(other, new Neg(test))).evaluate(model)){
+            if(new Know(agent, new Know(other, test.negate())).evaluate(model)){
                 return c;
             }
         }
@@ -166,7 +166,7 @@ class ResponseStrategy extends Strategy {
         */
         for(Card f : found){
             PropVar test = new PropVar(f,0);
-            if(new Know(agent, new Know(other, new Neg(test))).evaluate(model)){
+            if(new Know(agent, new Know(other, test.negate())).evaluate(model)){
                 return f;
             }
         }
@@ -191,7 +191,7 @@ class ResponseStrategy extends Strategy {
             cat = f.getCategory();
             number = model.point().numberOfCards(f.getCategory());
             for(int n=0; n < number; n++){
-                if(new Know(agent, new And(new Maybe(other,new PropVar(new Card(cat,n),0)), new Neg(new Know(other, new PropVar(new Card(cat,n),0))))).evaluate(copy)){
+                if(new Know(agent, new And(new Maybe(other,new PropVar(new Card(cat,n),0)), new Know(other, new PropVar(new Card(cat,n),0)).negate())).evaluate(copy)){
                     knowCopy++;
                 }
             }
