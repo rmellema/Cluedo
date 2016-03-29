@@ -2,7 +2,7 @@
 import java.util.Random;
 
 /**
- * 
+ * Class for Accusation Strategies
  * @author lauravandebraak
  */
 class AccusationStrategy extends Strategy {
