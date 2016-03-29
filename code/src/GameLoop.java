@@ -22,20 +22,27 @@ public class GameLoop {
      * @param model The model that the players of this game will use
      * @param out PrintStream that this object uses to print towards.
      */
-    public GameLoop(KripkeModel model, PrintStream out) {
+    public GameLoop(KripkeModel model, PrintStream out, Player... players) {
         this.model = model;
         this.numPlayers = model.getAgents();
         this.current = 0;
         this.out = out;
-        this.initPlayers(model.point(), model.getAgents());
+        if (players.length != this.numPlayers) {
+            throw new IllegalArgumentException("Wrong number of players given");
+        }
+        this.players = players;
     }
 
     /**
      * Create a new loop using the given model
      * @param model The model that the players of this game will use
      */
-    public GameLoop(KripkeModel model) {
-        this(model, System.out);
+    public GameLoop(KripkeModel model, Player... players) {
+        this(model, System.out, players);
+    }
+
+    public GameLoop(KripkeModel model, PrintStream out) {
+        this(model, out, initPlayers(model.point(), model.getAgents(), model));
     }
 
     /**
@@ -48,7 +55,10 @@ public class GameLoop {
     public GameLoop(Dealing deal, int players, PrintStream out) {
         this(new KripkeModel(deal, players), out);
     }
-    
+
+    public GameLoop(Dealing deal, PrintStream out, Player... players) {
+        this(new KripkeModel(deal, players.length), out, players);
+    }
 
 
     /**
@@ -91,8 +101,8 @@ public class GameLoop {
      * @param deal The deal for this game
      * @param players The number of players in this game
      */
-    private void initPlayers(Dealing deal, int players) {
-        this.players = new Player[players];
+    private static Player[] initPlayers(Dealing deal, int players, KripkeModel model) {
+        Player[] ret = new Player[players];
         ArrayList<ArrayList<Card>> dealing = new ArrayList<ArrayList<Card>>();
         for (int i = 0; i < players; i++) {
             dealing.add(i, new ArrayList<Card>());
@@ -104,10 +114,11 @@ public class GameLoop {
             }
         }
         for (int i = 0; i < players; i++) {
-            this.players[i] = new Player(new
+            ret[i] = new Player(new
                     CardSet(dealing.get(i).toArray(new
-                    Card[dealing.get(i).size()])),i + 1);
+                    Card[dealing.get(i).size()])),i + 1, model);
         }
+        return ret;
     }
 
     public Dealing getDealing() {
@@ -147,7 +158,7 @@ public class GameLoop {
              next != current;
              next = (next + 1) % this.numPlayers) {
             Player a = this.players[next];
-            Card resp = a.response(this.model, suspicion, agent.getNumber());
+            Card resp = a.response(suspicion, agent.getNumber());
             if (resp != null) {
                 counterGiven = true;
                 this.out.println("\tAgent #" + a.getNumber() +
@@ -210,10 +221,11 @@ public class GameLoop {
      * Play one turn of the game for the current player
      */
     public void step() {
+        System.out.println("Stepping");
         Player agent = this.players[this.current];
-        CardSet suspicion = agent.suspect(this.model);
+        CardSet suspicion = agent.suspect();
         checkSuspicion(suspicion);
-        checkAccusation(agent.accuse(model));
+        checkAccusation(agent.accuse());
         if (++this.current == this.numPlayers) {
             this.current = 0;
             this.round++;
