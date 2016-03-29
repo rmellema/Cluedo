@@ -3,12 +3,12 @@ import java.util.Set;
 /**
  * Created by rene on 28/03/16.
  */
-public class MultiEvery extends Formula {
+public class MultiImplicit extends Formula {
     private Set<Integer> agents;
     private Formula[]    formulas;
     private boolean      conjunction;
 
-    public MultiEvery(Set<Integer> agents, boolean conjunction, Formula... forms) {
+    public MultiImplicit(Set<Integer> agents, boolean conjunction, Formula... forms) {
         this.agents = agents;
         this.formulas = forms;
         this.conjunction = conjunction;
@@ -28,20 +28,20 @@ public class MultiEvery extends Formula {
         for (int i = 0; i < holds.length; i++) {
             holds[i] = true;
         }
-        Set<Integer> states = model.getReachableStates(state, this.agents);
+        Set<Integer> states = model.getReachableStatesForAll(state, this.agents);
         for (int s : states) {
             for (int i = 0; i < holds.length; i ++) {
                 holds[i] = holds[i] && this.formulas[i].evaluate(model, s);
             }
             if (this.conjunction) {
                 ret = true;
-                for (int i = 0; i < holds.length; i++) {
-                    ret = ret && holds[i];
+                for (boolean hold : holds) {
+                    ret = ret && hold;
                 }
             } else {
                 ret = false;
-                for (int i = 0; i < holds.length; i++) {
-                    ret = ret || holds[i];
+                for (boolean hold : holds) {
+                    ret = ret || hold;
                 }
             }
             if (!ret) {
@@ -60,7 +60,7 @@ public class MultiEvery extends Formula {
     public String toString() {
         Formula[] forms = new Formula[this.formulas.length];
         for (int i = 0; i < this.formulas.length; i++) {
-            forms[i] = new EveryKnows(this.agents, this.formulas[i]);
+            forms[i] = new ImplicitKnow(this.agents, this.formulas[i]);
         }
         if (this.conjunction) {
             return "Multi" + (new And(forms)).toString();
