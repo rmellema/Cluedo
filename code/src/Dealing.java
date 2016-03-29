@@ -113,7 +113,7 @@ public class Dealing {
 	 * Returns a random dealing to the specified number of agents
 	 * @param agents Number of agents to be dealt to.
 	 */
-	public void randomize(int agents) {
+	public Dealing randomize(int agents) {
 		// Make this dealing empty
 		int[] categorySizes = new int[dealing.length];
 		for (int cat = 0; cat != dealing.length; ++cat)
@@ -137,6 +137,7 @@ public class Dealing {
 		
 			// then deal these cards randomly;
 		randomDealing(1, agents, cardList);
+		return this;
 	}
 	
 	// agent is the agent that is currently being dealt to

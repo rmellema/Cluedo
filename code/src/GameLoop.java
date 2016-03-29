@@ -62,15 +62,6 @@ public class GameLoop {
 
 
     /**
-     * Create a new loop using the given table (dealing of cards, number of players)
-     * @param table Contains dealing and number of players.
-     * @param out PrintStream this object uses for printing
-     */
-    private GameLoop(Table table, PrintStream out) {
-		this(table.getDealing(), table.getPlayers(), out);
-	}
-
-    /**
      * Create a new loop using the given dealing of cards, number of players
      * @param deal The dealing of the cards
      * @param players the number of players in this game.
@@ -84,7 +75,7 @@ public class GameLoop {
      * @param out The PrintStream used for printing
      */
     public GameLoop(PrintStream out) {
-        this(new Table(), out);
+        this(new Dealing(new int[]{4, 6}).randomize(4), out);
     }
 
     /**

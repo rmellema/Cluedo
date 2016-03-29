@@ -236,7 +236,9 @@ public class Cluedo extends JFrame {
         @Override
         public Void doInBackground() {
             Cluedo.this.infoPanel.removeAll();
-            Cluedo.this.loop = new GameLoop(writer);
+            Table table = new Table();
+            Cluedo.this.loop = new GameLoop(table.getDealing(),
+                    table.getPlayers(), writer);
             return null;
         }
 
