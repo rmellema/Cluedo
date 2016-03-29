@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
+ * Class for Response Strategies
  * @author lauravandebraak
  */
 class ResponseStrategy extends Strategy {

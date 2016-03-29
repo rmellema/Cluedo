@@ -2,7 +2,7 @@
 import java.util.Random;
 
 /**
- *
+ * Class for Suspicion Strategies
  * @author lauravandebraak
  */
 class SuspicionStrategy extends Strategy {
