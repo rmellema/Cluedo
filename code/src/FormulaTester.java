@@ -56,6 +56,8 @@ public class FormulaTester {
         System.out.println(new String(new char[80]).replace('\0', '='));
         print("1 knows p11", new Know(1, p11));
         print("1 knows p00", new Know(1, p00));
+        print("1 knows p00", new Neg(new Know(1, p00)));
+        print("1 knows p00", new Know(1, new Neg(new Know(1, p00))));
         print("1 knows p01", new Know(1, p01));
         print("1 knows not p10", new Know(1, new Neg(new PropVar(new Card(0, 1), 0))));
         print("1 knows not p10", new Neg(new Know(1, new PropVar(new Card(0, 1), 0))));
