@@ -78,6 +78,10 @@ public class Or extends Formula {
             switch (className) {
                 case "EveryKnows":
                     return new MultiEvery(agents, false, forms);
+                case "CommonKnow":
+                    return new MultiCommon(agents, false, forms);
+                case "ImplicitKnow":
+                    return new MultiImplicit(agents, false, forms);
                 default:
                     return this;
             }
