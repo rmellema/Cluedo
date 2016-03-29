@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Class for Response Strategies
@@ -27,15 +29,15 @@ class ResponseStrategy extends Strategy {
      * @param other the agent querying
      * @return the card to show (null if none are in the hand)
      */
-    public Card strategy(KripkeModel model, int agent, CardSet query, CardSet hand, int other){
+    public Card strategy(Player agent, CardSet query, CardSet hand, int other){
         if(strategy.equals("default")){
             return defaultStrategy(query, hand);
         }
         if(strategy.equals("simple")){
-            return simpleStrategy(model, agent, query, hand, other);
+            return simpleStrategy(agent, query, hand, other);
         }
         if(strategy.equals("optimal")){
-            return optimalStrategy(model, agent, query, hand, other);
+            return optimalStrategy(agent, query, hand, other);
         }
         return defaultStrategy(query, hand);
     }
@@ -79,14 +81,13 @@ class ResponseStrategy extends Strategy {
     
     /**
      * The simple strategy: if the agent knows the other agent knows one of the cards, show that one, else, choose a random card
-     * @param model the current model
      * @param agent the agent asked for response
      * @param query the query made
      * @param hand the hand of the current agent
      * @param other the agent querying
      * @return the card to show (null if none are in the hand)
      */
-    private Card simpleStrategy(KripkeModel model, int agent, CardSet query, CardSet hand, int other){
+    private Card simpleStrategy(Player agent, CardSet query, CardSet hand, int other){
         int counter = 0, i, best;
         ArrayList<Card> found = new ArrayList<>();
         Random rand = new Random();
@@ -116,7 +117,7 @@ class ResponseStrategy extends Strategy {
         */
         for(Card c : found){
             PropVar test = new PropVar(c,0);
-            if(new Know(agent, new Know(other, test.negate())).evaluate(model)){
+            if (agent.doesKnow(new Know(other, test.negate()))) {
                 return c;
             }
         }
@@ -127,14 +128,13 @@ class ResponseStrategy extends Strategy {
     
     /**
      * The optimal strategy: if the agent knows the other agent knows one of the cards, show that one. Else, show the card that gives the least information.
-     * @param model the current model
      * @param agent the agent asked for response
      * @param query the query made
      * @param hand the hand of the current agent
      * @param other the agent querying
      * @return the card to show (null if none are in the hand)
      */
-    private Card optimalStrategy(KripkeModel model, int agent, CardSet query, CardSet hand, int other) {
+    private Card optimalStrategy(Player agent, CardSet query, CardSet hand, int other) {
         int counter = 0, i, number, cat;
         ArrayList<Card> found = new ArrayList<>();
         Random rand = new Random();
@@ -166,7 +166,7 @@ class ResponseStrategy extends Strategy {
         */
         for(Card f : found){
             PropVar test = new PropVar(f,0);
-            if(new Know(agent, new Know(other, test.negate())).evaluate(model)){
+            if (agent.doesKnow(new Know(other, test.negate()))) {
                 return f;
             }
         }
@@ -186,12 +186,16 @@ class ResponseStrategy extends Strategy {
         
         for(Card f : found){
             knowCopy = 0;
-            KripkeModel copy = new KripkeModel(model);
-            copy.privateAnnouncement(new PropVar(f,agent), other);
+            Set<Integer> others = new HashSet<>();
+            others.add(other);
             cat = f.getCategory();
-            number = model.point().numberOfCards(f.getCategory());
+            number = agent.getCardsForCategory(cat);
             for(int n=0; n < number; n++){
-                if(new Know(agent, new And(new Maybe(other,new PropVar(new Card(cat,n),0)), new Know(other, new PropVar(new Card(cat,n),0)).negate())).evaluate(copy)){
+                PropVar propVar = new PropVar(new Card(cat, n), 0);
+                if (agent.doesKnow(new PrivateAnnouncement(others,
+                        new PropVar(f, agent.getNumber()),
+                        new And(new Maybe(other, propVar),
+                                new Know(other, propVar).negate())))) {
                     knowCopy++;
                 }
             }
@@ -199,7 +203,6 @@ class ResponseStrategy extends Strategy {
                 bestCard = f;
             }
         }
-        
         return bestCard;
     }
 }

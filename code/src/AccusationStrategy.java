@@ -16,33 +16,32 @@ class AccusationStrategy extends Strategy {
         this.strategy = strat;
     }
     
-    public CardSet strategy(KripkeModel model, int agent){
+    public CardSet strategy(Player agent){
         if(strategy.equals("default")){
-            return defaultStrat(model, agent);
+            return defaultStrat(agent);
         }
         if(strategy.equals("risk")){
-            return riskStrat(model, agent);
+            return riskStrat(agent);
         }
         return null;
     }
     
     /**
      * Default Strategy: if an agent knows all cards in the envelope, they will make an accusation
-     * @param model the current model
      * @param agent the current agent
      * @return a suspicion if one is made, otherwise null
      */
-    private CardSet defaultStrat(KripkeModel model, int agent){
+    private CardSet defaultStrat(Player agent){
         int c, n, found = 0, number;
-        int cat = model.point().getCategories();
+        int cat = agent.getCardCategories();
         Card[] cards = new Card[cat];
     
         
         for (c=0; c < cat; c++){
-            number = model.point().numberOfCards(c);
+            number = agent.getCardsForCategory(c);
             for (n=0; n < number; n++){
                 Card test = new Card(c, n);
-                if((new Know(agent, new PropVar(test, 0))).evaluate(model)) {
+                if (agent.doesKnow(new PropVar(test, 0))) {
                     System.out.println("Agent knows card " + test);
                     found++;
                     cards[c] = test;
@@ -59,22 +58,21 @@ class AccusationStrategy extends Strategy {
     /**
      * A risky strategy: if an agent holds only two cards as possible, 
      * and knows all the rest, make a guess so someone can not win before you
-     * @param model the current model
      * @param agent the current agent
      * @return a suspicion if one is made, otherwise null
      */
-    private CardSet riskStrat(KripkeModel model, int agent){
+    private CardSet riskStrat(Player agent){
         int c, n, found = 0, number, notC = -1, not1 = -1, not2 = -1;
-        int cat = model.point().getCategories();
+        int cat = agent.getCardCategories();
         Card[] cards = new Card[cat];
         Random rand = new Random();
         
         
         for (c=0; c < cat; c++){
-            number = model.point().numberOfCards(c);
+            number = agent.getCardsForCategory(c);
             for (n=0; n < number; n++){
                 Card test = new Card(c, n);
-                if((new Know(agent, new PropVar(test, 0))).evaluate(model)) {
+                if (agent.doesKnow(new PropVar(test, 0))) {
                     System.out.println("Agent knows card " + test);
                     found++;
                     cards[c] = test;
