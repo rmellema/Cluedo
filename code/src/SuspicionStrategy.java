@@ -58,4 +58,7 @@ class SuspicionStrategy extends Strategy {
         return new CardSet(cards);
     }
     
+    public static String[] getOptions() {
+    	return new String[]{"default"};
+    }
 }

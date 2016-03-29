@@ -205,4 +205,8 @@ class ResponseStrategy extends Strategy {
         }
         return bestCard;
     }
+    
+    public static String[] getOptions() {
+    	return new String[]{"default", "simple", "optimal"};
+    }
 }

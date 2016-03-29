@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,6 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 	public class Table{
 		@SuppressWarnings("serial")
@@ -212,7 +216,7 @@ import javax.swing.JTextField;
 					return max;
 				}
 			}
-				
+			
 			public class EnvelopePanel extends JPanel {
 
 				private ArrayList<JComboBox<Integer>> cardInputs;
@@ -277,6 +281,114 @@ import javax.swing.JTextField;
 					
 					JButton apply = new JButton("Apply");
 					apply.addActionListener(new IntsInputListener(apply));
+				    add(apply, BorderLayout.SOUTH);
+				}
+			}
+			
+			
+			public class StrategiesPanel extends JPanel {
+				private class StrategyPanel extends JPanel {
+					int index;
+					JComboBox<String> suspicionBox;
+					JComboBox<String> responseBox;
+					JComboBox<String> accusationBox;
+					
+					//Index is the index 
+					public StrategyPanel(int index) {
+						this.index = index;
+						
+						
+						JPanel bigPanel = new JPanel();
+						
+						TitledBorder title = new TitledBorder("Agent #"+ (index+1) +":");
+						bigPanel.setBorder(title);
+						
+						bigPanel.setLayout(new GridLayout(4,3));
+						
+						bigPanel.add(new JLabel());
+						bigPanel.add(new JLabel("Strategy:"));
+						bigPanel.add(new JLabel("Manipulate:"));
+						
+						
+						bigPanel.add(new JLabel("Suspicion: "));
+						suspicionBox = new JComboBox<String>(SuspicionStrategy.getOptions());
+						bigPanel.add(suspicionBox);
+						bigPanel.add(new JLabel("PLACEHOLDER"));
+						
+						bigPanel.add(new JLabel("Response: "));
+						responseBox = new JComboBox<String>(ResponseStrategy.getOptions());
+						bigPanel.add(responseBox);
+						bigPanel.add(new JLabel("PLACEHOLDER"));
+						
+						bigPanel.add(new JLabel("Accusation: "));
+						accusationBox = new JComboBox<String>(AccusationStrategy.getOptions());
+						bigPanel.add(accusationBox);
+						bigPanel.add(new JLabel("PLACEHOLDER"));
+						
+						setLayout(new BorderLayout());
+						add(bigPanel, BorderLayout.NORTH);
+					}
+					
+					public void saveInput() {
+						strategySets[index] = new StrategySet();
+						strategySets[index].setSuspicion(new SuspicionStrategy((String) suspicionBox.getSelectedItem()));
+						strategySets[index].setResponse(new ResponseStrategy((String) responseBox.getSelectedItem()));
+						strategySets[index].setAccusation(new AccusationStrategy((String) accusationBox.getSelectedItem()));
+					}
+				}
+				
+				private StrategyPanel[] strategyPanels;
+				
+				public class StrategiesListener implements ActionListener {
+					private JButton apply;
+					
+					public StrategiesListener(JButton apply) {
+						this.apply = apply;
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						strategySets = new StrategySet[agents];
+						if(e.getSource().equals(apply)) {
+							for (int idx = 0; idx != agents; ++idx) {
+								strategyPanels[idx].saveInput();
+							}
+					    }
+					}
+
+				}
+				
+				public StrategiesPanel() {
+					reOrganize();
+				}
+				
+				public void reOrganize() {
+					removeAll();
+					if (agents == 0) {
+						setLayout(new BorderLayout())	;
+						add(new JLabel("Please first fill in \"Agents\"."), BorderLayout.NORTH);
+						return;
+					}
+					
+					JPanel hugePanel = new JPanel();
+					hugePanel.setLayout(new BorderLayout());
+					hugePanel.add(new JLabel("Strategies:"), BorderLayout.NORTH);
+					
+					JPanel bigPanel = new JPanel();
+					bigPanel.setLayout(new BoxLayout(bigPanel, BoxLayout.PAGE_AXIS));
+					
+					strategyPanels = new StrategyPanel[agents];
+					for (int idx = 0; idx != agents; ++idx) {
+						strategyPanels[idx] = new StrategyPanel(idx);
+						bigPanel.add(strategyPanels[idx]);
+					}
+					hugePanel.add(bigPanel, BorderLayout.SOUTH);
+					
+					setLayout(new BorderLayout());
+					add(hugePanel, BorderLayout.NORTH);
+					
+					JButton apply = new JButton("Apply");
+					apply.addActionListener(new StrategiesListener(apply));
 				    add(apply, BorderLayout.SOUTH);
 				}
 			}
@@ -419,6 +531,7 @@ import javax.swing.JTextField;
 								if (tmp > 0) {
 									agents = tmp;
 									change(Panels.DEALING);
+									change(Panels.STRATEGIES);
 									return;
 								}
 							} 
@@ -474,7 +587,7 @@ import javax.swing.JTextField;
 				}
 
 				public OKButton() {
-					super("Use this dealing");
+					super("Done");
 					this.addActionListener(new OKListener(this));
 				}
 			}
@@ -489,7 +602,7 @@ import javax.swing.JTextField;
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(e.getSource().equals(defButton)) {
-							setDefaultDealing();
+							defaultSettings();
 							close();
 							return;
 					    }
@@ -498,12 +611,14 @@ import javax.swing.JTextField;
 				}
 
 				public DefaultButton() {
-					super("Default dealing");
+					super("Default settings");
 					this.addActionListener(new DefaultListener(this));
 				}
 			}
 			
 			public class RandomButton extends JButton {
+				Random rand = new Random();
+				
 				public class RandomListener implements ActionListener {
 					RandomButton randomButton;
 					public RandomListener(RandomButton randomButton) {
@@ -512,15 +627,38 @@ import javax.swing.JTextField;
 					private void setRandomDealing() {
 						categorySizes = new int[]{4, 6};
 						dealing = new Dealing(categorySizes);
-						agents = 4;
 						dealing.randomize(agents);
 						dealingReady = true;
+					}
+					
+					private void setRandomStrategies() {
+						strategySets = new StrategySet[agents];
+						String[] options;
+						String option;
+						for (int idx = 0; idx != agents; ++idx){
+							strategySets[idx] = new StrategySet();
+							
+							options = SuspicionStrategy.getOptions();
+							option = options[rand.nextInt(options.length)];
+							strategySets[idx].setSuspicion(new SuspicionStrategy(option));
+							
+							options = ResponseStrategy.getOptions();
+							option = options[rand.nextInt(options.length)];
+							strategySets[idx].setResponse(new ResponseStrategy(option));
+							
+							options = AccusationStrategy.getOptions();
+							option = options[rand.nextInt(options.length)];
+							strategySets[idx].setAccusation(new AccusationStrategy(option));
+							
+						}
 					}
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(e.getSource().equals(randomButton)) {
+							agents = 4;
 							setRandomDealing();
+							setRandomStrategies();
 							close();
 							return;
 					    }
@@ -529,7 +667,7 @@ import javax.swing.JTextField;
 				}
 
 				public RandomButton() {
-					super("Random dealing");
+					super("Random settings");
 					this.addActionListener(new RandomListener(this));
 				}
 			}
@@ -539,28 +677,33 @@ import javax.swing.JTextField;
 			private int categories = 0;
 			private int[] categorySizes = null;
 			private Dealing dealing = null;
+			private StrategySet[] strategySets = null;
 			private boolean dealingReady = false;
 			
 			private CardPanel cardPanel;
 			private EnvelopePanel envelopePanel;
 			private DealPanel dealPanel;
+			private StrategiesPanel strategiesPanel;
 			
 			private enum Panels{
 				CARDS,
 				ENVELOPE,
-				DEALING;
+				DEALING,
+				STRATEGIES;
 			}
 			
 			public Initializer() {
 		        super("New game");
+		        
+		        setMinimumSize(new Dimension(500, 550));
 		        
 		        this.addWindowListener(new WindowAdapter() {
 			        @Override
 			        public void windowClosing(WindowEvent arg0) {
 			            synchronized (lock) {
 			                setVisible(false);
-			                if (!dealingReady)
-			                	setDefaultDealing();
+			                if (!dealingReady || strategySets == null)
+			                	defaultSettings();
 			                lock.notify();
 			            }
 			        }
@@ -586,15 +729,34 @@ import javax.swing.JTextField;
 					envelopePanel.reOrganize();
 					dealing = null;
 				//FALLING TROUGH
-				default: 
+				case DEALING: 
 					dealPanel.reOrganize();
 					dealingReady = false;
+					break;
+				case STRATEGIES:
+					strategiesPanel.reOrganize();
+					strategySets = null;
+					break;
 				}
+			}
+			private void defaultSettings() {
+				agents = 4;
+				setDefaultDealing();
+				setDefaultStrategies();
 			}
 
 			private void setDefaultDealing() {
-				agents = 4;
 				dealing = new Dealing(new int[][] {{0, 1, 1, 2}, {0, 2, 3, 3, 4, 4}});
+			}
+
+			private void setDefaultStrategies() {
+				strategySets = new StrategySet[agents];
+				for (int idx = 0; idx != agents; ++idx){
+					strategySets[idx] = new StrategySet();
+					strategySets[idx].setSuspicion(new SuspicionStrategy());
+					strategySets[idx].setResponse(new ResponseStrategy());
+					strategySets[idx].setAccusation(new AccusationStrategy());
+				}
 			}
 
 			private void initButtonPanel() {
@@ -614,8 +776,6 @@ import javax.swing.JTextField;
 
 			private void initTabbedPanel() {
 		        JTabbedPane tabbedPane = new JTabbedPane();
-
-		        tabbedPane.setPreferredSize(new Dimension(400, 400));
 		        
 		        AgentPanel agentPanel = new AgentPanel();
 		        tabbedPane.addTab("Agents", agentPanel);
@@ -631,6 +791,9 @@ import javax.swing.JTextField;
 
 		        dealPanel = new DealPanel();
 		        tabbedPane.addTab("Dealing", dealPanel);
+
+		        strategiesPanel = new StrategiesPanel();
+		        tabbedPane.addTab("Strategies", strategiesPanel);
 		        
 		        add(tabbedPane);
 				
@@ -651,12 +814,16 @@ import javax.swing.JTextField;
 			public int getAgents() {
 				return agents;
 			}
-			
+
+			public StrategySet[] getStrategies() {
+				return this.strategySets;
+			}
 		}
 
 		private static Object lock = new Object();
 		private Dealing dealing;
 		private int players;
+		private StrategySet[] strategySets;
 
 		public Table() {
 			Initializer init = new Initializer();
@@ -672,6 +839,7 @@ import javax.swing.JTextField;
 
 			dealing = init.getDealing();
 			players = init.getAgents();
+			strategySets = init.getStrategies();
 	    }
 
 		public Dealing getDealing() {
@@ -680,6 +848,10 @@ import javax.swing.JTextField;
 
 		public int getPlayers() {
 			return this.players;
+		}
+
+		public StrategySet[] getStrategies() {
+			return this.strategySets;
 		}
 	}
 	

@@ -102,4 +102,8 @@ class AccusationStrategy extends Strategy {
         
         return null;
     }
+    
+    public static String[] getOptions() {
+    	return new String[]{"default", "risk"};
+    }
 }
