@@ -39,7 +39,7 @@ public class Card {
      * @return String representation of card
      */
 	public String toString() {
-        return "c(" + this.category + ", " + this.number + ")";
+        return "c(" + (this.category+1) + ", " + (this.number+1) + ")";
     }
 
     /**

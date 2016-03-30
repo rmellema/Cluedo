@@ -49,15 +49,32 @@ public class Player extends AbstractPlayer {
          * @param accusation the accusation strategy
          */
         public Player(CardSet hand, int number, KripkeModel model, String suspicion, String response, String accusation) {
-            super(model, number);
-            this.hand = hand;
-            this.number = number;
-            this.suspicion = new SuspicionStrategy(suspicion);
-            this.response = new ResponseStrategy(response);
-            this.accusation = new AccusationStrategy(accusation);
+            this(hand, number, model, new SuspicionStrategy(suspicion), 
+            		new ResponseStrategy(response),  
+            		new AccusationStrategy(accusation));
         }
 
         /**
+         * Constructor for Player class
+         * @param hand a CardSet cards that the player has
+         * @param number the player's index number
+         * @param suspicion the suspicion strategy
+         * @param response the response strategy
+         * @param accusation the accusation strategy
+         */
+        public Player(CardSet hand, int number, KripkeModel model,
+				SuspicionStrategy suspicion, ResponseStrategy response,
+				AccusationStrategy accusation) {
+            super(model, number);
+            System.out.println("CONSTRUCTING PLAYER"); //TODO 
+        	this.hand = hand;
+            this.number = number;
+            this.suspicion = suspicion;
+            this.response = response;
+            this.accusation = accusation;
+		}
+
+		/**
          * the accusation function, determines an accusation
          * @return the accusation made
          */

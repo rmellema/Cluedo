@@ -7,7 +7,7 @@ import java.util.Random;
  */
 class SuspicionStrategy extends Strategy {
     
-    private String strategy;
+    protected String strategy;
     
     public SuspicionStrategy() {
         this.strategy = "default";
@@ -29,7 +29,7 @@ class SuspicionStrategy extends Strategy {
         return defaultStrat(agent);
     }
     
-    private CardSet defaultStrat(Player agent){
+    protected CardSet defaultStrat(Player agent){
         int c = 0, number = 0, s = 0;
         int cat = agent.getCardCategories();
         Card[] cards = new Card[cat];
@@ -60,5 +60,9 @@ class SuspicionStrategy extends Strategy {
 
     public String getStrategy() {
         return strategy;
+    }
+
+    public static String[] getOptions() {
+    	return new String[]{"default"};
     }
 }

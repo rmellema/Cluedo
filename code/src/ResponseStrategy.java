@@ -10,7 +10,7 @@ import java.util.Set;
  */
 class ResponseStrategy extends Strategy {
 
-    private String strategy;
+	private String strategy;
     
     public ResponseStrategy() {
         this.strategy = "default";
@@ -209,4 +209,7 @@ class ResponseStrategy extends Strategy {
         return strategy;
     }
 
+    public static String[] getOptions() {
+    	return new String[]{"default", "simple", "optimal"};
+    }
 }
