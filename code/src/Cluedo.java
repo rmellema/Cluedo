@@ -75,6 +75,7 @@ public class Cluedo extends JFrame {
         game.add(new JMenuItem(newGameAction));
         this.setEnabledButtons(false);
         this.newGameAction.setEnabled(true);
+        this.setMinimumSize(new Dimension(640, 600));
         this.revalidate();
         this.pack();
         this.setVisible(true);
