@@ -511,7 +511,7 @@ import javax.swing.event.ChangeListener;
 								}
 							} 
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please enter a number larger than 1.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please enter a positive integer.", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
