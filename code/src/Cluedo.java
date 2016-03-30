@@ -27,18 +27,22 @@ public class Cluedo extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // Panel Creation
         this.outField = new JTextArea();
-        this.outField.setPreferredSize(new Dimension(600, 600));
         this.outField.setMargin(new Insets(0, 5, 0, 0));
         this.outField.setEditable(false);
+        this.outField.setLineWrap(true);
+        this.outField.setWrapStyleWord(true);
         this.outField.setTabSize(8);
+        this.outField.setMinimumSize(new Dimension(600, 0));
         this.writer = new PrintStream(new JTextStream(this.outField));
         this.bar = new JProgressBar(SwingConstants.VERTICAL);
         this.bar.setVisible(false);
         this.bar.setIndeterminate(true);
         this.infoPanel = new JPanel();
-        this.infoPanel.setPreferredSize(new Dimension(200, 600));
         this.infoPanel.setLayout(new BoxLayout(this.infoPanel, BoxLayout.Y_AXIS));
-        this.add(this.infoPanel, BorderLayout.EAST);
+        this.infoPanel.setPreferredSize(new Dimension(200, 500));
+        JScrollPane infoScroll = new JScrollPane(this.infoPanel);
+        infoScroll.setPreferredSize(new Dimension(240, 600));
+        this.getContentPane().add(infoScroll, BorderLayout.EAST);
         JScrollPane scrollPane = new JScrollPane(this.outField);
         scrollPane.setPreferredSize(new Dimension(640, 600));
         this.getContentPane().add(scrollPane, BorderLayout.CENTER);
