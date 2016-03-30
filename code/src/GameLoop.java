@@ -1,6 +1,7 @@
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -16,6 +17,7 @@ public class GameLoop {
     private PrintStream out;
     private Player[]    players;
     private boolean     done = false;
+    private Set<Integer> skip = new HashSet<>();
 
     /**
      * Create a new loop using the given model and PrintStream.
@@ -200,10 +202,7 @@ public class GameLoop {
             } else {
                 this.out.println("The accusation is incorrect\nAgent #" +
                         agent.getNumber() + " will be removed from the game");
-                for (int i = this.current + 1; i < this.numPlayers; i++) {
-                    this.players[i - 1] = this.players[i];
-                }
-                this.numPlayers--;
+                skip.add(this.current);
             }
         }
     }
@@ -212,16 +211,22 @@ public class GameLoop {
      * Play one turn of the game for the current player
      */
     public void step() {
-        System.out.println("Stepping");
+        if (skip.size() == this.numPlayers - 1) {
+            this.done = true;
+            this.out.println("Only one agent left, so the game is over.");
+            return;
+        }
         Player agent = this.players[this.current];
         CardSet suspicion = agent.suspect();
         checkSuspicion(suspicion);
         checkAccusation(agent.accuse());
-        if (++this.current == this.numPlayers) {
-            this.current = 0;
-            this.round++;
-            this.out.println("# Round " + this.round);
-        }
+        do {
+            if (++this.current == this.numPlayers) {
+                this.current = 0;
+                this.round++;
+                this.out.println("# Round " + this.round);
+            }
+        } while (skip.contains(this.current));
     }
 
     /**
@@ -245,6 +250,24 @@ public class GameLoop {
 
     public boolean isDone() {
         return this.done;
+    }
+
+    public Player[] getEliminatedPlayers() {
+        if (skip.size() == 0) {
+            return null;
+        }
+        ArrayList<Player> ret = new ArrayList<>(skip.size());
+        for (int num : skip) {
+            ret.add(this.players[num]);
+        }
+        return ret.toArray(new Player[skip.size()]);
+    }
+    /**
+     * Get the number of the current round
+     * @return number of the current round
+     */
+    public int getRound() {
+        return round;
     }
 
     public static void main(String[] args) {
