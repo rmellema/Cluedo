@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class Cluedo extends JFrame {
     private GameLoop loop = null;
@@ -25,7 +26,7 @@ public class Cluedo extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // Panel Creation
         this.outField = new JTextArea();
-        this.outField.setPreferredSize(new Dimension(600, 800));
+        this.outField.setPreferredSize(new Dimension(600, 600));
         this.outField.setMargin(new Insets(0, 5, 0, 0));
         this.outField.setEditable(false);
         this.outField.setTabSize(8);
@@ -34,11 +35,11 @@ public class Cluedo extends JFrame {
         this.bar.setVisible(false);
         this.bar.setIndeterminate(true);
         this.infoPanel = new JPanel();
-        this.infoPanel.setPreferredSize(new Dimension(200, 800));
+        this.infoPanel.setPreferredSize(new Dimension(200, 600));
         this.infoPanel.setLayout(new BoxLayout(this.infoPanel, BoxLayout.Y_AXIS));
         this.add(this.infoPanel, BorderLayout.EAST);
         JScrollPane scrollPane = new JScrollPane(this.outField);
-        scrollPane.setPreferredSize(new Dimension(640, 800));
+        scrollPane.setPreferredSize(new Dimension(640, 600));
         this.getContentPane().add(scrollPane, BorderLayout.CENTER);
         this.getContentPane().add(bar, BorderLayout.WEST);
         // Menu and Button creation
@@ -230,21 +231,57 @@ public class Cluedo extends JFrame {
 
     public class NewGameWorker extends SwingWorker<Void, Void> {
         public NewGameWorker() {
-
+        }
+        
+        private Player[] initPlayers(KripkeModel model, StrategySet... strategySets) {
+            Dealing deal = model.point();
+        	Player[] ret = new Player[strategySets.length];
+            // Initialize an array of cards per player
+            ArrayList<ArrayList<Card>> dealing = new ArrayList<ArrayList<Card>>();
+            for (int i = 0; i < strategySets.length; i++) {
+                dealing.add(i, new ArrayList<Card>());
+            }
+            
+            // Save all cards in the list of the correct player
+            for (int i = 0; i < deal.getCategories(); i ++) {
+                for (int j = 0; j < deal.numberOfCards(i); j++) {
+                    if (deal.player(i, j) > 0)
+                        dealing.get(deal.player(i, j) - 1).add(new Card(i, j));
+                }
+            }
+            
+            // Initialize the players
+            for (int i = 0; i < strategySets.length; i++) {
+				Card[] dummyArray = new Card[dealing.get(i).size()];
+				CardSet cardSet = new CardSet(dealing.get(i).toArray(dummyArray));
+				
+                ret[i] = new Player(
+                			cardSet,
+                			i + 1, 
+                			model,
+                			strategySets[i].getSuspicion(),
+                			strategySets[i].getResponse(),
+                			strategySets[i].getAccusation()
+                			);
+            }
+            return ret;
         }
 
         @Override
         public Void doInBackground() {
             Cluedo.this.infoPanel.removeAll();
             Table table = new Table();
-            Cluedo.this.loop = new GameLoop(table.getDealing(),
-                    table.getPlayers(), writer);
+            KripkeModel model = new KripkeModel(table.getDealing(), table.getPlayers());
+            Cluedo.this.loop = new GameLoop(
+            		model,
+                    writer,
+                    initPlayers(model, table.getStrategies()));
+            
             return null;
         }
 
         @Override
         public void done() {
-            Cluedo.this.outField.setText("");
             for (Player p : Cluedo.this.loop.getPlayers()) {
                 String label = "Agent #" + p.getNumber() + "\n\t" + p.getHand();
                 Cluedo.this.infoPanel.add(new JLabel(label));

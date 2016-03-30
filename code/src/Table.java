@@ -11,6 +11,7 @@ import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -285,13 +286,16 @@ import javax.swing.event.ChangeListener;
 				}
 			}
 			
-			
 			public class StrategiesPanel extends JPanel {
 				private class StrategyPanel extends JPanel {
 					int index;
 					JComboBox<String> suspicionBox;
 					JComboBox<String> responseBox;
 					JComboBox<String> accusationBox;
+
+					JCheckBox suspicionCheckBox = new JCheckBox();
+					JCheckBox responseCheckBox = new JCheckBox();
+					JCheckBox accusationCheckBox = new JCheckBox();
 					
 					//Index is the index 
 					public StrategyPanel(int index) {
@@ -313,17 +317,17 @@ import javax.swing.event.ChangeListener;
 						bigPanel.add(new JLabel("Suspicion: "));
 						suspicionBox = new JComboBox<String>(SuspicionStrategy.getOptions());
 						bigPanel.add(suspicionBox);
-						bigPanel.add(new JLabel("PLACEHOLDER"));
+						bigPanel.add(suspicionCheckBox);
 						
 						bigPanel.add(new JLabel("Response: "));
 						responseBox = new JComboBox<String>(ResponseStrategy.getOptions());
 						bigPanel.add(responseBox);
-						bigPanel.add(new JLabel("PLACEHOLDER"));
+						bigPanel.add(responseCheckBox);
 						
 						bigPanel.add(new JLabel("Accusation: "));
 						accusationBox = new JComboBox<String>(AccusationStrategy.getOptions());
 						bigPanel.add(accusationBox);
-						bigPanel.add(new JLabel("PLACEHOLDER"));
+						bigPanel.add(accusationCheckBox);
 						
 						setLayout(new BorderLayout());
 						add(bigPanel, BorderLayout.NORTH);
@@ -331,9 +335,25 @@ import javax.swing.event.ChangeListener;
 					
 					public void saveInput() {
 						strategySets[index] = new StrategySet();
-						strategySets[index].setSuspicion(new SuspicionStrategy((String) suspicionBox.getSelectedItem()));
-						strategySets[index].setResponse(new ResponseStrategy((String) responseBox.getSelectedItem()));
-						strategySets[index].setAccusation(new AccusationStrategy((String) accusationBox.getSelectedItem()));
+						String strategyString;
+						
+						strategyString = (String) suspicionBox.getSelectedItem();
+						if (suspicionCheckBox.isSelected())
+							strategySets[index].setSuspicion(new PlayableSuspicionStrategy(strategyString));
+						else 
+							strategySets[index].setSuspicion(new SuspicionStrategy(strategyString));
+						
+						strategyString = (String) responseBox.getSelectedItem();
+						if (responseCheckBox.isSelected())
+							strategySets[index].setResponse(new PlayableResponseStrategy(strategyString));
+						else 
+							strategySets[index].setResponse(new ResponseStrategy(strategyString));
+						
+						strategyString = (String) accusationBox.getSelectedItem();
+						if (accusationCheckBox.isSelected())
+							strategySets[index].setAccusation(new PlayableAccusationStrategy(strategyString));
+						else 
+							strategySets[index].setAccusation(new AccusationStrategy(strategyString));
 					}
 				}
 				
