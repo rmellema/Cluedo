@@ -75,7 +75,7 @@ public class GameLoop {
      * @param out The PrintStream used for printing
      */
     public GameLoop(PrintStream out) {
-        this(new Dealing(new int[]{4, 6}).randomize(4), out);
+        this(new Dealing(new int[]{4, 6}).randomize(4), 4, out);
     }
 
     /**
