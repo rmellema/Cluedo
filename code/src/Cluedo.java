@@ -50,9 +50,19 @@ public class Cluedo extends JFrame {
         // Menu and Button creation
         this.menu = new JMenuBar();
         this.setJMenuBar(this.menu);
+        AbstractAction clearOutput = new AbstractAction("Clear output") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Cluedo.this.outField.setText("");
+            }
+        };
+        clearOutput.putValue(AbstractAction.SHORT_DESCRIPTION,
+                "Clears the output field");
+        JButton clearButton = new JButton(clearOutput);
         JMenu game = new JMenu("Game");
         this.menu.add(game);
         this.buttons = new JPanel();
+        this.buttons.add(clearButton);
         this.getContentPane().add(this.buttons, BorderLayout.SOUTH);
         this.gameAction = new GameAction("Game",
                 "Play until the end of the game", GameWorker.class);
@@ -239,9 +249,9 @@ public class Cluedo extends JFrame {
 
         @Override
         public void done() {
-            Cluedo.this.outField.setText("");
+            Cluedo.this.writer.println("============================");
             Cluedo.this.writer.println("Restarted game");
-            Cluedo.this.writer.println("=================");
+            Cluedo.this.writer.println("============================");
             Cluedo.this.writer.println("# Round 0");
             Cluedo.this.setBusy(false);
         }
@@ -310,9 +320,9 @@ public class Cluedo extends JFrame {
                 panel.add(new JLabel("Accusation strategy:\t" + p.getAccusationStrategy()));
                 Cluedo.this.infoPanel.add(panel, p.getNumber() - 1);
             }
-            Cluedo.this.outField.setText("");
+            Cluedo.this.writer.println("============================");
             Cluedo.this.writer.println("Prepared new game");
-            Cluedo.this.writer.println("=================");
+            Cluedo.this.writer.println("============================");
             Cluedo.this.writer.println("# Round 0");
             Cluedo.this.setBusy(false);
         }
