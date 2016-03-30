@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintStream;
@@ -295,9 +296,16 @@ public class Cluedo extends JFrame {
         @Override
         public void done() {
             for (Player p : Cluedo.this.loop.getPlayers()) {
-                String label = "Agent #" + p.getNumber() + "\n\t" + p.getHand();
-                Cluedo.this.infoPanel.add(new JLabel(label));
+                JPanel       panel  = new JPanel();
+                TitledBorder border = new TitledBorder("Agent #" + p.getNumber());
+                panel.setBorder(border);
+                panel.add(new JLabel("Hand:\t" + p.getHand()));
+                panel.add(new JLabel("Suspicion strategy:\t" + p.getSuspicionStrategy()));
+                panel.add(new JLabel("Response strategy:\t" + p.getResponseStrategy()));
+                panel.add(new JLabel("Accusation strategy:\t" + p.getAccusationStrategy()));
+                Cluedo.this.infoPanel.add(panel, p.getNumber() - 1);
             }
+            Cluedo.this.outField.setText("");
             Cluedo.this.writer.println("Prepared new game");
             Cluedo.this.writer.println("=================");
             Cluedo.this.writer.println("# Round 0");
