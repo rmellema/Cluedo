@@ -42,7 +42,7 @@ public class PlayableResponseStrategy extends ResponseStrategy {
 
 	private boolean manualInput(int agent) {
 		int selectedOption = JOptionPane.showConfirmDialog(null, 
-                "Do you want to do a response for agent #"+ agent +"?", 
+                "Do you want to manipulate the response of agent #"+ agent +"?", 
                 "It's your turn!", 
                 JOptionPane.YES_NO_OPTION); 
 		if (selectedOption == JOptionPane.YES_OPTION) {

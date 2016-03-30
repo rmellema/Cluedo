@@ -593,12 +593,29 @@ import javax.swing.event.ChangeListener;
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(e.getSource().equals(okButton)) {
-							if (dealingReady) {
+							int tabsFilledIn = 2;
+							String dealString = "";
+							String stratString = "";
+							String andString = "";
+							
+							if (!dealingReady) {
+								dealString  = " \"Dealing\"";
+								--tabsFilledIn;
+							}
+							if (strategySets == null) {
+								stratString  = " \"Strategies\"";
+								--tabsFilledIn;
+							}
+							if (tabsFilledIn == 2) {
 								close();
 								return;
-							} 
+							}
+							
+							if (tabsFilledIn == 0)
+								andString = " and";
+							 
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please first fill in \"Dealing\".", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please first fill in" + dealString  + andString + stratString + ".", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
@@ -715,7 +732,7 @@ import javax.swing.event.ChangeListener;
 			public Initializer() {
 		        super("New game");
 		        
-		        setMinimumSize(new Dimension(500, 550));
+		        setMinimumSize(new Dimension(500, 600));
 		        
 		        this.addWindowListener(new WindowAdapter() {
 			        @Override
