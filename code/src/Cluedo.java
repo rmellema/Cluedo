@@ -212,9 +212,20 @@ public class Cluedo extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            Cluedo.this.loop = new GameLoop(loop.getDealing(),
-                    loop.getPlayers().length,
-                    writer);
+            KripkeModel model = new KripkeModel(loop.getDealing(),
+                    loop.getPlayers().length);
+            Player[] oldPlayers = Cluedo.this.loop.getPlayers();
+            Player[] players = new Player[oldPlayers.length];
+            for (int i = 0; i < players.length; i++) {
+                Player oldPlayer = oldPlayers[i];
+                players[i] = new Player(oldPlayer.getHand(),
+                        oldPlayer.getNumber(), model,
+                        oldPlayer.getSuspicionStrategy(),
+                        oldPlayer.getResponseStrategy(),
+                        oldPlayer.getAccusationStrategy());
+            }
+            Cluedo.this.loop = new GameLoop(model,
+                    writer, players);
             return null;
         }
 

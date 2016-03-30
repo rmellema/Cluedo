@@ -22,7 +22,6 @@ class ResponseStrategy extends Strategy {
     
     /**
      * The strategy function for responses
-     * @param model the current model
      * @param agent the agent asked for response
      * @param query the query made
      * @param hand the hand of the current agent
@@ -205,4 +204,9 @@ class ResponseStrategy extends Strategy {
         }
         return bestCard;
     }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
 }

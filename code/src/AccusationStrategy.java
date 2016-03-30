@@ -102,4 +102,9 @@ class AccusationStrategy extends Strategy {
         
         return null;
     }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
 }

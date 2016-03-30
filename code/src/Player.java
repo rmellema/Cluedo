@@ -1,5 +1,5 @@
 /**
-* Class that implements players (agents).  
+* Class that implements players (agents).
 * @author lauravdbraak
 */
 
@@ -11,7 +11,7 @@ public class Player extends AbstractPlayer {
 
         private CardSet hand;
         private int number;
-        
+
 
         /**
          * Constructor for Player class
@@ -23,14 +23,9 @@ public class Player extends AbstractPlayer {
          * @param accusation the accusation strategy
          */
 	public Player(Card one, Card two, int number, KripkeModel model, String suspicion, String response, String accusation){
-        super(model, number);
-            this.hand = new CardSet(one, two);
-            this.number = number;
-            this.suspicion = new SuspicionStrategy(suspicion);
-            this.response = new ResponseStrategy(response);
-            this.accusation = new AccusationStrategy(accusation);
+        this(new CardSet(one, two), number, model, suspicion, response, accusation);
 	}
-        
+
         /**
          * Constructor for Player class
          * @param hand a CardSet cards that the player has
@@ -44,7 +39,7 @@ public class Player extends AbstractPlayer {
             this.response = new ResponseStrategy("default");
             this.accusation = new AccusationStrategy("default");
         }
-        
+
         /**
          * Constructor for Player class
          * @param hand a CardSet cards that the player has
@@ -61,7 +56,7 @@ public class Player extends AbstractPlayer {
             this.response = new ResponseStrategy(response);
             this.accusation = new AccusationStrategy(accusation);
         }
-        
+
         /**
          * the accusation function, determines an accusation
          * @return the accusation made
@@ -69,7 +64,7 @@ public class Player extends AbstractPlayer {
         public CardSet accuse(){
             return accusation.strategy(this);
         }
-        
+
         /**
          * the response function, determines if a response is to be made
          * @param query the query made
@@ -79,7 +74,7 @@ public class Player extends AbstractPlayer {
         public Card response(CardSet query, int other){
             return response.strategy(this, query, hand, other);
         }
-        
+
         /**
          * the suspect function, determines if a suspicion is pronounced
          * @return the suspicion to be made (if any, otherwise null)
@@ -95,4 +90,17 @@ public class Player extends AbstractPlayer {
     public int getNumber() {
         return this.number;
     }
+
+    public String getAccusationStrategy() {
+        return this.accusation.getStrategy();
+    }
+
+    public String getResponseStrategy() {
+        return this.response.getStrategy();
+    }
+
+    public String getSuspicionStrategy() {
+        return this.suspicion.getStrategy();
+    }
+
 }
