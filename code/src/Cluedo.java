@@ -219,11 +219,12 @@ public class Cluedo extends JFrame {
             Player[] players = new Player[oldPlayers.length];
             for (int i = 0; i < players.length; i++) {
                 Player oldPlayer = oldPlayers[i];
+                StrategySet set = oldPlayer.getStrategies();
                 players[i] = new Player(oldPlayer.getHand(),
                         oldPlayer.getNumber(), model,
-                        oldPlayer.getSuspicionStrategy(),
-                        oldPlayer.getResponseStrategy(),
-                        oldPlayer.getAccusationStrategy());
+                        set.getSuspicion(),
+                        set.getResponse(),
+                        set.getAccusation());
             }
             Cluedo.this.loop = new GameLoop(model,
                     writer, players);

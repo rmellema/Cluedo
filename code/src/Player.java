@@ -108,6 +108,10 @@ public class Player extends AbstractPlayer {
         return this.number;
     }
 
+    public StrategySet getStrategies() {
+        return new StrategySet(this.suspicion, this.response, this.accusation);
+    }
+
     public String getAccusationStrategy() {
         return this.accusation.getStrategy();
     }
