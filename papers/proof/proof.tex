@@ -20,14 +20,14 @@
 \maketitle
 
 For our implementation of Cluedo, we needed to implement private
-announcements \citep[see][chapter 6]{ditmarsch2007dynamic}. We decided to
+announcements \citep[see][Chapter 6]{ditmarsch2007dynamic}. We decided to
 implement this by removing the relations for the agent that received the
 announcement between the states where the announcement holds and the states
 where the announcement does not hold. So if agent $i$ receives announcement
 $\varphi$ and $R_i$ is the set of relations before the announcement then
 $R_i'$, the set of relations for agent $i$ after the private announcement.
 $R_i'$ is defined as $R_i = \{(s, t) | (s, t) \in R_i, (M', s) \models
-\varphi \text{ bi-implies } (M', t) \models \varphi\}$.
+\varphi \text{ if and only if } (M', t) \models \varphi\}$.
 
 We denote propositional variables as $p_i^j$, where $p$ stands for the
 category of the card, $i$ for the number of that card in the category and
@@ -36,17 +36,17 @@ number 3 is dealt to agent 0. In this notation, agent 0 is the envelope.
 If the number or category of the card is not important, the number is left
 out and the letter is not $p$ or $w$.  We also have a model $M$, which
 after the first public announcement becomes $M'$, after the private
-announcement becomes $M''$ and after the second public announcement becomes
+announcement becomes $M''$, and after the second public announcement becomes
 $M'''$.
 
-Most of the rules for Cluedo are also implemented in the model implicitly,
-like the rule $c^i \impl \neg c^j$ with $i \not = j$, which says that only
-one person can has a specific card. Also the rule that everybody has two
+Most of the rules for Cluedo have been implemented in the model implicitly,
+such as the rule $c^i \impl \neg c^j$ with $i \not = j$, which says that only
+one person can have a specific card. Also the rule that everybody has two
 cards is implemented in this way.
 
-Assume we have a set of agents $\A$. Now agent $i \in \A$ speaks a
+Assume that we have a set of agents $\A$. Now agent $i \in \A$ speaks an
 accusation, which is a set of cards denoted as $a$. Now the agent $j \in
-\A, i \not = j$ says he has one of these cards, $c \in a$ and shows that
+\A, i \not = j$ says he has one of these cards, $c \in a$, and shows that
 card $c$ to $i$.  In our implementation, this is modelled as the public
 announcement $\bigvee_{k \in a} k^j$. After this public announcement, the
 private announcement $c^j$ is made towards agent $i$. After that, the
@@ -104,7 +104,8 @@ in the five propositions.
     (R3) we get $C\left(\left(\bigvee_{k \in a} k^j \right) \impl
         \left(\bigvee_{k \in a} \neg k^0\right)\right)$. Now we can apply
     modus ponens in order to get $C\left(\bigvee_{k \in a} \neg
-        k^0\right)$. Since the logic is complete, we can conclude that
+        k^0\right)$. Since the logic \textit{PAC} is sound and complete
+    with respect to \textbf{PAC}, we can conclude that
     $(M', s0) \models C\left(\bigvee_{k \in a} \neg k^0\right)$.
 \end{proof}
 
@@ -134,10 +135,10 @@ in the five propositions.
     $(M', s0) \models M_h k^0$ for some $k \in a$. Now assume that $(M'',
     s0) \not \models M_h k^0$. This means that during the private
     announcement for $i$, the relations for $h$ have changed. By
-    definition, this is not what happens, so that means that our assumption
-    did not hold. So $(M', s0) \models M_h k^0$ implies $(M'', s0) \models
-    M_h k^0$ for some $k \in a$. Since $k$ was also chosen arbitrarily,
-    this holds for all cards in $a$. 
+    the definition of private announcements, this is not what happens, so
+    that means that our assumption did not hold. So $(M', s0) \models M_h
+    k^0$ implies $(M'', s0) \models M_h k^0$ for some $k \in a$. Since $k$
+    was also chosen arbitrarily, this holds for all cards in $a$. 
 \end{proof}
 
 \begin{proof}[Proof of Proposition 5]
@@ -146,10 +147,10 @@ in the five propositions.
     $(M', s0) \models \neg K_h k^j$ for some $k \in a$. Now assume that
     $(M'', s0) \not \models \neg K_h k^j$. This means that during the private
     announcement for $i$, the relations for $h$ have changed. By
-    definition, this is not what happens, so that means that our assumption
-    did not hold. So $(M', s0) \models \neg K_h k^j$ implies $(M'', s0) \models
-    \neg K_h k^j$ for some $k \in a$. Since $k$ was also chosen arbitrarily,
-    this holds for all cards in $a$. 
+    the definition of private announcements, this is not what happens, so
+    that means that our assumption did not hold. So $(M', s0) \models \neg
+    K_h k^j$ implies $(M'', s0) \models \neg K_h k^j$ for some $k \in a$.
+    Since $k$ was also chosen arbitrarily, this holds for all cards in $a$. 
 \end{proof}
 
 \bibliographystyle{plainnat}
