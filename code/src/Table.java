@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -402,10 +403,12 @@ import javax.swing.event.ChangeListener;
 						strategyPanels[idx] = new StrategyPanel(idx);
 						bigPanel.add(strategyPanels[idx]);
 					}
-					hugePanel.add(bigPanel, BorderLayout.SOUTH);
+
+			        JScrollPane scrollPane = new JScrollPane(bigPanel);
+			        hugePanel.add(scrollPane, BorderLayout.CENTER);
 					
 					setLayout(new BorderLayout());
-					add(hugePanel, BorderLayout.NORTH);
+					add(hugePanel, BorderLayout.CENTER);
 					
 					JButton apply = new JButton("Apply");
 					apply.addActionListener(new StrategiesListener(apply));
@@ -732,7 +735,7 @@ import javax.swing.event.ChangeListener;
 			public Initializer() {
 		        super("New game");
 		        
-		        setMinimumSize(new Dimension(500, 600));
+		        setMinimumSize(new Dimension(500, 400));
 		        
 		        this.addWindowListener(new WindowAdapter() {
 			        @Override
