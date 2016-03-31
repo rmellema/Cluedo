@@ -60,8 +60,9 @@ class CardSet {
     }
     
     /**
-     * Get the cards in this CardSet
-     * @return Cards in the CardSet
+     * Get a specific card in this CardSet
+     * @param i The index of the card to get
+     * @return Card at index `i`
      */
     public Card getCard(int i) {
         return this.cards[i];

@@ -23,6 +23,7 @@ public class GameLoop {
      * Create a new loop using the given model and PrintStream.
      * @param model The model that the players of this game will use
      * @param out PrintStream that this object uses to print towards.
+     * @param players The players that are going to play this game
      */
     public GameLoop(KripkeModel model, PrintStream out, Player... players) {
         this.model = model;
@@ -43,8 +44,23 @@ public class GameLoop {
         this(model, System.out, players);
     }
 
+    /**
+     * Create a new loop for the given model and PrintStream
+     * @param model The model that the players of this game will use
+     * @param out PrintStream this object uses for printing
+     */
     public GameLoop(KripkeModel model, PrintStream out) {
         this(model, out, initPlayers(model.point(), model.getAgents(), model));
+    }
+
+    /**
+     * Create a new loop for the given dealing, players and PrintStream
+     * @param deal The dealing of cards for this game
+     * @param out PrintStream this object uses for printing
+     * @param players The players that will play this game
+     */
+    public GameLoop(Dealing deal, PrintStream out, Player... players) {
+        this(new KripkeModel(deal, players.length), out, players);
     }
 
     /**
@@ -57,11 +73,6 @@ public class GameLoop {
     public GameLoop(Dealing deal, int players, PrintStream out) {
         this(new KripkeModel(deal, players), out);
     }
-
-    public GameLoop(Dealing deal, PrintStream out, Player... players) {
-        this(new KripkeModel(deal, players.length), out, players);
-    }
-
 
     /**
      * Create a new loop using the given dealing of cards, number of players
@@ -114,10 +125,18 @@ public class GameLoop {
         return ret;
     }
 
+    /**
+     * Get the dealing in state 0 for this GameLoop
+     * @return The true dealing of cards
+     */
     public Dealing getDealing() {
         return this.model.point();
     }
 
+    /**
+     * Get the players in this game
+     * @return The playing agents
+     */
     public Player[] getPlayers() {
         return this.players;
     }
@@ -217,6 +236,9 @@ public class GameLoop {
                 ands[i] = new Or(ors);
             }
             Formula announce = new And(ands);
+            // Non-rational agents may decide to not win the game, for some
+            // reason, so we have to check in order to make sure that we do
+            // not make false announcements
             if (announce.evaluate(this.model)) {
                 model.publicAnnouncement(new And(ands));
             } else {
@@ -267,6 +289,10 @@ public class GameLoop {
         }
     }
 
+    /**
+     * Check if the current game is finished
+     * @return `true` if the game is done, `false` otherwise
+     */
     public boolean isDone() {
         return this.done;
     }
@@ -281,6 +307,7 @@ public class GameLoop {
         }
         return ret.toArray(new Player[skip.size()]);
     }
+
     /**
      * Get the number of the current round
      * @return number of the current round
@@ -289,6 +316,10 @@ public class GameLoop {
         return round;
     }
 
+    /**
+     * Play one random game of Cluedo with `System.out` as output
+     * @param args unused
+     */
     public static void main(String[] args) {
         GameLoop loop = new GameLoop(System.out);
         for (Player agent : loop.players) {

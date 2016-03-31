@@ -43,6 +43,14 @@ public class Or extends Formula {
         return new MemoizationFormula(new Or(disju));
     }
 
+    /**
+     * Simplify this formula by checking if it is a disjunction of
+     * Common/General/Implicit knowledge for a group of agents
+     * @return `this` or a MultiCommon/MultiEvery/MultiImplicit
+     * @see MultiEvery
+     * @see MultiCommon
+     * @see MultiImplicit
+     */
     @Override
     public Formula simplify() {
         Set<Integer> agents = null;

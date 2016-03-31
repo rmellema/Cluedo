@@ -3,7 +3,9 @@ import java.util.LinkedList;
 import java.util.Set;
 
 /**
- * Created by rene on 28/03/16.
+ * A class to make it faster to evaluate disjunctions or conjunctions of
+ * Common Knowledge for the same group of agents by evaluating multiple
+ * formulas at the same time
  */
 public class MultiCommon extends Formula {
     private Set<Integer> agents;
