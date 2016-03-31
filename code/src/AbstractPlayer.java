@@ -57,4 +57,8 @@ public abstract class AbstractPlayer {
     public int getCardsForCategory(int category) {
         return this.model.point().numberOfCards(category);
     }
+    
+    public int getAgents(){
+        return this.model.getAgents();
+    }
 }
