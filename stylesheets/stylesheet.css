@@ -368,7 +368,24 @@ Full-Width Styles
   background: #212121;
 }
 
+nav ul {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
 
+nav ul li {
+  display: inline;
+  list-style: none;
+  text-align: left;
+  margin: 100;
+}
+
+nav ul li a {
+  text-decoration: underline;
+  color: #fff;
+}
 
 /*******************************************************************************
 Small Device Styles
