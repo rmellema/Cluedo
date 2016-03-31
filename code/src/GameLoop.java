@@ -144,7 +144,6 @@ public class GameLoop {
         Player agent = this.players[this.current];
         this.out.println("Agent #" + agent.getNumber() +
                 " speaks suspicion " + suspicion);
-        ArrayList<Formula> ands = new ArrayList<>();
         Card[] cards = suspicion.getCards();
         boolean counterGiven = false;
         for (int next = (current + 1) % this.numPlayers;
@@ -172,14 +171,15 @@ public class GameLoop {
             } else {
                 this.out.println("\tAgent #" + a.getNumber() +
                         " has none of these cards");
-                for (Card card : cards) {
-                    ands.add((new PropVar(card, a.getNumber()).negate()));
+                Formula[] ands = new Formula[cards.length];
+                for (int i = 0; i < cards.length; i++) {
+                    ands[i] = (new PropVar(cards[i], a.getNumber())).negate();
                 }
+                model.publicAnnouncement(new And(ands));
             }
         }
         if (!counterGiven) {
             this.out.println("None of the agents disprove the suspicion");
-            model.publicAnnouncement(new And(ands.toArray(new Formula[ands.size()])));
         }
     }
 
@@ -203,6 +203,25 @@ public class GameLoop {
                 this.out.println("The accusation is incorrect\nAgent #" +
                         agent.getNumber() + " will be removed from the game");
                 skip.add(this.current);
+            }
+        } else {
+            this.out.println("Agent #" + agent.getNumber() + " makes no accusation");
+            Formula[] ands = new Formula[this.model.point().getCategories()];
+            for (int i = 0; i < ands.length; i++) {
+                Formula[] ors = new Formula[this.model.point().numberOfCards(i)];
+                for (int j = 0; j < ors.length; j++) {
+                    ors[j] = (new Know(agent.getNumber(),
+                                       new PropVar(new Card(i, j), 0)))
+                            .negate();
+                }
+                ands[i] = new Or(ors);
+            }
+            Formula announce = new And(ands);
+            if (announce.evaluate(this.model)) {
+                model.publicAnnouncement(new And(ands));
+            } else {
+                this.out.println("Agent #" + agent.getNumber() +
+                        " chose to not win the game");
             }
         }
     }
@@ -272,6 +291,10 @@ public class GameLoop {
 
     public static void main(String[] args) {
         GameLoop loop = new GameLoop(System.out);
+        for (Player agent : loop.players) {
+            System.out.println("Agent #" + agent.getNumber() + " " +
+                    agent.getHand());
+        }
         loop.game();
     }
 }
