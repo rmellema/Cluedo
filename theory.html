@@ -1,0 +1,33 @@
+---
+title: Theory
+---
+      	<h1>Theory</h1>
+      	<p>This section will discuss the theory behind the game cluedo. We will first discuss the rules and possible actions of the game, followed by an explanation of how these can be translated into formal logic. </p>
+
+      	<h2>Cluedo</h2>
+      	<p>The rules of Cluedo were mentioned briefly in the introduction, but will be elaborated on further here.</p>
+      	<p>The game Cluedo goes as follows: A reclusive professor gives a party for six guests. Somewhere during the evening, the butler finds the professor dead in the basement. However, it quickly becomes clear that the butler did not commit the murder, and that it did not happen in the basement. The only possible suspects are the six guests. The task of the players is to determine which of the guests committed the crime, with which weapon and in which room.</p>
+      	<p>The game has a board, with nine rooms, six weapon objects, six players (guests) in different colours, and 21 cards representing all rooms, weapons and players. At the start of the game, one card of each category is placed in the vault (also called envelope), without any player having looked at them: these are the 'murder cards'. The rest of the cards is distibuted over the players. In a turn, a player throws a set of dice. They are then allowed to move at maximum that amount of steps. If they enter a room, they may then make a suspicion. A suspicion consists of that room, a guest, and a murder weapon they suspect. Following this suspicion, the other players are asked to respond to this suspicion. In order of the game, each player is then asked if they have one or more of the cards of the suspicion. If they have none of these cards, the next player in turn is asked this. If they have one or more of the cards, they have to show exactly one card to the player who made a suspicion. After this, the player who made the suspicion can also make an accusation. To do this, they write down the three suspects, and look in the vault. If they were correct, they win the game. If not, they put the cards back in the vault, and are not allowed to play further: they lose. However, they still have to respond to the suspicions of the other players. </p>
+
+      	<h3>Actions</h3>
+      	<p>From the above explanation one can deduce a number of possible actions. From these actions deductions can be made by the other players. This was also discussed by H. van Ditmarsch in his thesis 'Knowledge games', published in 2000.</p>
+
+      	<ul>
+      		<li><code>suspect:</code> a player makes a suspicion. Nothing can be deduced from this, as a player is allowed to suspect cards they already know are not in the envelope.</li>
+      		<li><code>noshow:</code> the player (player B) following the player that made a suspicion (player A) has none of the cards queried. Now all players know that player B has none of these cards.</li>
+      		<li><code>show:</code> the next player (player C) has at least one of the cards, and shows that card to player A. All players now know that both A and C know the same card, which is one of the cards in the suspicion. A and C also know which card that is. </li>
+      		<li><code>nowin:</code> after a suspicion, if nobody had any of the cards in that suspicion, and player A does not make an accusation, this means that player A does not have enough information to make an accusation. This only holds for fully rational players, and is further discussed in 'Strategies and Situations'.</li>
+      		<li><code>accuse:</code> the accusation is made. As it is written down and not said aloud, nothing can be learned from this.</li>
+      		<li><code>check:</code> the checking of the accusation either lets an agent win or lose, but the other agents gain no extra knowlegde from this.</li>
+      		<li><code>announce:</code> in a game played by human players, announcements can also be made such as 'I almost know the weapon'. These are person specific, can be anything, and are not defined by rules.  However, these are not relevant in our version, as we will play a completely rational version.</li>
+      		<li><code>win:</code> if player A knew of all cards whether they were in the envelope, and made an accusation, they win, and the game ends.</li>
+      	</ul>
+
+      	<h3>Perfect Epistemic Logicians in Cluedo</h3>
+      	<p>When humans play, they are not always perfect epistemic logicians. Humans can make mistakes, or can forget something that was said. Furthermore, they have limited processing capacity, so may not be able to remember all possible options.</p>
+
+      	<h3>Strategies</h3>
+
+
+      	<h2>Cluedo in Logic</h2>
+
