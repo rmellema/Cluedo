@@ -32,9 +32,22 @@ layout: default
 
 
 	<h2>Cluedo in Logic</h2>
-      <p></p>
-
-
+	<h3>Simplification</h3>
+	<p>Because implementing the full scope of cluedo would be too complex to check formulas in a reasonable amount of time, we decided to simplify our version of Cluedo to a game with only six weapons, four persons, and no rooms. This means that there are only four agents who have two cards each. Because we use two categories, there are only two cards in the envelope, instead of the usual three. Since we are only interested in the reasoning within this game and movement has little influence on this, we will leave it out of our implementation. The other rules for the game stay the same.</p>
+	<p>This drastically reduces the number of states the game can have. For a given envelope content, agent #1 gets two of the eight remaining cards, agent #2 gets two of the six then remaining cards etc. The number of possible ways in which a single agent can get his/her cards dealt can be calculated by using the binomial coefficient. This coefficient is given by the following equation: </p>
+	<p>
+	<img src="http://latex.codecogs.com/svg.latex?\frac{n!}{k!(n-k)!}" border="0"/> 
+	</p>
+	<p> Here <i>k</i> is the number of cards that an agent gets and <i>n</i> is the number of cards that are not dealt yet before dealing to that agent. The total number of possible hands dealt for a given envelope content in the simplified version of cluedo is thus:</p>
+	<p>
+	<img src="http://latex.codecogs.com/svg.latex?\frac{8!}{2!(8-2)!} * \frac{6!}{2!(6-2)!} * \frac{4!}{2!(4-2)!} * \frac{2!}{2!(2-2)!} = 2520" border="0"/>
+    </p>
+    <p>	Before we deal the cards for the players, one weapon and one person is drawn for the envelope. This means that there are 6 * 4 = 24 possible envelope contents, which results in a total number of 60.480 possible states. </p>
+	<p> This is a much smaller number than the number of possible states there are in a real game of cluedo that has maximally 6 players. For such a game, the number of possible states for a given envelope content is: 
+	<p>
+	<img src="http://latex.codecogs.com/svg.latex?\frac{18!}{3!(18-3)!} * \frac{15!}{3!(15-3)!} * \frac{12!}{3!(12-3)!} * \frac{9!}{3!(9-3)!} * \frac{6!}{3!(6-3)!}* \frac{3!}{3!(3-3)!} = 137225088000" border="0"/>
+    </p>
+    <p>Now there are 9 * 6 * 6 =  324 possible envelopte contents. 324 * 137.225.088.000 = 44.460.928.512.000 possible states.</p>
 
 
 
