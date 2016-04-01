@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Cluedo{% if page.title %} - {{ page.title }}{% endif %}</title>
+    <title>{% if page.title %} Cluedo - {{ page.title }}{% else %}Cludeo{% endif %}</title>
   </head>
 
   <body>
@@ -41,6 +41,9 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
+        {% if page.title %}
+          <h1>{{ page.title }}</h1>
+        {% endif %}
         {{ content }}
 
       </section>
