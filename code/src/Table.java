@@ -437,7 +437,7 @@ import javax.swing.event.ChangeListener;
 								if (cardInputs[idx].getText().matches("[0-9]+") 
 										&& cardInputs[idx].getText().length() > 0) {
 									tmpCatSizes[idx] = Integer.parseInt(cardInputs[idx].getText()); 
-									if (tmpCatSizes[idx]  <= 0) {
+									if (tmpCatSizes[idx]  < 2) {
 										correctInput = false;
 										break;
 									}
@@ -453,7 +453,7 @@ import javax.swing.event.ChangeListener;
 								return;
 							}
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please input positive integers for each category.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please input a minimum of 2 cards for each category.", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
@@ -507,14 +507,14 @@ import javax.swing.event.ChangeListener;
 							if (input.getText().matches("[0-9]+") 
 									&& input.getText().length() > 0) {
 								int tmp = Integer.parseInt(input.getText()); 
-								if (tmp > 0) {
+								if (tmp > 1) {
 									categories = tmp;
 									change(Panels.CARDS);
 									return;
 								}
 							} 
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please enter a positive integer.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please enter an integer larger than 1.", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
@@ -559,7 +559,7 @@ import javax.swing.event.ChangeListener;
 								}
 							} 
 							final JPanel panel = new JPanel();
-							JOptionPane.showMessageDialog(panel, "Please enter a number larger than 1.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(panel, "Please enter an integer larger than 1.", "Invalid input", JOptionPane.ERROR_MESSAGE);
 
 					    }
 
