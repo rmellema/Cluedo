@@ -1,5 +1,4 @@
 ---
-title: Theory
 layout: default
 ---
 	<h1>Theory</h1>
@@ -14,14 +13,15 @@ layout: default
 	<p>From the above explanation one can deduce a number of possible actions. From these actions deductions can be made by the other players. This was also discussed by H. van Ditmarsch in his thesis 'Knowledge games', published in 2000.</p>
 
 	<ul>
-		<li><strong>suspect:</strong> a player makes a suspicion. Nothing can be deduced from this, as a player is allowed to suspect cards they already know are not in the envelope.</li>
-		<li><strong>noshow:</strong> the player (player B) following the player that made a suspicion (player A) has none of the cards queried. Now all players know that player B has none of these cards.</li>
-		<li><strong>show:</strong> the next player (player C) has at least one of the cards, and shows that card to player A. All players now know that both A and C know the same card, which is one of the cards in the suspicion. A and C also know which card that is. </li>
-		<li><strong>nowin:</strong> after a suspicion, if nobody had any of the cards in that suspicion, and player A does not make an accusation, this means that player A does not have enough information to make an accusation. This only holds for fully rational players, and is further discussed in 'Strategies and Situations'.</li>
-		<li><strong>accuse:</strong> the accusation is made. As it is written down and not said aloud, nothing can be learned from this.</li>
-		<li><strong>check:</strong> the checking of the accusation either lets an agent win or lose, but the other agents gain no extra knowlegde from this.</li>
-		<li><strong>announce:</strong> in a game played by human players, announcements can also be made such as 'I almost know the weapon'. These are person specific, can be anything, and are not defined by rules.  However, these are not relevant in our version, as we will play a completely rational version.</li>
-		<li><strong>win:</strong> if player A knew of all cards whether they were in the envelope, and made an accusation, they win, and the game ends.</li>
+	  <li><strong>suspect:</strong> a player makes a suspicion. Nothing can be deduced from this, as a player is allowed to suspect cards they already know are not in the envelope.</li>
+	  <li><strong>noshow:</strong> the player (player B) following the player that made a suspicion (player A) has none of the cards queried. Now all players know that player B has none of these cards.</li>
+	  <li><strong>show:</strong> the next player (player C) has at least one of the cards, and shows that card to player A. All players now know that both A and C know the same card, which is one of the cards in the suspicion. A and C also know which card that is. </li>
+	  <li><strong>nowin:</strong> after a suspicion, if nobody had any of the cards in that suspicion, and player A does not make an accusation, this means that player A does not have enough information to make an accusation. This only holds for fully rational players, and is further discussed in 'Strategies and Situations'.</li>
+	  <li><strong>accuse:</strong> the accusation is made. As it is written down and not said aloud, nothing can be learned from this.</li>
+	  <li><strong>check:</strong> the checking of the accusation either lets an agent win or lose, but the other agents gain no extra knowlegde from this.</li>
+	  <li><strong>announce:</strong> in a game played by human players, announcements can also be made such as 'I almost know the weapon'. These are person specific, can be anything, and are not defined by rules.  However, these are not relevant in our version, as we will play a completely rational version.</li>
+	  <li><strong>win:</strong> if player A knew of all cards whether they were in the envelope, and made an accusation, they win, and the game ends.</li>
+        <li><strong>lose:</strong> if player A decided to make an accusation with imperfect information, they can lose. This tells the other agents nothing, because an accusation is private.</li>
 	</ul>
 
 	<h3>Perfect Epistemic Logicians in Cluedo</h3>
@@ -32,6 +32,21 @@ layout: default
 
 
 	<h2>Cluedo in Logic</h2>
+      <p>For this project we chose to build a logic-based version of Cluedo. Most of the game is reasoning, so we can use epistemic logic to do that. We use S5 for this, so we assume equivalence relations. Added on to that, we will make use of Public Announcement Logic, as described by Barteld Kooi in 'The Secret of My Success', published in 2006.</p> 
+      <p>In a game of Cluedo, the actions that change anything in the knowledge of agents can all be formulated as announcements. Some of these are public announcements, which means that every agent receives the announcement and it is common knowledge that all agents received the announcement. There are also private announcements: announcements made by one agent to one other agent. All other agents see the communication happening, but do not know the message announced.</p>
+      <p>Because we are more interested in the reasoning aspects of Cluedo, we decided to leave the board out of our implementation. The game we built deals only with the murder cards, and with the reasoning the agents do with that.</p>
+
+      <p>The actions that change the knowledge of agents in Cluedo are <strong>noshow</strong>, <strong>show</strong> and <strong>nowin</strong>, as described above. take the above description of actions, they can be described in terms of announcements in the following manner:</p>
+      <ul>
+        <li><strong>noshow:</strong> agent B makes a public announcement that they do not have any of the cards mentioned.</li>
+        <li><strong>show:</strong> agent C makes a public announcement that they have at least one of the cards in the suspicion. They also make a private announcement to agent A, with one of the cards. It is then common knowledge that agent A and C know the same card, which is one of the cards in the suspicion. A formal proof for this can be found at the bottom of this page.</li>
+        <li><strong>nowin: </strong>agent A makes a public announcement that they do not have enough information to win the game, which implies that the suspicion made by them was not the correct solution to the game.</li>
+      </ul>
+
+
+
+
+
 	<h3>Simplification</h3>
 	<p>Because implementing the full scope of cluedo would be too complex to check formulas in a reasonable amount of time, we decided to simplify our version of Cluedo to a game with only six weapons, four persons, and no rooms. This means that there are only four agents who have two cards each. Because we use two categories, there are only two cards in the envelope, instead of the usual three. Since we are only interested in the reasoning within this game and movement has little influence on this, we will leave it out of our implementation. The other rules for the game stay the same.</p>
 	<p>This drastically reduces the number of states the game can have. For a given envelope content, agent #1 gets two of the eight remaining cards, agent #2 gets two of the six then remaining cards etc. The number of possible ways in which a single agent can get his/her cards dealt can be calculated by using the binomial coefficient. This coefficient is given by the following equation: </p>
@@ -41,13 +56,13 @@ layout: default
 	<p> Here <i>k</i> is the number of cards that an agent gets and <i>n</i> is the number of cards that are not dealt yet before dealing to that agent. The total number of possible hands dealt for a given envelope content in the simplified version of cluedo is thus:</p>
 	<p>
 	<img src="http://latex.codecogs.com/svg.latex?\frac{8!}{2!(8-2)!} * \frac{6!}{2!(6-2)!} * \frac{4!}{2!(4-2)!} * \frac{2!}{2!(2-2)!} = 2520" border="0"/>
-    </p>
-    <p>	Before we deal the cards for the players, one weapon and one person is drawn for the envelope. This means that there are 6 * 4 = 24 possible envelope contents, which results in a total number of 60.480 possible states. </p>
+      </p>
+      <p>	Before we deal the cards for the players, one weapon and one person is drawn for the envelope. This means that there are 6 * 4 = 24 possible envelope contents, which results in a total number of 60.480 possible states. </p>
 	<p> This is a much smaller number than the number of possible states there are in a real game of cluedo that has maximally 6 players. For such a game, the number of possible states for a given envelope content is: 
 	<p>
 	<img src="http://latex.codecogs.com/svg.latex?\frac{18!}{3!(18-3)!} * \frac{15!}{3!(15-3)!} * \frac{12!}{3!(12-3)!} * \frac{9!}{3!(9-3)!} * \frac{6!}{3!(6-3)!}* \frac{3!}{3!(3-3)!} = 137225088000" border="0"/>
-    </p>
-    <p>Now there are 9 * 6 * 6 =  324 possible envelopte contents. 324 * 137.225.088.000 = 44.460.928.512.000 possible states.</p>
+      </p>
+      <p>Now there are 9 * 6 * 6 =  324 possible envelopte contents. 324 * 137.225.088.000 = 44.460.928.512.000 possible states.</p>
 
 
 
