@@ -62,7 +62,6 @@ class ResponseStrategy extends Strategy {
 
         for(i = 0; i < query.size(); i++){
             if (hand.contains(query.getCard(i))){
-                System.out.println("Have card: " + query.getCard(i).toString());
                 counter++;
                 found.add(query.getCard(i));
             }
@@ -101,7 +100,6 @@ class ResponseStrategy extends Strategy {
 
         for(i = 0; i < query.size(); i++){
             if (hand.contains(query.getCard(i))){
-                System.out.println("Have card: " + query.getCard(i).toString());
                 counter++;
                 found.add(query.getCard(i));
             }
@@ -150,7 +148,6 @@ class ResponseStrategy extends Strategy {
  
         for(i = 0; i < query.size(); i++){
             if (hand.contains(query.getCard(i))){
-                System.out.println("Have card: " + query.getCard(i).toString());
                 counter++;
                 found.add(query.getCard(i));
             }

@@ -70,7 +70,6 @@ public class Player extends AbstractPlayer {
 				SuspicionStrategy suspicion, ResponseStrategy response,
 				AccusationStrategy accusation) {
             super(model, number);
-            System.out.println("CONSTRUCTING PLAYER"); //TODO 
         	this.hand = hand;
             this.number = number;
             this.suspicion = suspicion;

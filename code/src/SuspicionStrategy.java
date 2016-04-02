@@ -55,10 +55,7 @@ class SuspicionStrategy extends Strategy {
 
             for (int r : shuffle(super.arrayTo(number))) {
                 Card card = new Card(c, r);
-                System.out.println(card);
                 PropVar test = new PropVar(card, 0);
-                System.out.println(agent.doesConsider(test));
-                System.out.println(!agent.doesKnow(test));
                 if (agent.doesConsider(test) &&
                         !agent.doesKnow(test)) {
                     cards[c] = card;
@@ -94,10 +91,7 @@ class SuspicionStrategy extends Strategy {
             
             for (int r : shuffle(super.arrayTo(number))) {
                 Card card = new Card(c, r);
-                System.out.println(card);
                 PropVar test = new PropVar(card, 0);
-                System.out.println(agent.doesConsider(test));
-                System.out.println(!agent.doesKnow(test));
                 if (agent.doesConsider(test) &&
                         !agent.doesKnow(test)) {
                     options[c][ind] = card;

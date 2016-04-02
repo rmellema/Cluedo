@@ -47,7 +47,7 @@ public class KripkeModel {
 
 	private void agentCheck(int agent) {
 		if (agent < 1 || agent > this.agents) 
-    		throw new RuntimeException("Queried relations of a non-existing agent.");
+    		throw new RuntimeException("Queried relations of a non-existing agent: " + agent);
 	}
 	
 	/**

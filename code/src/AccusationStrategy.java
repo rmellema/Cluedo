@@ -54,7 +54,6 @@ class AccusationStrategy extends Strategy {
             for (n=0; n < number; n++){
                 Card test = new Card(c, n);
                 if (agent.doesKnow(new PropVar(test, 0))) {
-                    System.out.println("Agent knows card " + test);
                     found++;
                     cards[c] = test;
                 }
@@ -85,7 +84,6 @@ class AccusationStrategy extends Strategy {
             for (n=0; n < number; n++){
                 Card test = new Card(c, n);
                 if (agent.doesKnow(new PropVar(test, 0))) {
-                    System.out.println("Agent knows card " + test);
                     found++;
                     cards[c] = test;
                     break;
