@@ -171,22 +171,22 @@ cannot do queries concering knowledge.</p>
 their turn comes, and they have to make a suspicion. Next, when another player
 make a suspicion, they can be asked to respond to that suspicion. Finally, at
 the end of their turn, they can make an accusation, if they want to. Below is a
-description of the strategies currently implemented. For a discussion on
+description of the strategies implemented. For a discussion on
 possible strategies, see the 'Strategies and Situations' tab.</p>
 
-<h3>Suspicion Strategy</h3> 
+<h3>Default Suspicion Strategy</h3> 
 <p>Each turn a player makes a suspicion. A suspicion consists of one card of
-each category. So, currently, for each category, a player will randomly choose
+each category. So for each category, a player will randomly choose
 a card. If they still hold that card possible, so they hold it for possible
 that the card is in the envelope, but do not yet know that it is in the
 envelope, they will add it to the set of cards they will make a suspicion of,
 and continue to the next category. When they have chosen a card for each
 category this way, the function will return that <code>CardSet</code></p>
 
-<h3>Response Strategy</h3> 
+<h3>Default Response Strategy</h3> 
 <p>If another player makes a suspicion, a player can be asked to respond to
 that query. This means that if the player has one or more of the cards queried,
-they must show one of them. The current implementation is that if an agent has
+they must show one of them. The default implementation is that if an agent has
 one of the cards, they show that card.  If they have more than one, they choose
 a card at random.</p>
 
@@ -200,76 +200,6 @@ they return that as a suspicion. Otherwise, they return <code>null</code>.</p>
 suspicion. If, for all categories, they know which card is in the envelope,
 they return that as a suspicion. Else, if they know for all categories but one, and in that one category they only hold two for possible (it May be in the envelope, but they don't Know that it is in the envelope), guess one of those two. Otherwise, they return <code>null</code>.</p> 
 
-<h1>Possible Strategies</h1> 
-<p>These are some extra strategies we thought were possible strategies in
-Cluedo.</p>
-
-<h3>Suspicion Strateies</h3> 
-<p>The possible strategies for making a suspicion.</p>
-
-<h4>Random</h4> 
-<p>A completely random strategy: choose any cards, and query them.</p>
-
-<h4>Random with some Knowledge</h4> 
-<p>This is currently implemented. This strategy entails that the agent chooses
-any cards it does not yet have full information over, and queries them.</p>
-
-<h4>Using own Cards</h4> 
-<p>This is the strategy we are most unsure about. We do not yet know whether
-this is a rational strategy, but we all used it while playing the game
-ourselves, so we wanted to include it. This is the strategy where in stead of
-querying only cards you do not yet know, an agent will use the knowledge of
-their own cards to ensure that they get information on one card. So where
-normally the responding player can choose which card they show, the playing
-agent forces the responding players to respond to the one card the playing
-agent does not have.</p>
-
-<h3>Response Strategies</h3>
-
-<h4>Random</h4> 
-<p>This is currently implemented. When requested to respond, a player will
-choose a card at random of the cards thy have of the query, and show that to
-the requesting player.</p>
-
-<h4>Clever Random</h4> 
-<p>Almost the same as the above strategy, with the addition that if the
-responding player has already shown one of the cards to that player, it will do
-so again. This gives less information to the other players.</p>
-
-<h4>Optimal</h4> 
-<p>Added on to what was described at 'Clever Random', the agent also looks at
-possible consequences to see which possible action of theirs will give the
-least information to the other player.</p>
-
-<h4>Sweet Grandparent</h4> 
-<p>Similar to 'Clever Random', but instead of choosing the card which gives the
-least information, it will chose the one that gives more information. This is
-not a rational strategy, but one that could by played by a grandparent who does
-not want to let their grandchild lose too often.</p>
-
-<h4>Clever Grandparent</h4> 
-<p>Similar to 'Optimal', but with the same alteration as 'Sweet Grandparent':
-instead of choosing the action that gives the least amount of information, do
-the exact opposite. Similarly to 'Sweet Grandparent', this is not an optimal
-strategy.</p>
-
-<h3>Accusation Strategies</h3>
-
-<h4>Knowledge</h4> 
-<p>This is the implemented strategy: If a player knows all the cards in the
-envelope, they will make an accusation.</p>
-
-<h4>Risky Player</h4> 
-<p>Not a rational strategy. A player could, if there are only two possibilities
-left, make a risky guess, in hopes that another player does not gain the
-knowledge before him. Doing this includes the possibility that the player will
-lose, which is why it is not rational.</p>
-
-<h4>Grandparent</h4> 
-<p>A player could choose to give the other players more time to come to the
-same (winning) conclusion, and could therefore choose not to make an
-accusation, even though the agent knows the solution. This is not a rational
-strategy.</p>
 
 <a name="Game"></a>
 <h2>Game</h2>
