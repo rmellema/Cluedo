@@ -129,11 +129,6 @@ public class Cluedo extends JFrame {
             this.runClass = run;
         }
 
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e
-         */
         @Override
         public void actionPerformed(ActionEvent e) {
             SwingWorker<Void, Void> run = null;

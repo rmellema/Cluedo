@@ -39,6 +39,7 @@ public class GameLoop {
     /**
      * Create a new loop using the given model
      * @param model The model that the players of this game will use
+     * @param players The players that will play this game
      */
     public GameLoop(KripkeModel model, Player... players) {
         this(model, System.out, players);
@@ -104,6 +105,8 @@ public class GameLoop {
      * into the game and deals them their cards
      * @param deal The deal for this game
      * @param players The number of players in this game
+     * @param model The model that these agents will use to reason about the world
+     * @return An array of players with the default strategy
      */
     private static Player[] initPlayers(Dealing deal, int players, KripkeModel model) {
         Player[] ret = new Player[players];
