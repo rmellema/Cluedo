@@ -13,7 +13,8 @@ layout: default
 <p>A very simple strategy: the agent chooses a card per category of which they do not know whether it is in the envelope, and then make that set their suspicion.</p>
 
 <h3>Complex Suspicion Strategy</h3>
-<p>A more complex suspicion stratgy is to take into account the information of the other players. To do this, an agent first makes a list per category of the cards it does not yet know. Instead of just choosing one from this list, they check to see how many agents </p>
+<p>A more complex suspicion stratgy is to take into account the information of the other players. To do this, an agent first makes a list per category of the cards it does not yet know. Instead of just choosing one from this list, they check to see how many agents know something about that card. If agent A knows that agent I knows that card is in the envelope, or that agent I knows that card is held by agent A, that is seen as 'knowing something about that card'. If the other agent already knows something about these cards, they can gain more information if there are cards shown by an agent who has to respond to the suspicion. </p>
+<p>An example: Agent A suspects Mrs. White and the candlestick. However, I know that agent A has Mrs. White, because they showed me that card in a previous round. Agent B, who is asked to respond to the suspicion, shows agent A a card. Because I know that Agent B cannot have Mrs. White (because I know Agent A has it), the card shown must be the candlestick. In the game of cluedo the goal is to gain as much information as possible, while giving the other agents the least possible information. So, if it can be avoided, any agent wants to play the strategy that will give them new information, without giving more information than necessary to the other agents.</p>
 
 <h2>Response Strategies</h2>
 
