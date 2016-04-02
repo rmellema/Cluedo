@@ -8,14 +8,26 @@ import java.util.Random;
 class AccusationStrategy extends Strategy {
     private String strategy;
     
+    /**
+     * The default constructor. If no strategy is given, it will be "default"
+     */
     public AccusationStrategy() {
         this.strategy = "default";
     }
     
+    /**
+     * The constructor. Creates a AccusationStrategy with a certain strategy.
+     * @param strat the strategy to be played
+     */
     public AccusationStrategy(String strat){
         this.strategy = strat;
     }
     
+    /**
+     * the accusation strategy to be played
+     * @param agent the agent played for
+     * @return the accusation made, if any
+     */
     public CardSet strategy(Player agent){
         if(strategy.equals("default")){
             return defaultStrat(agent);
@@ -103,10 +115,18 @@ class AccusationStrategy extends Strategy {
         return null;
     }
 
+    /**
+     * Get the strategy played
+     * @return the strategy played by this agent
+     */
     public String getStrategy() {
         return strategy;
     }
 
+    /**
+     * Get the different types of AccusationStrategy
+     * @return a String[] of the possible types of AccusationStrategy
+     */
     public static String[] getOptions() {
     	return new String[]{"default", "risk"};
     }

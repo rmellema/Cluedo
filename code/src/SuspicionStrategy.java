@@ -9,16 +9,23 @@ class SuspicionStrategy extends Strategy {
     
     protected String strategy;
     
+    /**
+     * The default constructor. If no strategy is given, it will be "default"
+     */
     public SuspicionStrategy() {
         this.strategy = "default";
     }
     
+    /**
+     * The constructor. Creates a SuspicionStrategy with a certain strategy.
+     * @param strat the strategy to be played
+     */
     public SuspicionStrategy(String strat){
         this.strategy = strat;
     }
     
     /**
-     * the suspicion strategy to be played
+     * The suspicion strategy to be played
      * @param agent the agent played for
      * @return the suspicion made
      */
@@ -32,6 +39,11 @@ class SuspicionStrategy extends Strategy {
         return defaultStrat(agent);
     }
     
+    /**
+     * The default strategy: suspect cards you do not yet know
+     * @param agent the playing agent
+     * @return the CardSet to be suspected
+     */
     protected CardSet defaultStrat(Player agent){
         int c, number;
         int cat = agent.getCardCategories();
@@ -117,11 +129,18 @@ class SuspicionStrategy extends Strategy {
         return new CardSet(cards);
     }
 
-    
+    /**
+     * Get the strategy played
+     * @return the strategy played by this agent
+     */
     public String getStrategy() {
         return strategy;
     }
 
+    /**
+     * Get the different types of SuspicionStrategy
+     * @return a String[] of the possible types of SuspicionStrategy
+     */
     public static String[] getOptions() {
     	return new String[]{"default", "complex"};
     }

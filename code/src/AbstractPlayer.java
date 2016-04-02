@@ -58,6 +58,10 @@ public abstract class AbstractPlayer {
         return this.model.point().numberOfCards(category);
     }
     
+    /**
+     * Get the number of agents playing in this game
+     * @return the number of agents
+     */
     public int getAgents(){
         return this.model.getAgents();
     }

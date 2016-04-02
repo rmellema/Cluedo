@@ -10,12 +10,20 @@ import java.util.Set;
  */
 class ResponseStrategy extends Strategy {
 
-	private String strategy;
+    private String strategy;
     
+    /**
+     * The default constructor. If no strategy is given, it will be "default"
+     */
     public ResponseStrategy() {
         this.strategy = "default";
     }
     
+    
+    /**
+     * The constructor. Creates a ResponseStrategy with a certain strategy.
+     * @param strat the strategy to be played
+     */
     public ResponseStrategy(String strat){
         this.strategy = strat;
     }
@@ -205,10 +213,18 @@ class ResponseStrategy extends Strategy {
         return bestCard;
     }
 
+    /**
+     * Get the strategy played
+     * @return the strategy played by this agent
+     */
     public String getStrategy() {
         return strategy;
     }
 
+    /**
+     * Get the different types of ResponseStrategy
+     * @return a String[] of the possible types of ResponseStrategy
+     */
     public static String[] getOptions() {
     	return new String[]{"default", "simple", "optimal"};
     }
