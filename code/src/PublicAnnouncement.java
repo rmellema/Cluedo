@@ -1,5 +1,6 @@
 /**
- * Created by rene on 20/03/16.
+ * Formula to evaluate the Public Announcement operator from PAC
+ * @author rmellema
  */
 public class PublicAnnouncement extends Formula {
     private Formula announcement;

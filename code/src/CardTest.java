@@ -1,6 +1,3 @@
-/**
- * Created by rene on 21/03/16.
- */
 public class CardTest {
     public static void main(String[] args) {
         Card c1 = new Card(1, 1);

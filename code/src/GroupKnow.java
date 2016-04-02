@@ -1,7 +1,8 @@
 import java.util.Set;
 
 /**
- * Created by rene on 28/03/16.
+ * Interface for Knowledge operators over groups
+ * @author rmellema
  */
 public interface GroupKnow {
     /**

@@ -6,7 +6,8 @@ import java.util.Set;
 
 
 /**
- * Created by rene on 19/03/16.
+ * Class to handle all the game logic in Cluedo.
+ * @author rmellema
  */
 public class GameLoop {
 

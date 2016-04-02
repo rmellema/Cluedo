@@ -2,7 +2,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by rene on 20/03/16.
+ * Formula to evaluate our Private Announcements
+ * @author rmellema
  */
 public class PrivateAnnouncement extends Formula {
     private Set<Integer> agents;

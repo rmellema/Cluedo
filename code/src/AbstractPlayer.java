@@ -1,5 +1,7 @@
 /**
- * Created by rene on 29/03/16.
+ * A class used to hide the model from the actual player, so strategies cannot
+ * simply pull the correct accusation out of the model.
+ * @author rmellema
  */
 public abstract class AbstractPlayer {
     private KripkeModel model;

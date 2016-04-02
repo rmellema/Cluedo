@@ -1,7 +1,8 @@
 import java.util.HashMap;
 
 /**
- * Created by rene on 28/03/16.
+ * Formula that remembers its evaluation in a state
+ * @author rmellema
  */
 public class MemoizationFormula extends Formula {
     private Formula form;
