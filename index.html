@@ -7,10 +7,34 @@ layout: default
 simplified version of Cluedo. This tool is able to check formulas from Public
 Announcement Logic in a specific Kripke model, which is built specifically for
 Cluedo. This tool can be used to analyse specific situations and strategies in
-Cluedo. The current version of the tool can be downloaded <a
-  href="https://github.com/rmellema/Cluedo/releases/tag/V0.1">here</a>. </p>
+Cluedo. More information about obtaining and running the tool can be found on
+the <a href="./download.html">downloads page</a>.
 
-<h2>Simplification</h2> 
+<h2>Cluedo</h2>
+<p>Cluedo is a game in which the players are supposed to solve a murder, and
+the first player to solve the murder wins the game. In order to solve the 
+murder, they need to correctly guess the room where the murder was committed,
+the murder weapon and the murderer. To help them, they are each given a set of
+cards with rooms, persons and weapons which cannot have partaken in the murder. 
+The correct answer consists of a similar set of cards which contains on room,
+one person and one weapon, which is placed on the table, called the envelope.
+During their turn, each player can chose to move from room to room, where their
+movement is constricted such that they have to move across a grid in between
+rooms, and they can only take the number of steps that they rolled on a dice.
+If a player is in a room, they can also make a suspicion in order to gather
+more information, which other players have to disprove, if they have one of the
+cards in the suspicion. A player is only allowed to make a suspicion about a
+room if they are in that room.</p>
+
+<p>Once a player is confident they know who committed the murder, with what
+weapon and where, they can make an accusation. This means that they write down
+this information and take a look in the envelope. If they are correct, they win
+the game and the game ends. If they are incorrect, they are no longer allowed
+to move or make suspicions, but are still supposed to react to the suspicions
+of others. <a href="./theory.html#Cluedo">Click here for more information about 
+  the rules</a>.</p>
+
+<h3>Simplification</h3> 
 <p>Because implementing the full scope of Cluedo would be too complex to check
 formulas in a reasonable amount of time, we decided to simplify our version of
 Cluedo to a game with only six weapons, four persons, and no rooms. This means
@@ -19,17 +43,18 @@ use two categories, there are only two cards in the envelope, instead of the
 usual three. Since we are only interested in the reasoning within this game and
 movement has little influence on this, we left it out of our implementation.</p>
 
-<h2>Private Announcements</h2>
-<p>Since Cluedo also uses private announcements beside public announcements, we
-also had to implement those. We implemented private announcements as the
-removal of relations for an agent between states if those states have different
-truth values for the announcement and the announcement is made to that agent.
-We have a proof that this method gives us the correct knowledge change <a
-  href="./proof.pdf">here</a>.</p>
+<h2>Analysis</h2>
+<p>We have analysed several situations and strategies for Cluedo, in order to
+see what a rational agent would do in such a situation. For this we have 
+created several strategies, which we extracted from Hans van Ditmarsch PhD.
+Thesis Knowledge Games (2000) or from situations we encountered during play. The
+full analysis of these situations and strategies can be found in <a
+  href="./strategies.html">Strategies and Situations</a>. For this we also first
+needed to ground Cluedo in logic. The information about this can be found on the
+<a href="./theory.html">theory page</a>.</p>
 
-<h1>Results</h1> 
-<p>As we do not have any complex strategies implemented, and only one strategy
-of each yet, we cannot give any results. </p>
-
-<h1>Conclusion</h1>
-<p>As we have no results yet, we cannot conclude anything.</p>
+<p>We also implemented these strategies into our Cluedo tool, so it was possible
+to see these strategies in action. The can be selected from the Strategies tab
+in the `new game` dialog if you <a href="./download.html">download the tool</a>.
+To see more about the inner workings of the tool you can go to <a
+  href="./implemntation.html">the implementation page</a>.</p>

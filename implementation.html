@@ -3,13 +3,16 @@ title: Implementation
 layout: default
 ---
 
-<p>The implementation of the program is divided into four main parts, the
-<code>KripkeModel</code>, the implementation of logical <code>Formula</code>s
-for <b>PAC</b>, the implementation for the strategies, and the Graphical User
-Interface. Implementation details for these elements can be found here.  The
-javadoc for the entire project can be found <a href="./docs/index.html">
-  here</a>. They might be sligthly out of date for some classes.</p>
+<p>The implementation of the program is divided into four main parts, <a
+  href="#Model">the <code>KripkeModel</code>,</a> the <a
+  href="#Formula">implementation of logical <code>Formula</code>s for
+  <b>PAC</b></a>, the <a href="#Strategies">implementation for the
+  strategies</a>, and the <a href="#Game">actual game itself</a>.
+Implementation details for these elements can be found here. The javadoc for
+the entire project can be found <a href="./docs/index.html"> here</a>. They
+might be slightly out of date for some classes.</p>
 
+<a name="Model"></a>
 <h2>KripkeModel</h2>
 <p>This class describes a pointed Kripke model. In this model,  states,
 valuations of the states, the number of agents and the relations
@@ -73,6 +76,7 @@ Propositional variables can be easily evaluated in a dealing by checking
 whether the card is held by the player that the propositional variable
 specifies.</p>
 
+<a name="Formula"></a>
 <h2 id="evaluation-of-formulas">Evaluation of Formulas</h2> 
 <p>For the evaluation of formulas, we decided to create a Formula class that
 could be subclassed to implement the specific operators for Epistemic Dynamic
@@ -143,6 +147,19 @@ have processed all states that are reachable. We return <code>true</code> if it
 holds in all reachable states. If it does not hold in one of those states we
 return <code>false</code>.</p>
 
+<h3>Efficiency for group knowledge
+  (<code>MultiEvery/MultiImplicit/MultiCommon</code>)</h3>
+Since the evaluation of multiple general/implicit/common knowledge formulas in
+a conjunction or disjunction is quite inefficient, since we keep building the
+same set of states for multiple general knowledge formulas for the
+same set of agents, we added three new classes that can evaluate a conjunction
+or disjunction of general knowledge formulas. This works by first building this
+set, and then going over this set to see if the general knowledge formulas hold.
+Lastly, it will check if their con/disjunction holds, and return that. The
+classes <code>MultiImplicit</code> and <code>MultiCommon</code> work similar,
+but have different methods for constructing these sets.
+
+<a name="Strategies"></a>
 <h2>Player</h2> 
 <p>This class describes a Player. Each player has a set of cards in their hand,
 and has functions which call the strategies they can play.  Every player also
@@ -249,3 +266,65 @@ same (winning) conclusion, and could therefore choose not to make an
 accusation, even though the agent knows the solution. This is not a rational
 strategy.</p>
 
+<a name="Game"></a>
+<h2>Game</h2>
+<p>All of the game logic is contained in the class <code>GameLoop</code>, which
+handles the general flow of the game and makes sure that all the announcements
+that need to be made in the normal game are made. This section will describe
+how this class works in detail.</p>
+
+<h2 id="initialisation">Initialisation</h2> 
+<p>For initialisation, the loop gets a <code>KripkeModel</code>, a group of
+<code>Player</code>s, and a <code>PrintStream</code>. This last one is used for
+printing and is not relevant for the rest of the discussion. Instead of a model
+the loop can also construct a model from a <code>Dealing</code> and a number of
+players. It will also initialise the round number to 0 and make the first
+player in the group the current player.</p>
+
+<h2 id="playing-a-turn-step">Playing a turn (<code>step</code>)</h2> 
+<p>At the start of each turn, the current player is asked if they want to make
+a suspicion using the <code>suspect</code> method on <code>Player</code>. Then,
+each other player, starting with the next player, is asked if they have one of
+the cards in the suspicion, and if so, which card they would like to show to
+the current player, using the <code>response</code> method.</p>
+
+<p>If the player responds with a card, the public announcement that this player
+has one of the cards in the suspicion is made. Then, the current player is
+told, via a private announcement, which card the other player responded with.
+Then the public announcement that both agents know the same card is made. After
+this, no other players are asked for a response, since the current player go a
+response.</p>
+
+<p>If the player does not respond with a card, meaning that it does not hold
+one of the cards in the suspicion, the public announcement that it has none of
+the cards in the suspicion is made. After that, the next agent in line is asked
+for a response. If this would be the current player, it is instead asked for an
+accusation.</p>
+
+<p>When asked for an accusation, the Player can either return <code>null</code>
+or the set of cards it expects to be in the envelope. If it returns a set of
+cards, the loop will then check if this set is indeed in the envelope. If this
+is the case, the game ends. If this is not the case, then the agent is removed
+from the game, so it can no longer make suspicions or accusations, but can
+still respond to suspicions.</p>
+
+<p>If the player does not make an accusation, the announcement that it does not
+yet know the current set of cards in the envelope is made. Since the game also
+allows for non-rational players, the loop also checks whether or not this
+announcement holds to make sure that we do not make announcements which are
+untrue.</p>
+
+<p>After this, the next player becomes the current player, and if this is the
+player that also made the first turn, the round number is increased by one.
+During this process, players that were removed from the game are excluded.</p>
+
+<h2 id="playing-a-round-round">Playing a round (<code>round</code>)</h2> 
+<p>In order to play a round, the loop keeps stepping until the round number
+changed or the game ended. Using this definition of round, it is not
+necessarily the case that each player gets to play during the round, but at the
+end of the round all of the agents have had an equal number of turns, or the
+game ended.</p>
+
+<h2 id="playing-a-game-game">Playing a game (<code>game</code>)</h2> 
+<p>The <code>game</code> method simply keeps <code>step</code>ing until one of
+the players has won the game.</p>
