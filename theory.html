@@ -44,9 +44,6 @@ layout: default
       </ul>
 
 
-
-
-
 	<h3>Simplification</h3>
 	<p>Because implementing the full scope of cluedo would be too complex to check formulas in a reasonable amount of time, we decided to simplify our version of Cluedo to a game with only six weapons, four persons, and no rooms. This means that there are only four agents who have two cards each. Because we use two categories, there are only two cards in the envelope, instead of the usual three. Since we are only interested in the reasoning within this game and movement has little influence on this, we will leave it out of our implementation. The other rules for the game stay the same.</p>
 	<p>This drastically reduces the number of states the game can have. For a given envelope content, agent #1 gets two of the eight remaining cards, agent #2 gets two of the six then remaining cards etc. The number of possible ways in which a single agent can get his/her cards dealt can be calculated by using the binomial coefficient. This coefficient is given by the following equation: </p>
