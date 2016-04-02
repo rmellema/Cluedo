@@ -147,6 +147,18 @@ have processed all states that are reachable. We return <code>true</code> if it
 holds in all reachable states. If it does not hold in one of those states we
 return <code>false</code>.</p>
 
+<h3>Efficiency for group knowledge
+  (<code>MultiEvery/MultiImplicit/MultiCommon</code>)</h3>
+Since the evaluation of multiple general/implicit/common knowledge formulas in
+a conjunction or disjunction is quite inefficient, since we keep building the
+same set of states for multiple general knowledge formulas for the
+same set of agents, we added three new classes that can evaluate a conjunction
+or disjunction of general knowledge formulas. This works by first building this
+set, and then going over this set to see if the general knowledge formulas hold.
+Lastly, it will check if their con/disjunction holds, and return that. The
+classes <code>MultiImplicit</code> and <code>MultiCommon</code> work similar,
+but have different methods for constructing these sets.
+
 <a name="Strategies"></a>
 <h2>Player</h2> 
 <p>This class describes a Player. Each player has a set of cards in their hand,
