@@ -166,15 +166,15 @@ and has functions which call the strategies they can play.  Every player also
 has to know their number they are denoted by in the model, otherwise they
 cannot do queries concering knowledge.</p>
 
-<h3 id="strategies">Implemented Strategies(<code>Strategy</code>)</h3> 
+<h2 id="strategies">Implemented Strategies(<code>Strategy</code>)</h2> 
 <p>There are three actions where a player needs a strategy. The first is when
 their turn comes, and they have to make a suspicion. Next, when another player
 make a suspicion, they can be asked to respond to that suspicion. Finally, at
 the end of their turn, they can make an accusation, if they want to. Below is a
-description of the strategies currently implemented. For a discussion on other
-possible strategies, see further below.</p>
+description of the strategies currently implemented. For a discussion on
+possible strategies, see the 'Strategies and Situations' tab.</p>
 
-<h4>Suspicion Strategy</h4> 
+<h3>Suspicion Strategy</h3> 
 <p>Each turn a player makes a suspicion. A suspicion consists of one card of
 each category. So, currently, for each category, a player will randomly choose
 a card. If they still hold that card possible, so they hold it for possible
@@ -183,17 +183,22 @@ envelope, they will add it to the set of cards they will make a suspicion of,
 and continue to the next category. When they have chosen a card for each
 category this way, the function will return that <code>CardSet</code></p>
 
-<h4>Response Strategy</h4> 
+<h3>Response Strategy</h3> 
 <p>If another player makes a suspicion, a player can be asked to respond to
 that query. This means that if the player has one or more of the cards queried,
 they must show one of them. The current implementation is that if an agent has
 one of the cards, they show that card.  If they have more than one, they choose
 a card at random.</p>
 
-<h4>Accusation Strategy</h4> 
+<h3>Default Accusation Strategy</h3> 
 <p>At the end of their turn, a player is asked if they want to make a
 suspicion. If, for all categories, they know which card is in the envelope,
 they return that as a suspicion. Otherwise, they return <code>null</code>.</p>
+
+<h3>Risky Accusation Strategy</h3> 
+<p>At the end of their turn, a player is asked if they want to make a
+suspicion. If, for all categories, they know which card is in the envelope,
+they return that as a suspicion. Else, if they know for all categories but one, and in that one category they only hold two for possible (it May be in the envelope, but they don't Know that it is in the envelope), guess one of those two. Otherwise, they return <code>null</code>.</p> 
 
 <h1>Possible Strategies</h1> 
 <p>These are some extra strategies we thought were possible strategies in
