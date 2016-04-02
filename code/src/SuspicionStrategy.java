@@ -88,6 +88,7 @@ class SuspicionStrategy extends Strategy {
         
         for (c=0; c < cat; c++){
             number = agent.getCardsForCategory(c);
+            options[c] = new Card[number];
             ind = 0;
             best = -1;
             
@@ -105,7 +106,7 @@ class SuspicionStrategy extends Strategy {
             }
             for(i = 0; i < ind; i++){
                 count = 0;
-                for(a = 0; a < ag; a++){
+                for(a = 1; a <= ag; a++){
                     PropVar test = new PropVar(options[c][i],0);
                     PropVar testSelf = new PropVar(options[c][i],agent.getNumber());
                     if(agent.doesKnow(new Or(new Know(a,test), new Know(a,testSelf)))){
