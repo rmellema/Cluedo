@@ -225,26 +225,6 @@ public class GameLoop {
             }
         } else {
             this.out.println("Agent #" + agent.getNumber() + " makes no accusation");
-            Formula[] ands = new Formula[this.model.point().getCategories()];
-            for (int i = 0; i < ands.length; i++) {
-                Formula[] ors = new Formula[this.model.point().numberOfCards(i)];
-                for (int j = 0; j < ors.length; j++) {
-                    ors[j] = (new Know(agent.getNumber(),
-                                       new PropVar(new Card(i, j), 0)))
-                            .negate();
-                }
-                ands[i] = new Or(ors);
-            }
-            Formula announce = new And(ands);
-            // Non-rational agents may decide to not win the game, for some
-            // reason, so we have to check in order to make sure that we do
-            // not make false announcements
-            if (announce.evaluate(this.model)) {
-                model.publicAnnouncement(new And(ands));
-            } else {
-                this.out.println("Agent #" + agent.getNumber() +
-                        " chose to not win the game");
-            }
         }
     }
 
