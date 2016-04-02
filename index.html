@@ -34,7 +34,7 @@ to move or make suspicions, but are still supposed to react to the suspicions
 of others. <a href="./theory.html#Cluedo">Click here for more information about 
   the rules</a>.</p>
 
-<h2>Simplification</h2> 
+<h3>Simplification</h3> 
 <p>Because implementing the full scope of Cluedo would be too complex to check
 formulas in a reasonable amount of time, we decided to simplify our version of
 Cluedo to a game with only six weapons, four persons, and no rooms. This means
@@ -42,3 +42,19 @@ that there are only four agents (players) who have two cards each. Because we
 use two categories, there are only two cards in the envelope, instead of the
 usual three. Since we are only interested in the reasoning within this game and
 movement has little influence on this, we left it out of our implementation.</p>
+
+<h2>Analysis</h2>
+<p>We have analysed several situations and strategies for Cluedo, in order to
+see what a rational agent would do in such a situation. For this we have 
+created several strategies, which we extracted from Hans van Ditmarsch PhD.
+Thesis Knowledge Games (2000) or from situations we encountered during play. The
+full analysis of these situations and strategies can be found in <a
+  href="./strategies.html">Strategies and Situations</a>. For this we also first
+needed to ground Cluedo in logic. The information about this can be found on the
+<a href="./theory.html">theory page</a>.</p>
+
+<p>We also implemented these strategies into our Cluedo tool, so it was possible
+to see these strategies in action. The can be selected from the Strategies tab
+in the `new game` dialog if you <a href="./download.html">download the tool</a>.
+To see more about the inner workings of the tool you can go to <a
+  href="./implemntation.html">the implementation page</a>.</p>
