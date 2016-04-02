@@ -186,13 +186,19 @@ category this way, the function will return that <code>CardSet</code></p>
 <h3>Complex Suspicion Stragy</h3>
 <p>Added on to the default strategy that checks for cards an agent does not yet have full information on, is the part that checks how much other agents have information on these cards. First, a list of all cards per category that the agent does not have full information on yet is built. For all those cards is checked how many agents know that card is in the envelope or with the playing agent. Then the card of which holds that the least number of agents know that card is placed in the suspicion. When they have chosen a card for eachcategory this way, the function will return that <code>CardSet</code> </p>
 
-
 <h3>Default Response Strategy</h3> 
 <p>If another player makes a suspicion, a player can be asked to respond to
 that query. This means that if the player has one or more of the cards queried,
 they must show one of them. The default implementation is that if an agent has
 one of the cards, they show that card.  If they have more than one, they choose
-a card at random.</p>
+a <code>Card</code> at random.</p>
+
+<h3>Simple Response Strategy</h3>
+<p>This is an expansion on the default response strategy. If there is more than one card to choose from, they choose the one of which they know that the other agent already knows it, if possible. If the agent knows that the other agent knows neither card, it will choose one at random. </p>
+
+<h3>Optimal Response Strategy</h3>
+<p>An addtition to the simple response strategy. If there are still multiple options left, check to see which card would give the other agent the least amount of information. For every card, count how many cards you know that the other agent still considers possible in that category. Divide that by the number of cards in that category, so you have the relative amount of knowledge that is altered. Choose the card that gives the least information.</p>
+
 
 <h3>Default Accusation Strategy</h3> 
 <p>At the end of their turn, a player is asked if they want to make a
