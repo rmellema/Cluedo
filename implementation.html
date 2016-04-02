@@ -251,13 +251,8 @@ or the set of cards it expects to be in the envelope. If it returns a set of
 cards, the loop will then check if this set is indeed in the envelope. If this
 is the case, the game ends. If this is not the case, then the agent is removed
 from the game, so it can no longer make suspicions or accusations, but can
-still respond to suspicions.</p>
-
-<p>If the player does not make an accusation, the announcement that it does not
-yet know the current set of cards in the envelope is made. Since the game also
-allows for non-rational players, the loop also checks whether or not this
-announcement holds to make sure that we do not make announcements which are
-untrue.</p>
+still respond to suspicions. If the player dos not make an accusation, their
+turn ends.</p>
 
 <p>After this, the next player becomes the current player, and if this is the
 player that also made the first turn, the round number is increased by one.
