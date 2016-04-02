@@ -169,7 +169,11 @@ public class Cluedo extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            Cluedo.this.loop.game();
+            try {
+                Cluedo.this.loop.game();
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
             return null;
         }
         @Override
@@ -189,7 +193,11 @@ public class Cluedo extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            Cluedo.this.loop.round();
+            try{
+                Cluedo.this.loop.round();
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
             return null;
         }
         @Override
@@ -209,7 +217,11 @@ public class Cluedo extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            Cluedo.this.loop.step();
+            try {
+                Cluedo.this.loop.step();
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
             return null;
         }
         @Override
@@ -229,21 +241,25 @@ public class Cluedo extends JFrame {
         }
         @Override
         public Void doInBackground() {
-            KripkeModel model = new KripkeModel(loop.getDealing(),
-                    loop.getPlayers().length);
-            Player[] oldPlayers = Cluedo.this.loop.getPlayers();
-            Player[] players = new Player[oldPlayers.length];
-            for (int i = 0; i < players.length; i++) {
-                Player oldPlayer = oldPlayers[i];
-                StrategySet set = oldPlayer.getStrategies();
-                players[i] = new Player(oldPlayer.getHand(),
-                        oldPlayer.getNumber(), model,
-                        set.getSuspicion(),
-                        set.getResponse(),
-                        set.getAccusation());
+            try {
+                KripkeModel model = new KripkeModel(loop.getDealing(),
+                        loop.getPlayers().length);
+                Player[] oldPlayers = Cluedo.this.loop.getPlayers();
+                Player[] players = new Player[oldPlayers.length];
+                for (int i = 0; i < players.length; i++) {
+                    Player oldPlayer = oldPlayers[i];
+                    StrategySet set = oldPlayer.getStrategies();
+                    players[i] = new Player(oldPlayer.getHand(),
+                            oldPlayer.getNumber(), model,
+                            set.getSuspicion(),
+                            set.getResponse(),
+                            set.getAccusation());
+                }
+                Cluedo.this.loop = new GameLoop(model,
+                        writer, players);
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
             }
-            Cluedo.this.loop = new GameLoop(model,
-                    writer, players);
             return null;
         }
 
@@ -297,14 +313,17 @@ public class Cluedo extends JFrame {
 
         @Override
         public Void doInBackground() {
-            Cluedo.this.infoPanel.removeAll();
-            Table table = new Table();
-            KripkeModel model = new KripkeModel(table.getDealing(), table.getPlayers());
-            Cluedo.this.loop = new GameLoop(
-            		model,
-                    writer,
-                    initPlayers(model, table.getStrategies()));
-            
+            try {
+                Cluedo.this.infoPanel.removeAll();
+                Table table = new Table();
+                KripkeModel model = new KripkeModel(table.getDealing(), table.getPlayers());
+                Cluedo.this.loop = new GameLoop(
+                        model,
+                        writer,
+                        initPlayers(model, table.getStrategies()));
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
             return null;
         }
 
