@@ -19,14 +19,17 @@ layout: default
 <h2>Response Strategies</h2>
 <p>If another player makes a suspicion, an agent can be asked to respond to
 that query. This means that if the agent has one or more of the cards queried,
-they must show one of them. </p>
+they must show one of them. In all cases, if an agent only has one of the cards in the suspicion, they have to show that one. When they have more than one, there are different strategies that can be played. </p>
 
 <h3>Default Response Strategy</h3>
+<p>The simplest strategy that can be played is just to choose a card from the suspicion to return at random. If the agent only has one, this is easy, and otherwise, they choose one at random.</p>
+
 
 <h3>Simple Response Strategy</h3>
+<p>A slightly more complicated strategy is to check whether you have already shown one of the cards to the querying agent. If you have (if you know that they know that you have that card), then just show that card again, that gives then no new information at all. If the agent hasn't shown any of the cards to the querying agent, then just choose a random card.</p>
 
 <h3>Optimal Response Strategy</h3>
-
+<p>This can be added on to the simple strategy, so if the agent has more than one of the cards in the suspicion, and has shown neither of them to the other agent before. In this case, you still want the opponent to gain the least amount of information. A way to do this is to reason about how many information showing each of these cards would give the other agent. If you know that they know almost all weapon cards, you would be better off to show a person card. However, if there are six possible weapons and four possible suspects, and you know that they know half of each category, it is better to show a weapon, because that gives the least amount of information, relatively.</p>
 
 
 <h2>Accusation Strategies</h2>
