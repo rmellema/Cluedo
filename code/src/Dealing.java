@@ -56,7 +56,7 @@ public class Dealing {
 	
 	/** 
 	 * 
-	 * @param category
+	 * @param category Category for which the number of cards is returned
 	 * @return number of cards in the specified category
 	 */
 	public int numberOfCards(int category) {

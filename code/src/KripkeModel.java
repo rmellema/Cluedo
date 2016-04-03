@@ -26,7 +26,7 @@ public class KripkeModel {
 	
 	/**
 	 * Updates the Kripke model so that all agents know what cards they have been dealt
-	 * @param point
+	 * @param point The point of the model
 	 */
 	private void dealCards(Dealing point) {
 		for (int category = 0; category < point.getCategories(); category++) {
@@ -55,6 +55,7 @@ public class KripkeModel {
 	
 	/**
 	 * Constructs a deep copy (except for sdMap) of the KripkeModel.
+	 * @param other Kripkemodel to be deep copied
 	 */
 	public KripkeModel(KripkeModel other) {
         this.agents = other.getAgents();

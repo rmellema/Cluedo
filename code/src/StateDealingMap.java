@@ -42,14 +42,12 @@ public class StateDealingMap {
 	 * @param categorySizes List of sizes of card getCategories
 	 * @param players Number of players in the game
 	 * @param point Point of pointed model
+	 * @param totalCards Total number of cards in the game
 	 */
 	private void buildMap(int[] categorySizes, int players, Dealing point, int totalCards) {
 		Dealing empty = new Dealing(categorySizes);
 		//Determine possible envelope contents
 		ArrayList<Dealing> envelopeDealings = possibleEnvelopeDealings(0, empty, categorySizes);
-		
-		//TODO DEBUG
-		System.out.println("nr of envelope dealings: " + envelopeDealings.size());
 		
 		//Determine how many cards a player can maximally get
 		int cardsLeft = totalCards - categorySizes.length;
@@ -90,11 +88,15 @@ public class StateDealingMap {
 		//Return all these combinations for each card of the current category
 		return returnDealing;
 	}
-		
+	
 	/**
-	 * Saves all dealings to the map for a given envelope dealing
-	 * @param envelopeDealing Dealing in which the envelope already contains its cards
+	 * 
+	 * @param playerID Player that is currently being dealt to
+	 * @param soFar The dealing so far
 	 * @param players Number of players in the game
+	 * @param point Point of the model
+	 * @param maxHandSize Maximum number of cards a player 
+	 * @param cardsLeft Number of cards that have not been dealt yet
 	 */
 	private void mapDealings(int playerID, Dealing soFar, int players, Dealing point, int maxHandSize, int cardsLeft) {
 		//If all cards have been dealt
@@ -106,7 +108,12 @@ public class StateDealingMap {
 		}
 		
 		//Determine the number of cards that should be dealt to the current player
-		int cardsDealt = Math.min(maxHandSize,cardsLeft);
+		int playersLeft = players-playerID+1;
+		int cardsShort = (playersLeft * maxHandSize) - cardsLeft;
+		int cardsDealt = maxHandSize;
+		if (cardsShort == playersLeft)
+			--cardsDealt;
+		
 		//Otherwise, deal as many cards as should to the next player. 
 		// Save all possible ways in which this can be done in a list
 		ArrayList<Dealing> newDealings = dealNCardsTo(playerID, soFar, cardsDealt);
@@ -120,9 +127,10 @@ public class StateDealingMap {
 	
 	/**
 	 * Wrapper function
-	 * @param playerID
-	 * @param soFar
+	 * @param playerID Player to be dealt to
+	 * @param soFar The dealing so far
 	 * @param n number of cards to be dealt
+	 * @return A list of all possible ways in which n cards are dealt to the player
 	 */
 	private ArrayList<Dealing> dealNCardsTo(int playerID, Dealing soFar, int n) {
 		// This is actually a wrapper function. The real function keeps track of dealing states instead of dealings.
@@ -142,10 +150,9 @@ public class StateDealingMap {
 	
 	/**
 	 * 
-	 * @param playerID
-	 * @param soFar
-	 * @param n
-	 * @param previous Previous card that was dealt. New cards should be drawn from further in the deck so that there cannot be duplicate states.
+	 * @param playerID Player to be dealt to
+	 * @param state Current dealing state keeping track of the previous card being dealt. New cards should be drawn from further in the deck so that there cannot be duplicate states.
+	 * @param n number of cards to be dealt
 	 * @return Individual ways in which player playerID can get n cards dealt
 	 */
 	private ArrayList<DealingState> dealNCardsTo(int playerID, DealingState state, int n) {
@@ -166,6 +173,8 @@ public class StateDealingMap {
 
 	/**
 	 * Saves a dealing to the map. If the dealing is the point, it is ignored, since it already has been added.
+	 * @param dealing The dealing to be saved to the map
+	 * @param point The point of the Kripke model of which the states are being constructed
 	 */
 	private void addToMap(Dealing dealing, Dealing point) {
 		// We don't want a duplicate of the point in the map. It has already been added.
@@ -176,6 +185,8 @@ public class StateDealingMap {
 	}
 	
 	/**
+	 * @param playerID Agent that is being dealt to
+	 * @param DealingState current state of the dealing, keeping track of the previously dealt card
 	 * @return List of all possible dealings that result from soFar when player playerID gets any new card
 	 */
 	private ArrayList<DealingState> dealCardTo(int playerID, DealingState state) {
