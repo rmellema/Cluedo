@@ -9,6 +9,11 @@ public class PlayableResponseStrategy extends ResponseStrategy {
 		super(strategy);
 	}
 
+	/**
+	 * If there are multiple responses possible, the user is asked whether he/she wants to play this strategy manually. If so, a GUI pops up in which the user can specify a response. Otherwise, the response is obtained by calling the strategy function of the ResponseStrategy class.
+	 * @param agent The agent that plays this strategy
+	 * @return A card that represents the response if an the agent can respond. Null if this is not possible. 
+	 */
 	@Override 
 	public Card strategy(Player agent, CardSet query, CardSet hand, int other){
 		// Follow the rules: 

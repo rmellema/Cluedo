@@ -10,10 +10,18 @@ public class Relations {
 	private KripkeModel parent;
 	private Map<Integer, Set<Formula>> announcements = new HashMap<Integer, Set<Formula>>();
 	
+	/**
+	 * Initialises a relation matrix in which all possible relations are present.
+	 * @param parent KripkeModel instance that this Relations belongs to.
+	 */
 	public Relations(KripkeModel parent) {
 		this.parent = parent;
 	}
 
+	/**
+	 * Makes a deep copy
+	 * @param other The to be deep copied Relations instance
+	 */
 	public Relations(Relations other) {
 		this(other.parent);
 		//Shallow copy of formulas is ok since they are not altered
@@ -21,16 +29,22 @@ public class Relations {
 			for (Formula phi : entry.getValue())
 				privateAnnouncement(phi, entry.getKey());
 	}
-    
+	
 	/**
-	 * returns whether the matrix contains specified relation for the specified agent.
+	 * @param from One of the states involved in the relation. This can be switched with the to parameter without consequences since the Kripke model is in S5.
+	 * @param to One of the states involved in the relation. This can be switched with the from parameter without consequences since the Kripke model is in S5.
+	 * @param agent The agent for which the function checks whether the queried relation holds.
+	 * @return Whether the matrix contains specified relation for the specified agent.
 	 */
 	public boolean contains(Integer from, Integer to, Integer agent) {
 		return containsAny(from, to, new HashSet<Integer>(agent));
 	}
 
 	/**
-	 * returns whether the matrix contains specified relation for any of the specified agents.
+	 * @param from One of the states involved in the relation. This can be switched with the to parameter without consequences since the Kripke model is in S5.
+	 * @param to One of the states involved in the relation. This can be switched with the from parameter without consequences since the Kripke model is in S5.
+	 * @param agents The agents for which the function checks whether the queried relation holds.
+	 * @return Whether the matrix contains specified relation for any of the specified agents.
 	 */
 	public boolean containsAny(Integer from, Integer to, Set<Integer> agents) {
 		// for any agent
@@ -51,8 +65,12 @@ public class Relations {
 		}		
 		return false;
 	}
+	
 	/**
-	 * returns whether the matrix contains specified relation for all of the specified agents.
+	 * @param from One of the states involved in the relation. This can be switched with the to parameter without consequences since the Kripke model is in S5.
+	 * @param to One of the states involved in the relation. This can be switched with the from parameter without consequences since the Kripke model is in S5.
+	 * @param agents The agents for which the function checks whether the queried relation holds.
+	 * @return Whether the matrix contains specified relation for all of the specified agents.
 	 */
 	public boolean containsAll(Integer from, Integer to, Set<Integer> agents) {
 		// if for any agent
@@ -67,8 +85,9 @@ public class Relations {
 		return true;
 	}
 	/**
-	 * Handles private announcement phi to agent
-	 * @param states States left in the Kripke model
+	 * Updates the relations according to the specified private announcement
+	 * @param phi Formula that is announced
+	 * @param agent Agent to which the private announcement is done
 	 */
 	public void privateAnnouncement(Formula phi, Integer agent) {
 			if (!announcements.containsKey(agent))

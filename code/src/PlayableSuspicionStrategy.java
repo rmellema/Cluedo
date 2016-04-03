@@ -119,7 +119,11 @@ public class PlayableSuspicionStrategy extends SuspicionStrategy {
 	public PlayableSuspicionStrategy(String strategy) {
 		super(strategy);
 	}
-
+	/**
+	 * The user is asked whether he/she wants to play this strategy manually. If so, a GUI pops up in which the user can specify a suspicion. Otherwise, the suspicion is obtained by calling the strategy function of the SuspicionStrategy class.
+	 * @param agent The agent that plays this strategy
+	 * @return A set of cards that represents the suspicion. 
+	 */
 	@Override 
 	public CardSet strategy(Player agent){
         if(manualInput(agent.getNumber())){

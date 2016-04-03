@@ -19,7 +19,7 @@ public class Dealing {
 	private Random rand = new Random();
 	
 	/**
-	 * @param dealing List of getCategories with in each category a number of cards (indices) that are in the hands of a specific player (value) e.g. [1][2] = 3 means  player 3 has the second card of category 1.
+	 * @param dealing List of categories with in each category a number of cards that are in the hands of a specific player e.g. [1][2] == 3 means  player 3 has the second card of category 1.
 	 */
 	public Dealing(int[][] dealing) {
 		//Make a deep copy of the dealing
@@ -68,6 +68,7 @@ public class Dealing {
         }
 	
 	/**
+	 * @param var Propositional variable to be evaluated in this valuation (Dealing)
 	 * @return Whether the propositional variable is true in this valuation
 	 */
 	public boolean isTrue(PropVar var){
@@ -87,6 +88,9 @@ public class Dealing {
 	}
 	
 	/**
+	 * @param playerID Player that the specified card is dealt to.
+	 * @param category Category of the card that is being dealt.
+	 * @param cardnumber Card number of the card that is being dealt.
 	 * @return null if the card has already been dealt to a player. A new dealing with the card dealt to the specified player otherwise.
 	 */
 	public Dealing dealTo(int playerID, int category, int cardnumber) {
@@ -98,6 +102,12 @@ public class Dealing {
 		return returnDealing;
 	}
 	
+	/**
+	 * This function alters this Dealing instance, where dealTo returns a copy of itself in which the specified card has been dealt to the specified player
+	 * @param playerID Player that the specified card is dealt to.
+	 * @param category Category of the card that is being dealt.
+	 * @param cardnumber Card number of the card that is being dealt.
+	 */
 	public void deal(int playerID, int category, int cardnumber) {
 		if (this.dealing[category][cardnumber] != -1) {
 			throw new RuntimeException("Tried to deal c("+category+", "+cardnumber+") to agent #"+playerID+", while this card already belongs to agent #"+dealing[category][cardnumber]+".");
@@ -105,6 +115,11 @@ public class Dealing {
 		this.dealing[category][cardnumber] = playerID;
 	}
 	
+	/**
+	 * This function alters this Dealing instance, where dealTo returns a copy of itself in which the specified card has been dealt to the specified player
+	 * @param agent Player that the specified card is dealt to.
+	 * @param card Card that is being dealt.
+	 */
 	public void deal(int agent, Card card) {
 		deal(agent, card.getCategory(), card.getNumber());
 	}

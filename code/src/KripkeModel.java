@@ -24,6 +24,10 @@ public class KripkeModel {
         dealCards(point);    
 	}
 	
+	/**
+	 * Updates the Kripke model so that all agents know what cards they have been dealt
+	 * @param point
+	 */
 	private void dealCards(Dealing point) {
 		for (int category = 0; category < point.getCategories(); category++) {
             int cards = point.numberOfCards(category);
@@ -36,7 +40,6 @@ public class KripkeModel {
             }
         }
 	}
-	
 
     private void queryCheck(Integer state, Set<Integer> agents) {
     	if (!hasState(state)) 
@@ -51,7 +54,7 @@ public class KripkeModel {
 	}
 	
 	/**
-	 * Deep copy (except for sdMap) of the KripkeModel. To save memory some sharing magic might be useful. But maybe we can do without. At least for the first version.
+	 * Constructs a deep copy (except for sdMap) of the KripkeModel.
 	 */
 	public KripkeModel(KripkeModel other) {
         this.agents = other.getAgents();
@@ -75,9 +78,9 @@ public class KripkeModel {
 	}
 	
 	/**
-	 * Removes all relations of agent 'agent' from the Kripke model between 
-	 * states where the evaluation of phi differs.
+	 * Removes all relations of agent 'agent' from the Kripke model between states where the evaluation of phi differs.
 	 * @param phi Formula that is announced
+	 * @param agent The agent to which the formula is being announced
 	 */
 	public void privateAnnouncement(Formula phi, Integer agent) {
 		relations.privateAnnouncement(phi, agent);
@@ -89,24 +92,30 @@ public class KripkeModel {
 	public final Dealing point() {
 		return sdMap.point();
 	}
-
+	/**
+	 * @return  Valuation of specified state
+	 * @param state Specified state
+	 */
 	public Dealing getDealing(int state) {
 		if (this.states.contains(state))
             return sdMap.getValuation(state);
         else
             return null;
     }
-
+	
+	/**
+	 * 
+	 * @param state Specified state
+	 * @return Whether the state is present in the Kripke model
+	 */
     public boolean hasState(int state) {
         return this.states.contains(state);
     }
 
 	/**
-     * Builds the set of states that are reachable in one step from `state` for
-     * any of the agents in `agents`.
      * @param state The state to get the reachable states from
      * @param agents The agents to take into account
-     * @return The set of states
+     * @return The set of states that are reachable in one step from `state` for any of the agents in `agents`.
 	 */
 	public Set<Integer> getReachableStates(Integer state, Set<Integer> agents) {
 		queryCheck(state, agents);
@@ -121,10 +130,9 @@ public class KripkeModel {
 	}
 
     /**
-     * Builds the set of states that `agent` can distinguish from `state`
      * @param state The state to see if they are different
      * @param agent The agent to look for differences
-     * @return The set of states
+     * @return The set of states that `agent` can distinguish from `state`
      */
 	public Set<Integer> getReachableStates(Integer state, Integer agent) {
 		Set<Integer> agents = new HashSet<Integer>();
@@ -133,11 +141,9 @@ public class KripkeModel {
 	}
 
     /**
-     * Get the set of states that are reachable in one step from `state` for
-     * all agents in `agents`.
      * @param state The state to get the reachable states from
      * @param agents The agents that must all be able to reach that world
-     * @return The set of states that all agents can reach from the state
+     * @return The set of states that are reachable in one step from `state` for all agents in `agents`.
      */
 	public Set<Integer> getReachableStatesForAll(Integer state, Set<Integer> agents) {
 		queryCheck(state, agents);
@@ -152,8 +158,7 @@ public class KripkeModel {
 	}
 
     /**
-     * Get the number of agents in this model
-     * @return The number of agents
+     * @return The number of agents in this model
      */
     public int getAgents() {
         return agents;

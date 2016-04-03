@@ -9,6 +9,11 @@ import java.util.HashMap;
 public class StateDealingMap {
 	private HashMap<Integer, Dealing> map = new HashMap<Integer, Dealing>();
 	
+	/**
+	 * Builds a StateDealingMap with all possible dealings.
+	 * @param point The point of the Kripke Model that contains this StateDealingMap
+	 * @param players The number of agents in the KripkeModel
+	 */
 	public StateDealingMap(Dealing point, int players) {
 		// Determine category sizes
 		int[] categorySizes = new int[point.getCategories()];
@@ -192,10 +197,17 @@ public class StateDealingMap {
 		return returnDealingStates;
 	}
 	
+	/**
+	 * @return Point that was used to initialise this StateDealingMap
+	 */
 	public final Dealing point() {
 		return map.get(0);
 	}
 
+	/**
+	 * @param state A state in the KripkeModel
+	 * @return Valuation (Dealing) of the specified state
+	 */
     public final Dealing getValuation(int state) {
         return map.get(state);
     }
