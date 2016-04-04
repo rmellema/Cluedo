@@ -189,7 +189,7 @@ public class GameLoop {
                 long startTime = System.nanoTime();
                 model.publicAnnouncement(new Or(eors).simplify());
                 long endTime = System.nanoTime();
-                System.out.println("Time taken: " + (endTime - startTime)/(60000000000.0));
+                //System.out.println("Time taken: " + (endTime - startTime)/(60000000000.0));
                 break;
             } else {
                 this.out.println("\tAgent #" + a.getNumber() +
