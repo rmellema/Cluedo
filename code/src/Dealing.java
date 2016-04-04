@@ -127,6 +127,7 @@ public class Dealing {
 	/**
 	 * Returns a random dealing to the specified number of agents
 	 * @param agents Number of agents to be dealt to.
+	 * @return The randomized dealing
 	 */
 	public Dealing randomize(int agents) {
 		// Make this dealing empty

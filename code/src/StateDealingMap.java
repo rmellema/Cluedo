@@ -186,7 +186,7 @@ public class StateDealingMap {
 	
 	/**
 	 * @param playerID Agent that is being dealt to
-	 * @param DealingState current state of the dealing, keeping track of the previously dealt card
+	 * @param state current state of the dealing, keeping track of the previously dealt card
 	 * @return List of all possible dealings that result from soFar when player playerID gets any new card
 	 */
 	private ArrayList<DealingState> dealCardTo(int playerID, DealingState state) {
