@@ -50,7 +50,7 @@ accusation, which is a set of cards denoted as $a$. Now the agent $j \in
 card $c$ to $i$.  In our implementation, this is modelled as the public
 announcement $\bigvee_{k \in a} k^j$. After this public announcement, the
 private announcement $c^j$ is made towards agent $i$. After that, the
-public announcement $\bigvee_{k \in a} C_{i, j} k^j$ is made, to show that
+public announcement $\bigvee_{k \in a} E_{i, j} k^j$ is made, to show that
 both agents know the same card. 
 
 During the private announcement, only agent $i$ should get new knowledge,
@@ -124,9 +124,19 @@ in the five propositions.
 
 \begin{proof}[Proof of Proposition 3]
     Here we make the observation that the second public announcement
-    $\bigvee_{k\in a} C_{i,j} k^j$ is also a member of
+    $\bigvee_{k\in a} E_{i,j} k^j$ is also a member of
     $\mathcal{L}_N^{u0}$ and that the proof will be similar to the proof of
     Proposition 1.
+
+    After we have gotten $(M''', s0) \models C\left(\bigvee_{k \in a }
+        E_{i,j} k^j\right)$, we now need to promote the $E$ operator to the $C$
+    operator. For this, we can use the rule $(\varphi \land E \varphi)
+    \impl C \varphi$ and the rule $E \varphi \impl \varphi$. Now by
+    propositional logic we get $\bigwedge_{k \in a} \left(E_{i,j}k^j \impl
+        k^j\right)$. Using that and the initial formula we get $(M''', s0)
+    \models C\left(\bigvee_{k \in a } E_{i,j} k^j \land k^j\right)$. Now we
+    can conclude $(M''', s0) \models C\left(\bigvee_{k \in a} C_{i,j}
+        k^j\right)$.
 \end{proof}
 
 \begin{proof}[Proof of Proposition 4]
