@@ -1,0 +1,270 @@
+---
+title: Implementation
+layout: default
+---
+
+<p>The implementation of the program is divided into four main parts, <a
+  href="#Model">the <code>KripkeModel</code>,</a> the <a
+  href="#Formula">implementation of logical <code>Formula</code>s for
+  <b>PAC</b></a>, the <a href="#Strategies">implementation for the
+  strategies</a>, and the <a href="#Game">actual game itself</a>.
+Implementation details for these elements can be found here. The javadoc for
+the entire project can be found <a href="./docs/index.html"> here</a>. They
+might be slightly out of date for some classes.</p>
+
+<a name="Model"></a>
+<h2>KripkeModel</h2>
+<p>This class describes a pointed Kripke model. In this model,  states,
+valuations of the states, the number of agents and the relations
+between states for every agent is saved. The Kripke model can be deep
+copied to make agents able to reason about private and public
+announcements.</p>
+
+<h4>States and their valuations</h4> 
+<p>The possible states are saved as a set of integers. These integers are
+mapped to Dealings. A dealing describes which cards are dealt to what player
+and which cards are in the envelope for a specific state. A dealing can thus be
+seen as a valuation of a state. The KripkeModel class has a method getDealing
+that can be used to obtain the Dealing (valuation) for a specific state. This
+method can be used to evaluate formulas. </p>
+
+<h4>Generating the states</h4> 
+<p>When the Kripke model is initialised, the possible card dealings are used to
+construct the possible states.  During this process, state numbers are mapped
+to their dealings. The real dealing is saved as the point of the model.</p>
+
+<h4>Public announcements</h4> 
+<p>The public announcements done during a game are only announcements of
+propositional formulas. Whenever a public announcement is done, states where
+the announced formula does not hold are removed from the Kripke model. Also all
+relations to or from these states are removed.</p>
+
+<h4>Private announcements</h4> 
+<p>Whenever a private announcement is done to a specific agent, all relations
+of that agent between a state where the announced formula holds and a state
+where the announced formula does not hold are removed. We have proven that
+doing this indeed causes the effect of a private announcement in cluedo. </p>
+
+<h4>Relations between states</h4> 
+<p>The relations in the Kripke model are not saved explicitly and when a
+private announcement is done, they are not removed explicitly either.  Instead,
+all private announcements done during the game are stored per agent. Whenever
+it is needed to check whether a relation between two states is there for a
+specific agent, every formula privately announced to that agent is evaluated in
+both states. Only if the valuation of every formula is the same in both states,
+the relation is still there.  We did not store relations or removed relations
+explicitly, because this caused our program to run out of memory quickly.</p>
+
+<h4>Relation querying</h4> 
+<p>The Kripke model has methods available that return the states that are
+reachable in one step by any or all specified agents. These methods can be used
+to evaluate formulas about knowledge and implicit knowledge of (groups of)
+agents.</p>
+
+<h2>Dealing </h2> 
+<p>A Dealing contains the information about which cards are held by whom and
+which cards are in the envelope. This information is represented as a 2D ragged
+array. The first index specifies the category of the card (e.g. 0th category
+means weapon) and the second index specifies the card number (e.g. 4th weapon
+means lead pipe). The entries in the array specify the number of the agent that
+is holding the card. An entry of 0 means that the card is in the envelope. An
+entry of -1 means that the specified card has not yet been dealt.</p>
+
+<h4>Evaluating propositional variables</h4> 
+<p>A propositional variable specifies a card and the player that holds it.
+Propositional variables can be easily evaluated in a dealing by checking
+whether the card is held by the player that the propositional variable
+specifies.</p>
+
+<a name="Formula"></a>
+<h2 id="evaluation-of-formulas">Evaluation of Formulas</h2> 
+<p>For the evaluation of formulas, we decided to create a Formula class that
+could be subclassed to implement the specific operators for Epistemic Dynamic
+Logic.  This class also has other convenience methods like <code>negate</code>
+and <code>simplify</code> that can be used to speed up evaluation. Because of
+the way that the model is constructed, a lot of the semantics of PAL can be
+translated to our system in a natural way. Now, we will go over the
+implementation of the operators.</p>
+
+<h3 id="propositional-variable-propvar">Propositional Variable
+  (<code>PropVar</code>)</h3> 
+<p>In order to evaluate a propositional variable in a given state, we can
+simply look up the valuation for that state and see if that propositional
+variable is true given that valuation.</p>
+
+<h3 id="negation-neg">Negation (<code>Neg</code>)</h3> 
+<p>In order to evaluate the negation of a formula, we evaluate the formula and
+take the boolean not of that value.</p>
+
+<h3 id="conjunction-and">Conjunction (<code>And</code>)</h3> 
+<p>In order to evaluate a conjunction, we evaluate all of the conjuncts. If one
+of them is false, the whole conjunction is false. If all of them are true, the
+conjunction is true.</p>
+
+<h3 id="disjunction-or">Disjunction (<code>Or</code>)</h3> 
+<p>In order to evaluate a disjunction, we evaluate the disjuncts. If one of
+them is true, the disjunction is true. If none of them are true, the
+disjunction is false.</p>
+
+<h3 id="knowledge-know">Knowledge (<code>Know</code>)</h3> 
+<p>To evaluate the knowledge operator in a state in a model, we first get all
+the relations from that state for the agent that is tied to the knowledge
+operator. Then we evaluate the formula that the operator works over in all
+those states. If it holds in all those states, the knowledge operator holds. If
+it fails in one state, the operator returns <code>false</code>.</p>
+
+<h3 id="considers-maybe">Considers (<code>Maybe</code>)</h3> 
+<p>To evaluate the M operator in a state in a model, we first get all the
+relations from that state for the agent that is tied to the operator. Then we
+evaluate the formula that the operator works over in all those states. If it
+holds in one of those states, the operator returns true. If the formula holds
+in none of the states, it returns false.</p>
+
+<h3 id="general-knowledge-everyknows">General Knowledge
+  (<code>EveryKnows</code>)</h3> 
+<p>To evaluate general knowledge in a state in a model, we first get all the
+states that are reachable in one step for any of the agents in the group. Then
+we evaluate the formula that the operator works over in all those states and
+return <code>true</code> if it holds in all those states. If it does not hold
+in one of those states we return <code>false</code>.</p>
+
+<h3 id="implicit-knowledge-implicitknow">Implicit Knowledge
+  (<code>ImplicitKnow</code>)</h3> 
+<p>To evaluate implicit knowledge in a state in a model, we first get all the
+states that are reachable in one step for all the agents in the group. Then we
+evaluate the formula that the operator works over in all those states and
+return <code>true</code> if it holds in all those states. If it does not hold
+in one of those states we return <code>false</code>.</p>
+
+<h3 id="common-knowledge-commonknow">Common Knowledge
+  (<code>CommonKnow</code>)</h3> 
+<p>To evaluate common knowledge in a state in a model, we first get all the
+states that are reachable in one step for any the agents in the group. Then we
+evaluate the formula that the operator works over in all those states and get
+all of the states that any of the agents can reach from those states in one
+step, making sure that no state is evaluated twice.  This is repeated until we
+have processed all states that are reachable. We return <code>true</code> if it
+holds in all reachable states. If it does not hold in one of those states we
+return <code>false</code>.</p>
+
+<h3>Efficiency for group knowledge
+  (<code>MultiEvery/MultiImplicit/MultiCommon</code>)</h3>
+Since the evaluation of multiple general/implicit/common knowledge formulas in
+a conjunction or disjunction is quite inefficient, since we keep building the
+same set of states for multiple general knowledge formulas for the
+same set of agents, we added three new classes that can evaluate a conjunction
+or disjunction of general knowledge formulas. This works by first building this
+set, and then going over this set to see if the general knowledge formulas hold.
+Lastly, it will check if their con/disjunction holds, and return that. The
+classes <code>MultiImplicit</code> and <code>MultiCommon</code> work similar,
+but have different methods for constructing these sets.
+
+<a name="Strategies"></a>
+<h2>Player</h2> 
+<p>This class describes a Player. Each player has a set of cards in their hand,
+and has functions which call the strategies they can play.  Every player also
+has to know their number they are denoted by in the model, otherwise they
+cannot do queries concering knowledge.</p>
+
+<h2 id="strategies">Implemented Strategies(<code>Strategy</code>)</h2> 
+<p>There are three actions where a player needs a strategy. The first is when
+their turn comes, and they have to make a suspicion. Next, when another player
+make a suspicion, they can be asked to respond to that suspicion. Finally, at
+the end of their turn, they can make an accusation, if they want to. Below is a
+description of the strategies implemented. For a discussion on
+possible strategies, see the 'Strategies and Situations' tab.</p>
+
+<h3>Default Suspicion Strategy</h3> 
+<p>Each turn a player makes a suspicion. A suspicion consists of one card of
+each category. So for each category, a player will randomly choose
+a card. If they still hold that card possible, so they hold it for possible
+that the card is in the envelope, but do not yet know that it is in the
+envelope, they will add it to the set of cards they will make a suspicion of,
+and continue to the next category. When they have chosen a card for each
+category this way, the function will return that <code>CardSet</code></p>
+
+<h3>Complex Suspicion Stragy</h3>
+<p>Added on to the default strategy that checks for cards an agent does not yet have full information on, is the part that checks how much other agents have information on these cards. First, a list of all cards per category that the agent does not have full information on yet is built. For all those cards is checked how many agents know that card is in the envelope or with the playing agent. Then the card of which holds that the least number of agents know that card is placed in the suspicion. When they have chosen a card for eachcategory this way, the function will return that <code>CardSet</code> </p>
+
+<h3>Default Response Strategy</h3> 
+<p>If another player makes a suspicion, a player can be asked to respond to
+that query. This means that if the player has one or more of the cards queried,
+they must show one of them. The default implementation is that if an agent has
+one of the cards, they show that card.  If they have more than one, they choose
+a <code>Card</code> at random.</p>
+
+<h3>Simple Response Strategy</h3>
+<p>This is an expansion on the default response strategy. If there is more than one card to choose from, they choose the one of which they know that the other agent already knows it, if possible. If the agent knows that the other agent knows neither card, it will choose one at random. </p>
+
+<h3>Optimal Response Strategy</h3>
+<p>An addtition to the simple response strategy. If there are still multiple options left, check to see which card would give the other agent the least amount of information. For every card, count how many cards you know that the other agent still considers possible in that category. Divide that by the number of cards in that category, so you have the relative amount of knowledge that is altered. Choose the card that gives the least information.</p>
+
+
+<h3>Default Accusation Strategy</h3> 
+<p>At the end of their turn, a player is asked if they want to make a
+suspicion. If, for all categories, they know which card is in the envelope,
+they return that as a suspicion. Otherwise, they return <code>null</code>.</p>
+
+<h3>Risky Accusation Strategy</h3> 
+<p>At the end of their turn, a player is asked if they want to make a
+suspicion. If, for all categories, they know which card is in the envelope,
+they return that as a suspicion. Else, if they know for all categories but one, and in that one category they only hold two for possible (it May be in the envelope, but they don't Know that it is in the envelope), guess one of those two. Otherwise, they return <code>null</code>.</p> 
+
+
+<a name="Game"></a>
+<h2>Game</h2>
+<p>All of the game logic is contained in the class <code>GameLoop</code>, which
+handles the general flow of the game and makes sure that all the announcements
+that need to be made in the normal game are made. This section will describe
+how this class works in detail.</p>
+
+<h2 id="initialisation">Initialisation</h2> 
+<p>For initialisation, the loop gets a <code>KripkeModel</code>, a group of
+<code>Player</code>s, and a <code>PrintStream</code>. This last one is used for
+printing and is not relevant for the rest of the discussion. Instead of a model
+the loop can also construct a model from a <code>Dealing</code> and a number of
+players. It will also initialise the round number to 0 and make the first
+player in the group the current player.</p>
+
+<h2 id="playing-a-turn-step">Playing a turn (<code>step</code>)</h2> 
+<p>At the start of each turn, the current player is asked if they want to make
+a suspicion using the <code>suspect</code> method on <code>Player</code>. Then,
+each other player, starting with the next player, is asked if they have one of
+the cards in the suspicion, and if so, which card they would like to show to
+the current player, using the <code>response</code> method.</p>
+
+<p>If the player responds with a card, the public announcement that this player
+has one of the cards in the suspicion is made. Then, the current player is
+told, via a private announcement, which card the other player responded with.
+Then the public announcement that both agents know the same card is made. After
+this, no other players are asked for a response, since the current player go a
+response.</p>
+
+<p>If the player does not respond with a card, meaning that it does not hold
+one of the cards in the suspicion, the public announcement that it has none of
+the cards in the suspicion is made. After that, the next agent in line is asked
+for a response. If this would be the current player, it is instead asked for an
+accusation.</p>
+
+<p>When asked for an accusation, the Player can either return <code>null</code>
+or the set of cards it expects to be in the envelope. If it returns a set of
+cards, the loop will then check if this set is indeed in the envelope. If this
+is the case, the game ends. If this is not the case, then the agent is removed
+from the game, so it can no longer make suspicions or accusations, but can
+still respond to suspicions. If the player dos not make an accusation, their
+turn ends.</p>
+
+<p>After this, the next player becomes the current player, and if this is the
+player that also made the first turn, the round number is increased by one.
+During this process, players that were removed from the game are excluded.</p>
+
+<h2 id="playing-a-round-round">Playing a round (<code>round</code>)</h2> 
+<p>In order to play a round, the loop keeps stepping until the round number
+changed or the game ended. Using this definition of round, it is not
+necessarily the case that each player gets to play during the round, but at the
+end of the round all of the agents have had an equal number of turns, or the
+game ended.</p>
+
+<h2 id="playing-a-game-game">Playing a game (<code>game</code>)</h2> 
+<p>The <code>game</code> method simply keeps <code>step</code>ing until one of
+the players has won the game.</p>

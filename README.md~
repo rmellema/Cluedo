@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MASproject
 =======
 # Running the program
@@ -86,3 +87,6 @@ Pressing this button causes the game to perform rounds until the game is over.
 
 ### Clear output
 This button clears the output text panel. 
+
+
+>>>>>>> ba263819252fef8f6d3779fab5dff564bedc9a49

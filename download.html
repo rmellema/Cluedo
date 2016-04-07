@@ -1,0 +1,48 @@
+---
+title: Download
+layout: default
+---
+<p>The tool is a generic Java program and can be downloaded <a
+  href="https://github.com/rmellema/Cluedo/releases/tag/v1.0">here</a>. If you
+want to download an older version, all releases can be found <a
+  href="https://github.com/rmellema/Cluedo/releases">here</a>. You can also
+download zip and tar.gz archives if you follow those links. For the people that
+are interested or that want to build against the tool, with for example their
+own strategies, the javadoc can be found <a
+  href="./docs/index.html">here</a>.</p>
+<h1 id="running-the-program">Running the program</h1>
+<p>The file 'cluedo.jar' can be run by entering <code>java -jar cluedo.jar</code> in the command line. If your operating system allows it, you can also double click the file.</p>
+<h1 id="using-the-program">Using the program</h1>
+<p>When the program starts, some buttons appear in the bottom of the window. The functions of these buttons are explained here.</p>
+<h3 id="new-game">New game</h3>
+<p>This button starts a new game of our simplified version of Cluedo. The button <strong>Default settings</strong> initialises the game with 4 agents that all use the default strategy and a default card dealing. The button <strong>Random settings</strong> initialises the game with 4 agents that all use the default strategy and a random card dealing. The button <strong>Done</strong> can be pressed after specifying costum game settings for all tabs. These tabs and the way they have to be filled in are described here.</p>
+<p>Note that the <strong>Apply</strong> button has to be pressed to save the input of a tab that has been filled in.</p>
+<h5 id="agents">Agents</h5>
+<p>In this tab you can specify the number of agents that will be playing. A minimal number of two agents is needed to play a game. A large number of agents (larger than about 4) in combination with a large number of categories and cards can cause an lengthen the duration of turns in the game significantly.</p>
+<h5 id="categories">Categories</h5>
+<p>Here the number of card categories, e.g. weapon in the original game, can be specified. Each category needs to be initialised with at least one card. A large number of categories (larger than about 3) in combination with a large number of cards and agents can cause an lengthen the duration of turns in the game significantly.</p>
+<h5 id="cards">Cards</h5>
+<p>Define the number of cards for each card category here. Again, a large number of cards can cause turns to take longer.</p>
+<h5 id="envelope">Envelope</h5>
+<p>Indicate here for each category which card will be put into the envelope at the beginning of the game.</p>
+<h5 id="dealing">Dealing</h5>
+<p>Specify here for every agent which cards he/she receives at the beginning of the game. Cards that will be put into the envelope cannot be dealt to any agent.</p>
+<p>Note that the number of cards each agent receives is fixed to simulate the clockwise dealing that is in the rules of the original Cluedo. When an incorrect dealing is applied, the dealing is not saved and the user is notified.</p>
+<h5 id="strategies">Strategies</h5>
+<p>The strategies that the agents play have to be filled in here. An agent has
+different strategies for the different situations it gets into during the game.
+These situations are: Making a suspicion, responding to the suspicions of other
+players and making an accusation. The strategies for these situations are
+described in the <a href="./strategies.html">Strategies</a> tab on our website.</p>
+<p>When for a specific agent, a checkbox behind a specific situation in the <strong>Manipulate</strong> collumn is selected, the user will get the option to manipulate the actions of that agent when it gets into that situation.</p>
+<h3 id="restart">Restart</h3>
+<p>This button can be used to start a game with the same settings as the game that is currently being played or has just been finished.</p>
+<h3 id="step">Step</h3>
+<p>When this button is pressed, the next agent makes a suspicion and the other players respond to it. Note that the respond strategy can only be manipulated when an agent has multiple was to respond to a suspicion. When an agent has shown a card to the agent making the suspicion or no agent was able to respond, the agent making the suspicion has the possibility of making an accusation. When an agent gets an accusation wrong, it is no longer allowed to make suspicions or accusations.</p>
+<p>Also note that the first turn can take a few minutes, the turns after that should progress faster.</p>
+<h3 id="round">Round</h3>
+<p>This button performs steps until it is the turn of agent #1 to make a suspicion.</p>
+<h3 id="game">Game</h3>
+<p>Pressing this button causes the game to perform rounds until the game is over.</p>
+<h3 id="clear-output">Clear output</h3>
+<p>This button clears the output text panel.</p>

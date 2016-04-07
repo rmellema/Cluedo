@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -175,3 +176,7 @@ hs_err_pid*
 ## Custom
 papers/proposal/proposal.pdf
 *.iml
+=======
+papers/
+_site/
+>>>>>>> ba263819252fef8f6d3779fab5dff564bedc9a49

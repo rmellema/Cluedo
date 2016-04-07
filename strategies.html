@@ -1,0 +1,161 @@
+---
+title: Strategies and Situations
+layout: default
+---
+
+<p>Most of the strategies that can be played (as described below) originated
+from situations we encountered while playing the game ourselves, and from
+reasoning about possible tactics and other situations.</p>
+
+<h2>Suspicion Strategies</h2>
+<p>There are two strategies that can be used to determine which suspicion an
+agent could/should make when they get their turn. We named the first the
+'default' strategy, and the second the 'complex' strategy.</p>
+
+<h3>Default Suspicion Strategy</h3>
+<p>A very simple strategy: the agent chooses a card per category of which they
+do not know whether it is in the envelope, and then make that set their
+suspicion.</p>
+
+<h3>Complex Suspicion Strategy</h3>
+<p>A more complex suspicion strategy is to take into account the information of
+the other players. To do this, an agent first makes a list per category of the
+cards it does not yet know. Instead of just choosing one from this list, they
+check to see how many agents know something about that card. If agent A knows
+that agent I knows that card is in the envelope, or that agent I knows that card
+is held by agent A, that is seen as 'knowing something about that card'. If the
+other agent already knows something about these cards, they can gain more
+information if there are cards shown by an agent who has to respond to the
+suspicion. </p>
+
+<p>An example: Agent A suspects Mrs. White and the candlestick. However, I know
+that agent A has Mrs. White, because they showed me that card in a previous
+round. Agent B, who is asked to respond to the suspicion, shows agent A a card.
+Because I know that Agent B cannot have Mrs. White (because I know Agent A has
+it), the card shown must be the candlestick. In the game of Cluedo the goal is
+to gain as much information as possible, while giving the other agents the least
+possible information. So, if it can be avoided, any agent wants to play the
+strategy that will give them new information, without giving more information
+than necessary to the other agents.</p>
+
+<h2>Response Strategies</h2>
+<p>If another player makes a suspicion, an agent can be asked to respond to
+that query. This means that if the agent has one or more of the cards queried,
+they must show one of them. In all cases, if an agent only has one of the cards
+in the suspicion, they have to show that one. When they have more than one,
+there are different strategies that can be played. </p>
+
+<h3>Default Response Strategy</h3>
+<p>The simplest strategy that can be played is just to choose a card from the
+suspicion to return at random. If the agent only has one, this is easy, and
+otherwise, they choose one at random.</p>
+
+
+<h3>Simple Response Strategy</h3>
+<p>A slightly more complicated strategy is to check whether you have already
+shown one of the cards to the querying agent. If you have (if you know that they
+know that you have that card), then just show that card again, that gives then
+no new information at all. If the agent hasn't shown any of the cards to the
+querying agent, then just choose a random card.</p>
+
+<h3>Optimal Response Strategy</h3>
+<p>This can be added on to the simple strategy, so if the agent has more than
+one of the cards in the suspicion, and has shown neither of them to the other
+agent before. In this case, you still want the opponent to gain the least amount
+of information. A way to do this is to reason about how many information showing
+each of these cards would give the other agent. If you know that they know
+almost all weapon cards, you would be better off to show a person card. However,
+if there are six possible weapons and four possible suspects, and you know that
+they know half of each category, it is better to show a weapon, because that
+gives the least amount of information, relatively.</p>
+
+
+<h2>Accusation Strategies</h2>
+<p>There are several strategies that can be used to determine whether to make an
+accusation. The first is obvious one. The second is an alternative strategy that
+can be played by winning-driven agents. This is one we encountered while
+playing.</p>
+
+<h3>Default Accusation Strategy</h3>
+<p>If you know all the cards that are in the envelope (be eliminating all other
+possibilities), make an accusation containing those cards.</p>
+
+<h3>Risky Accusation Strategy</h3>
+<p>It can happen that you know all the cards in the envelope, except for one. So
+of one of the categories you still hold 2 different cards for possible. If you
+make an accusation then, you can lose if you choose the wrong card. However, if
+you are that far in the game, another agent might be too, and all other agents
+have a chance to make an accusation before your turn comes again. If they are
+correct, you also lose. So in this situation, it could be a good strategy to
+guess the card.</p>
+
+
+<h2>Other Situations</h2>
+
+<h3>Using one's own cards in a Suspicion</h3>
+<p>Initially we wanted to implement a strategy in which an agent uses their own
+cards in a suspicion. For example, if agent A holds the candlestick, they could
+make a suspicion with Mrs. White and the candlestick. One would do this to try
+to gain information specifically on Mrs. White. While playing the game ourselves
+we all used this strategy. However, it is not rational. It is defendable that we
+use it, but, as also described by H. van Ditmarsch in his thesis 'Knowledge
+Games' (2000), we only use it because humans have a limited processing
+capability and limited short-term memory.</p>
+<p>This means that we cannot hold the entire model of possible states and
+knowledge in our heads, and therefore try to limit the number of possible
+states. As the system we built is capable of computing the entire model (for a
+smaller number of categories), we did not implement this strategy. Perfect
+epistemic logicians would not play this, but would inquire after that which they
+know least about. </p>
+
+<h3 id="knowledge-through-the-lack-of-accusations">Knowledge through the lack of accusations</h3>
+<p>A rational agent would, whenever they knew which cards are in the envelope,
+make an accusation. This means that if a rational agent does not make an
+accusation, that they cannot yet know the exact dealing of the cards. Because if
+they would know the dealing of the cards, they would have made an
+accusation.</p>
+<p>This means that if an agent were to make a suspicion to which no one
+responds, one would expect the agent to make an accusation, unless the agent has
+one of those cards themselves. From this information, the other players might be
+able to draw new conclusions about the cards the agent has. Therefore, a truly
+rational agent would have to take into account that they might give away more
+information than intended in this situation.</p>
+<p>Currently, this situation is not build into our tool, since not all players
+have to be rational. For example, a human player is not necessarily rational.
+This means that we cannot assume that, when a player does not make an
+accusation, they cannot know what cards are in the envelope. However, if we
+could make this assumption, it would be possible to construct a strategy that
+would take this into account.</p>
+<p>We could do this by creating a strategy that, beside looking at the knowledge
+that the other players have about the cards now, also looks at the knowledge the
+other players would gain after the announcement that the current player does not
+know the cards in the envelope. This strategy could then also be used to answer
+the question whether or not this situation does actually occur, which is a
+question that was posed by Hans van Ditmarsch and Barteld Kooi in The Secret of
+my Success (2006)</p>
+
+<h3 id="non-rational-strategies-and-knowledge">Non-rational strategies and knowledge</h3>
+<p>Although most players would want to win a game, there are situations
+imaginable where one would want to consciously lose a game. A situation like
+this could be where a grandparent is playing with their grandchildren, who are
+still young and might not like it if the grandparent would win all the time, so
+the grandparent could chose to use a different playing style, which would lead
+to a style of play that is different from a rational agent.</p>
+<p>Using this style of play, most strategies would stay fairly similar, but
+instead of trying to give the least amount of information possible, the player
+would want to give the other players as much information as possible. This means
+that the new strategies would use the same kind of knowledge, but instead of
+selecting the card that gives the least amount of knowledge, selecting the card
+that gives the most amount of knowledge.</p>
+<p>It would also be possible to favour one specific player over the other
+players. Here one must make a distinction between actively helping them out
+(selecting the card that would give that player the most information) and not
+caring whether or not that player gets more information (not taking them into
+account when calculating how much information the other players get). Whereas
+the first method is probably preferable for the grandparent in the previous
+example, the other strategy might be used when playing with people who play the
+game for the first time or not very well. It could also be used as a tiebreaker,
+for example if the optimal suspicion strategy would need to decide between two
+cards, they could use a weighted ranking, depending on how close they think the
+players are to winning the game.</p>
+
