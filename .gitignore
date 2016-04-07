@@ -174,5 +174,6 @@ hs_err_pid*
 
 ## Custom
 papers/proposal/proposal.pdf
+presentation/presentation.pdf
 *.iml
 _site/
