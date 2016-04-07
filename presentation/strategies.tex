@@ -1,4 +1,122 @@
-\subsection{Suspicion}
-\begin{frame}
 
+\begin{frame}{Strategies}
+  \begin{itemize}
+    \item Suspicion
+    \begin{itemize}
+     \item Default
+     \item Complex
+    \end{itemize}
+
+    \item Response
+    \begin{itemize}
+     \item Default
+     \item Simple
+     \item Optimal
+    \end{itemize}
+
+    \item Accusation
+    \begin{itemize}
+     \item Default
+     \item Risky
+    \end{itemize}
+
+  \end{itemize}
 \end{frame}
+
+
+\subsection{Suspicion}
+%For every card you don't know: ask a card with an unknown location
+%For every card you do know: Card you have or a card in the envelope
+
+
+
+\begin{frame}{Suspicion: Default}
+  \begin{itemize}
+   \item Gather as much information as possible
+  \end{itemize}
+\end{frame}
+
+%Limit the information gathered by other agents about categories you already know.
+\begin{frame}{Suspicion: Complex}
+  Scenario: 
+  \begin{itemize}
+    \item $A$ shows the candlestick to $C$ 
+    \item ...
+    \item $A$ knows that the murderweapon is the lead pipe.
+    \item Which weapon should $A$ use in its suspicion?
+  \end{itemize}
+\end{frame}
+
+%Suspicion becomes: Mss White with the candlestick
+%Agent B might show a card to A and => C knows that B showed Mss White
+
+\begin{frame}{Suspicion: Complex}
+  Scenario:
+  \begin{itemize}
+    \item $A$ shows the candlestick to $C$ 
+    \item ...
+    \item $A$ knows that the murderweapon is the lead pipe.
+    \item Which weapon should $A$ use in its suspicion? \textcolor{green}{The lead pipe}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Response}
+\begin{frame}{Response: Default}
+Multiple options?
+  \begin{itemize}
+  \item Choose randomly
+  \end{itemize}
+\end{frame}
+
+% If you have not shown a card to the agent doing the suspicion before, choose randomly
+\begin{frame}{Response: Simple}
+Multiple options?
+  \begin{itemize}
+  \item Show the card you have shown before.
+  \end{itemize}
+\end{frame}
+
+% If you have not shown a card to the agent doing the suspicion before, do the following
+\begin{frame}{Response: Optimal}
+Multiple options?
+  \begin{itemize}
+  \item Show the card that gives the least amount of information.
+  \item Agent $A$ knows that agent $B$ considers it possible for:
+  \begin{itemize}
+    \item 3 weapons to be murderweapons.
+    \item 2 persons to be murderers. 
+  \end{itemize}
+  Should $A$ show a person or a weapon?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Response: Optimal}
+Multiple options?
+  \begin{itemize}
+  \item Show the card that gives the least amount of information.
+  \item Agent $A$ knows that agent $B$ considers it possible for:
+  \begin{itemize}
+    \item 3 weapons to be murderweapons.
+    \item 2 persons to be murderers. 
+  \end{itemize}
+  Should $A$ show a person or a weapon?  \textcolor{green}{A weapon}
+  \end{itemize}
+\end{frame}
+
+\subsection{Accusation}
+\begin{frame} {Accusation}
+\begin{itemize}
+  \item Default
+  \begin{itemize}
+   \item Only accuse when you know the contents of the envelope. 
+  \end{itemize}
+  
+  \item Risky
+  \begin{itemize}
+  \item Accuse when you consider only two envelope contents possible.
+  \end{itemize}
+
+\end{itemize}
+\end{frame} 
+
