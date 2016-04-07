@@ -1,7 +1,0 @@
-title: Cluedo
-defaults:
-  -
-    scope:
-      path: ""
-    values:
-      layout: default
