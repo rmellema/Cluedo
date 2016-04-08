@@ -10,8 +10,7 @@ import java.util.Set;
  * @author rmellema
  */
 public class GameLoop {
-
-	private KripkeModel model;
+    private KripkeModel model;
     private int         numPlayers;
     private int         current;
     private int         round = 0;
@@ -19,6 +18,7 @@ public class GameLoop {
     private Player[]    players;
     private boolean     done = false;
     private Set<Integer> skip = new HashSet<>();
+    private boolean      firstTurn = true;
 
     /**
      * Create a new loop using the given model and PrintStream.
@@ -183,6 +183,10 @@ public class GameLoop {
                 for (int i = 0; i < cards.length; i++) {
                     ors[i]  = new PropVar(cards[i], a.getNumber());
                     eors[i] = new EveryKnows(set(agent.getNumber(), a.getNumber()), ors[i]);
+                }
+                if (firstTurn) {
+                    this.out.println("\tThis might take a while, please be patient");
+                    this.firstTurn = false;
                 }
                 model.publicAnnouncement(new Or(ors));
                 model.privateAnnouncement(new PropVar(resp, a.getNumber()), agent.getNumber());
